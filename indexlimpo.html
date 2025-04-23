@@ -85,17 +85,21 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
-    @media (max-width: 600px) {
-      .system-btn {
-        font-size: 1rem; /* Tamanho da fonte reduzido para telas menores */
-      }
-    }
 
     .system-btn:hover {
       border-color: #ccc;
       padding: 3rem;
       transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .system-btn {
+        font-size: 1rem; /* Tamanho da fonte reduzido para telas menores */
+      }
+      .system-btn:hover {
+        padding: 2rem;
+        transform: scale(0.85);
+      }
     }
 
     #sing {

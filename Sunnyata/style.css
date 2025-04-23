@@ -286,6 +286,7 @@ select:focus option:checked {
   background-color: #29254091;
   border-radius: 5px;
   font-weight: bold;
+  line-height: 25px;
 }
 
 .status-info2 {
@@ -1474,13 +1475,19 @@ textarea:focus {
   background-color: #29254091;
   backdrop-filter: blur(20px);
   color: #fff;
+  width: 4vw;
   border: #fff 3px solid;
-  padding: 8px 14.5px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
   transition: opacity 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .toggle-container {
@@ -1595,7 +1602,7 @@ textarea:focus {
   right: 0.5vw;
   z-index: 50;
   width: 4vw;
-  background-color: #3b2540b6;
+  background-color: #29254091;
   backdrop-filter: blur(20px);
   color: #fff;
   border: #fff 3px solid;
@@ -1627,7 +1634,7 @@ textarea:focus {
   top: 7rem;
   right: 0.5vw;
   z-index: 50;
-  background-color: #3b2540b6;
+  background-color: #29254091;
   backdrop-filter: blur(20px);
   color: #fff;
   border: #fff 3px solid;

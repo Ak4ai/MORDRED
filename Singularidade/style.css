@@ -286,6 +286,13 @@ select:focus option:checked {
   background-color: #36254091;
   border-radius: 5px;
   font-weight: bold;
+  line-height: 25px;
+}
+
+#status-traco-historia {
+  border: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .status-info2 {
@@ -628,7 +635,7 @@ textarea:focus {
 
 @media (max-height: 1000px) {
   #essential-info #status-img{
-    aspect-ratio: 1 / 0.875; /* Garante que a imagem fique quadrada */
+    aspect-ratio: 1 / 0.85; /* Garante que a imagem fique quadrada */
   }
   #essential-info label{
     font-size: 10px;
@@ -939,7 +946,6 @@ textarea:focus {
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid rgba(255, 255, 255, 0.222);
-    background-color: #26243e80;
     color: #ccc;
     border-radius: 4px;
     font-size: 16px;
@@ -1023,7 +1029,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 2px;
   }
 
   #essential-info img {
@@ -1075,6 +1081,12 @@ textarea:focus {
     display: block;
     transform: translateY(0) !important;
     opacity: 1;
+  }
+
+    
+  body.abas-mostradas #essential-info,
+  body.abas-mostradas #essential-info2 {
+    display: block;
   }
 }
 
@@ -1471,13 +1483,19 @@ textarea:focus {
   background-color: #3b2540b6;
   backdrop-filter: blur(20px);
   color: #fff;
+  width: 4vw;
   border: #fff 3px solid;
-  padding: 8px 14.5px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
   transition: opacity 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .toggle-container {

@@ -2574,6 +2574,12 @@ document.getElementById('clear-data-btn').addEventListener('click', function() {
 });
 
 
+document.getElementById('toggleinfo1')?.addEventListener('click', (e) => {
+    e.stopPropagation(); // <-- isso evita o conflito!
+    console.log('Clicou no botão!');
+    document.body.classList.add('abas-mostradas');
+});   
+
 document.addEventListener('DOMContentLoaded', () => {
     let startY = 0;
     let isAtBottom = false;
@@ -2654,11 +2660,6 @@ document.addEventListener('DOMContentLoaded', () => {
       indicador.style.backgroundImage = `url('${imagemPersonagem}')`;
   }
   
-
-
-
-
-  
     function carregarFichasNaBarra() {
     const barra = document.getElementById('barra-fichas');
     barra.innerHTML = ''; // Limpa
@@ -2691,6 +2692,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let iconesAdicionados = 0;
   
 // Adiciona ficha marcada com check: 1
+  
 if (fichaCheckada) {
     const nome = fichaCheckada.chave.replace('-personagem302X', '');
     const img = document.createElement('img');
@@ -2853,4 +2855,4 @@ document.getElementById("toggleselection1").addEventListener("click", function (
   toggleChatButton.addEventListener("click", function (e) {
     e.stopPropagation();
     toggleVisibility(chatContainer, toggleChatButton, outsideClickChatListener);
-  });
+});
