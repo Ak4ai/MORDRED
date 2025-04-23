@@ -1,0 +1,132 @@
+tokenLayer.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const target = e.target;
+
+  // RESIZE
+  if (target.classList.contains('resize-handle')) {
+    e.stopPropagation();
+    resizing      = true;
+    currentHandle = target;
+    selectedToken = target.parentElement;
+
+    const rect       = selectedToken.getBoundingClientRect();
+    const wrapperRect= tokenLayer.getBoundingClientRect();
+
+    initialMouseX  = touch.clientX;
+    initialMouseY  = touch.clientY;
+    initialWidth   = rect.width  / zoomLevel;   // ← aqui
+    initialHeight  = rect.height / zoomLevel;   // ← e aqui
+    initialLeft    = (rect.left - wrapperRect.left) / zoomLevel;
+    initialTop     = (rect.top  - wrapperRect.top)  / zoomLevel;
+
+  // DRAG
+  } else if (target.classList.contains('token')
+          || target.classList.contains('background-img')) {
+    selectedToken = target;
+    const rect        = selectedToken.getBoundingClientRect();
+    const wrapperRect = tokenLayer.getBoundingClientRect();
+
+    // calcula o offset exato, igual ao mouse
+    offsetX = (touch.clientX - rect.left) / zoomLevel;
+    offsetY = (touch.clientY - rect.top)  / zoomLevel;
+
+    selectedToken.style.cursor = 'grabbing';
+  }
+}, { passive: false });
+
+document.addEventListener('touchmove', (e) => {
+  if (!selectedToken) return;
+  const touch = e.touches[0];
+
+  if (resizing && currentHandle) {
+    // deltas lógicos
+    const dx = (touch.clientX - initialMouseX) / zoomLevel;
+    const dy = (touch.clientY - initialMouseY) / zoomLevel;
+
+    let newWidth  = initialWidth;
+    let newHeight = initialHeight;
+    let newLeft   = initialLeft;
+    let newTop    = initialTop;
+
+    if (currentHandle.classList.contains('bottom-right')) {
+      newWidth  += dx;
+      newHeight += dy;
+    } else if (currentHandle.classList.contains('bottom-left')) {
+      newWidth  -= dx;
+      newHeight += dy;
+      newLeft   += dx;
+    } else if (currentHandle.classList.contains('top-right')) {
+      newWidth  += dx;
+      newHeight -= dy;
+      newTop    += dy;
+    } else if (currentHandle.classList.contains('top-left')) {
+      newWidth  -= dx;
+      newHeight -= dy;
+      newLeft   += dx;
+      newTop    += dy;
+    }
+
+    // **sem** multiplicar pelo zoom de novo:
+    selectedToken.style.width      = `${newWidth}px`;
+    selectedToken.style.height     = `${newHeight}px`;
+    selectedToken.style.left       = `${newLeft}px`;
+    selectedToken.style.top        = `${newTop}px`;
+    selectedToken.style.lineHeight = `${newHeight}px`;
+
+  } else {
+    // DRAG normal, mesma conta do mouse
+    const wrapperRect = tokenLayer.getBoundingClientRect();
+    const x = (touch.clientX - wrapperRect.left) / zoomLevel - offsetX;
+    const y = (touch.clientY - wrapperRect.top)  / zoomLevel - offsetY;
+
+    selectedToken.style.left = `${x}px`;
+    selectedToken.style.top  = `${y}px`;
+  }
+
+  e.preventDefault(); // trava scroll nativo
+}, { passive: false });
+
+document.addEventListener('touchend', () => {
+  if (!selectedToken) return;
+  selectedToken.style.cursor = 'grab';
+
+  // dados básicos de posição
+  const x = parseFloat(selectedToken.style.left);
+  const y = parseFloat(selectedToken.style.top);
+
+  // TOKEN?
+  if (selectedToken.classList.contains('token')) {
+    const id = selectedToken.dataset.id;
+    if (!id) return;
+
+    // monta o objeto de update
+    const updateData = { x, y };
+    // se veio de um resize, também salva o size
+    if (resizing) {
+      updateData.size = parseFloat(selectedToken.style.width);
+    }
+
+    db.collection('tokens').doc(id)
+      .update(updateData)
+      .catch(console.error);
+
+  // BACKGROUND?
+  } else if (selectedToken.classList.contains('background-img')) {
+    const bgId = selectedToken.dataset.bgId;
+    if (!bgId) return;
+
+    const updateData = { x, y };
+    // independente de resize ou não, para bg faz sentido salvar largura/altura
+    updateData.width  = parseFloat(selectedToken.style.width);
+    updateData.height = parseFloat(selectedToken.style.height);
+
+    db.collection('backgrounds').doc(bgId)
+      .update(updateData)
+      .catch(console.error);
+  }
+
+  // limpa estado
+  resizing      = false;
+  currentHandle = null;
+  selectedToken = null;
+});

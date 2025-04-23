@@ -46,12 +46,18 @@ function iniciarChat() {
   async function tratarRolagem(texto) {
     const match = texto.match(/^\/roll\s+(.+)/i) || texto.match(/^(\d+d\d+.*)/i);
     if (!match) return null;
-    const expr = match[1].trim();
-
+  
+    let expr = match[1].trim();
+  
+    // Verifica se a expressão termina com 'k' e adiciona 1
+    if (/^(\d+d\d+)k$/i.test(expr)) {
+      expr += "1";
+    }
+  
     try {
       const roller = new DiceRoller();
       const result = roller.roll(expr);
-
+  
       console.log("Resultado da rolagem:", result);
       
       if (result.output) {
@@ -65,6 +71,7 @@ function iniciarChat() {
       return `Expressão inválida: ${expr}`;
     }
   }
+  
 
   enviarBtn.addEventListener("click", async () => {
     if (typeof window.nomepersonagem !== "undefined" && window.nomepersonagem !== nomeUsuario) {
