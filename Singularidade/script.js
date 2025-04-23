@@ -2053,7 +2053,7 @@ async function carregarStatusPorNome(nome) {
     }
 
     carregarFichasNaBarra(); // Atualiza a barra após carregar
-    toggleButton.click();
+    toggleButton1.click();
 }
 
 
@@ -2659,7 +2659,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   
-function carregarFichasNaBarra() {
+    function carregarFichasNaBarra() {
     const barra = document.getElementById('barra-fichas');
     barra.innerHTML = ''; // Limpa
   
@@ -2787,3 +2787,70 @@ window.addEventListener("DOMContentLoaded", () => {
     window.admincheck = savedStatus === "true";
     atualizarStatusAdmin();
 });
+
+document.getElementById("toggleselection1").addEventListener("click", function () {
+    window.location.href = "../indexlimpo.html";
+  });
+
+  const toggleButton1 = document.getElementById("toggleplayer1");
+  const playerContainer1 = document.querySelector(".player-container");
+  const toggleChatButton = document.getElementById("togglechat1");
+  const chatContainer = document.getElementById("chat-container");
+  const blackoverlay = document.querySelector("#black-overlay");
+
+  function isMobileDevice() {
+    return window.innerWidth <= 768;
+  }
+
+  function toggleVisibility(container, button, outsideListenerFn) {
+    const isHidden = container.style.display === "none" || getComputedStyle(container).display === "none";
+    const isMobile = isMobileDevice();
+
+    container.style.display = isHidden ? "flex" : "none";
+
+    if (isMobile) {
+      blackoverlay.style.display = isHidden ? "block" : "none";
+    }
+
+    // Remover o listener anterior se houver
+    document.removeEventListener("click", outsideListenerFn);
+
+    // Esperar um pequeno tempo para evitar conflito com o clique que abre
+    if (isMobile && isHidden) {
+      setTimeout(() => {
+        document.addEventListener("click", outsideListenerFn);
+      }, 10); // 10ms é suficiente
+    }
+  }
+
+  function outsideClickListener(event) {
+    if (
+      !playerContainer1.contains(event.target) &&
+      !toggleButton1.contains(event.target)
+    ) {
+      playerContainer1.style.display = "none";
+      blackoverlay.style.display = "none";
+      document.removeEventListener("click", outsideClickListener);
+    }
+  }
+
+  function outsideClickChatListener(event) {
+    if (
+      !chatContainer.contains(event.target) &&
+      !toggleChatButton.contains(event.target)
+    ) {
+      chatContainer.style.display = "none";
+      blackoverlay.style.display = "none";
+      document.removeEventListener("click", outsideClickChatListener);
+    }
+  }
+
+  toggleButton1.addEventListener("click", function (e) {
+    e.stopPropagation(); // Evita propagação indesejada
+    toggleVisibility(playerContainer1, toggleButton1, outsideClickListener);
+  });
+
+  toggleChatButton.addEventListener("click", function (e) {
+    e.stopPropagation();
+    toggleVisibility(chatContainer, toggleChatButton, outsideClickChatListener);
+  });

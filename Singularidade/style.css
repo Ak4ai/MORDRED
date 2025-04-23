@@ -24,12 +24,13 @@ body {
 
 .container {
   position:absolute;
+  display: flex;
   color: #c9c9da;
   top: 1vh;
   bottom: 1vh;
-  box-shadow: 2px 2px 5px rg  ba(255, 255, 255, 0.3);
   padding: 25px;
   padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.222);
   background-color: #38254091;
@@ -40,6 +41,7 @@ body {
   width: 80vw;
   overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
   overflow-x: hidden;
+  flex-direction: column;
 }
 
 
@@ -193,14 +195,29 @@ select:focus option:checked {
 
 .tab, .subtab {
   flex: 1;
-  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
   padding: 10px;
   background-color: #9790b390;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 0.25rem;
+  margin: 2px;
   background-color: #36254091;
   transition: all ease .2s;
   max-width: 350px;
+}
+
+.tab.active, .subtab.active {
+  background-color: #9a76a6b8;
+  color: #ccc;
+  border: #ccc solid 1px;
+}
+
+.tab:hover, .subtab:hover {
+  background-color: #9a76a6;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  color: #ccc;
+  border: #ccc solid 2px;
+  transform: scale(1.05);
 }
 
 /* Ajuste para dispositivos móveis */
@@ -221,13 +238,8 @@ select:focus option:checked {
   }
 }
 
-.tab.active, .subtab.active {
-  background-color: #9a76a6b8;
-  color: #38254091;
-  border-bottom: none;
-}
-
 .content, .subcontent {
+  flex-grow: 1;           /* ocupa o espaço restante */
   border: 1px solid #c6bdca6b;
   text-align: center;
   padding: 20px;
@@ -435,6 +447,7 @@ button:active {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: small;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.222);
@@ -452,7 +465,7 @@ button:active {
   border: 1px solid rgba(255, 255, 255, 0.222);
   background-color: #36254091;
   border-radius: 5px;
-  width: 100%;
+  width: 80%;
   text-align: center;
 }
 
@@ -579,26 +592,6 @@ textarea:focus {
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Sombra ao focar */
 }
 
-#chat-container {
-  position: fixed;
-  right: 2vw;
-  bottom: 2vh;
-  width: 350px;
-  max-height: 20vh;
-  background-color: #38254091;
-  color: #c9c9da;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
-  padding: 1rem;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 999;
-  transition: max-height ease 0.25s;
-}
-
 /* Estilos para a aba de informações essenciais */
 #essential-info {
   top: 1.5vh;
@@ -612,7 +605,7 @@ textarea:focus {
   border: 1px solid rgba(255, 255, 255, 0.222);
   border-radius: 8px;
   color: #c9c9da;
-  background-color: #3c254091;
+  background-color: #38243e80;
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
@@ -840,7 +833,7 @@ textarea:focus {
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #3e243e80;
+  background-color: #38254091;
   color: #ccc;
   border-radius: 4px;
   font-size: 16px;
@@ -1524,13 +1517,66 @@ textarea:focus {
   margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
   margin-top: 10px;
   z-index: 0;
+  flex-shrink: 0; /* ocupa apenas o necessário */
+}
+
+#togglecontainer1:hover {
+  background-color: #382540b8;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+  transform: scale(1.05); /* Aumenta o tamanho ao focar */
+  transition: background-color 0.3s ease;
+  transition: border 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: opacity 0.3s ease;
+  
+}
+
+#bottom-toggles{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-bot{
+  position: static;
+  background-color: #38254091;
+  display: flex;
+  margin: 10px;
+  margin-bottom: 5px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 25px;
+  margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
+  margin-top: 10px;
+  z-index: 0;
+  border: 1px solid #c6bdca6b;
+  border-radius: 4px;
+}
+
+.toggle-bot:hover {
+  background-color: #382540b8;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+}
+
+@media (max-width: 1023px) {
+  .toggle-bot{
+    height: 35px;
+  }
 }
 
 #togglecontainer{
   display: none;
 }
 
-.oggle-container:hover {
+.toggle-container:hover {
   opacity: 1;
 }
 
@@ -1857,8 +1903,19 @@ textarea:focus {
 
 @media (max-width: 1023px) {
   .player-container {
-    display: none !important;
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
   }
+}
+
+.player-container.player-hidden {
+  max-height: 150px;
+  transition: max-height 0.5s;
 }
 
 #youtubeLink {
@@ -2247,12 +2304,6 @@ textarea:focus {
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,1) 40%);
 }
 
-@media (max-width: 1148px) {
-  #chat-container {
-    display: none !important;
-  }
-}
-
 #chat-mensagens {
   display: flex;
   flex-direction: column;
@@ -2320,6 +2371,50 @@ textarea:focus {
 
 .chat-message strong {
   color: #a0b3ff;
+}
+
+@media (max-width: 1023px) {
+  #chat-container {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-height: 60vh;
+  }
+
+  #chat-container.map {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    left: 1rem;
+    right: 1rem;
+    max-height: 60vh;
+  }
+
+  #chat-container.map:hover {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    left: 1rem;
+    right: 1rem;
+    max-height: 80vh;
+  }
+
+  #chat-container:hover {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-height: 80vh;
+  }
 }
 
 #token-layer {

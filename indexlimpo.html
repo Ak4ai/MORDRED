@@ -131,14 +131,14 @@
     </div>
 
     <script>
-      function selectSystem(systemId) {
+            function selectSystem(systemId) {
         // Salva a escolha no localStorage
         localStorage.setItem('sistemaEscolhido', systemId);
     
         // Redireciona para a página específica do sistema
         window.location.href = `${systemId}/${systemId}.html`;
       }
-    
+      
       function changeBackground(system) {
         let bgImage = '';
     
@@ -154,14 +154,6 @@
     
         document.body.style.backgroundImage = bgImage;
       }
-    
-      // Verifica se já existe uma escolha salva no localStorage
-      window.addEventListener('DOMContentLoaded', () => {
-        const sistemaSalvo = localStorage.getItem('sistemaEscolhido');
-        if (sistemaSalvo) {
-          window.location.href = `${sistemaSalvo}/${sistemaSalvo}.html`;
-        }
-      });
     </script>    
 </body>
 </html>

@@ -37,7 +37,7 @@ Array.from(toggleButtons).forEach(btn => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     // Esconde apenas em dispositivos não móveis
-    container.style.display = hidden ? 'none' : 'block';
+    container.style.display = hidden ? 'none' : 'flex';
     barrafichas.style.display = hidden ? 'flex' : 'none';
 
     if (window.admincheck) {
