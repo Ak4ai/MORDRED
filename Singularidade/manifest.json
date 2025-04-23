@@ -1,0 +1,22 @@
+{
+    "name": "M.O.R.D.R.E.D-302X",
+    "short_name": "MORDRED-S",
+    "description": "Descrição do seu projeto",
+    "start_url": "/MORDRED-302X/",
+    "display": "standalone",
+    "background_color": "#29243e",
+    "theme_color": "#29243e",
+    "icons": [
+      {
+        "src": "android-icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "apple-icon-180x180.png",
+        "sizes": "180x180",
+        "type": "image/png"
+      }
+    ]
+  }
+  

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+
+  <title>Escolha o Sistema de RPG</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      height: 100dvh;
+      overflow: hidden;
+      overflow-y: hidden;
+      justify-content: center;
+      background-image: url(''); /* Imagem inicial do fundo */
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out; /* Transição suave para a troca de imagem de fundo */
+    }
+
+    self{
+        backdrop-filter: var(--backdrop-filter, blur(5px));
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centraliza o conteúdo em relação ao ponto 50%, 50% */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        width: 90vw;
+        background-color: #1e1e1eb8;
+        backdrop-filter: blur(5px);
+        border: 3px #ccc solid;
+        border-radius: 3rem;
+        max-width: 1100px;
+    }
+
+    .systems {
+        display: flex;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        width: 90vw;
+        max-width: 800px;
+        height: 98vh;
+        border-radius: 1rem;
+        margin: 0 auto;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .system-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #1e1e1e6e;
+      border: 2px solid #ccc;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      height: 15vh;
+      width: 55vw;
+      border-radius: 1rem;
+      font-size: 1.2rem;    
+      margin: auto;
+      margin-top: 0;
+      margin-bottom: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    @media (max-width: 600px) {
+      .system-btn {
+        font-size: 1rem; /* Tamanho da fonte reduzido para telas menores */
+      }
+    }
+
+    .system-btn:hover {
+      border-color: #ccc;
+      padding: 3rem;
+      transform: scale(1.05);
+    }
+
+    #sing {
+      font-size: 5vw;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    #sunny {
+      font-size: 5vw;
+      font-family: 'Cinzel', sans-serif;
+    }
+
+    #nexus {
+      font-size: 6vw;
+      font-family: 'Rajdhani', sans-serif;
+      text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    #cda {
+      font-size: 5vw;
+      font-family: 'UnifrakturCook', sans-serif;
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <div class="systems">
+            <div id="sing" class="system-btn" onmouseover="changeBackground('singularidade')" onclick="selectSystem('Singularidade')">Singularidade</div>
+            <div id="sunny" class="system-btn" onmouseover="changeBackground('sunnyata')" onclick="selectSystem('gurps')">Sunnyata</div>
+            <div id="nexus" class="system-btn" onmouseover="changeBackground('nexus')" onclick="selectSystem('vampire')">Nexus</div>
+            <div id="cda" class="system-btn" onmouseover="changeBackground('cthulhu')" onclick="selectSystem('cthulhu')">Contos do Abismo</div>
+        </div>
+    </div>
+
+  <script>
+    function selectSystem(systemId) {
+      // Redireciona para a página específica do sistema
+      window.location.href = `${systemId}/${systemId}.html`;
+    }
+
+    function changeBackground(system) {
+      let bgImage = '';
+      
+      if(system === 'singularidade') {
+        bgImage = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?width=1680&format=pjpg&auto=webp&s=9fab219a771aca724c230e3639ac00e2aecfdc99")'; // Substitua pelo link da imagem de singularidade
+      } else if(system === 'sunnyata') {
+        bgImage = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")'; // Imagem do Sunnyata
+      } else if(system === 'nexus') {
+        bgImage = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")'; // Imagem do Nexus
+      } else if(system === 'cthulhu') {
+        bgImage = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg?1536076913")'; // Imagem do Cthulhu
+      }
+
+      // Altera a imagem de fundo do body
+      document.body.style.backgroundImage = bgImage;
+    }
+  </script>
+</body>
+</html>
