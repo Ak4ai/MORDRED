@@ -2858,30 +2858,39 @@ document.getElementById("toggleselection1").addEventListener("click", function (
 });
 
 function ajustarAlturaCorreta() {
-    const alturaVisivel = window.visualViewport?.height || window.innerHeight;
-    document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
-    document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
-    console.log('Altura visual ajustada para:', alturaVisivel);
-}
+    const viewportAltura = window.visualViewport?.height || window.innerHeight;
+    const insetBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("env(safe-area-inset-bottom)")) || 0;
+    const alturaFinal = viewportAltura;
   
+    // Define o valor exato
+    document.documentElement.style.setProperty('--altura-visivel', alturaFinal + 'px');
+    document.documentElement.style.setProperty('--vh', (alturaFinal * 0.01) + 'px');
+  
+    console.log('Ajuste de altura final:', alturaFinal, '| inset-bottom:', insetBottom);
+}
+
+function aplicarAlturaComDelay() {
+    ajustarAlturaCorreta();
+    setTimeout(ajustarAlturaCorreta, 100);  // Garantia após redraw
+}
 
 // Executa ao carregar
-ajustarAlturaCorreta();
+aplicarAlturaComDelay();
 
 // Executa quando volta de outra aba
 document.addEventListener('visibilitychange', () => {
 if (document.visibilityState === 'visible') {
-    setTimeout(ajustarAlturaCorreta, 100);
+    setTimeout(aplicarAlturaComDelay, 100);
 }
 });
 
 window.addEventListener('pageshow', (event) => {
 if (event.persisted) {
     // Vindo do cache (back/forward)
-    setTimeout(ajustarAlturaCorreta, 100);
+    setTimeout(aplicarAlturaComDelay, 100);
 }
 });
   
 
 // Executa em redimensionamentos
-window.addEventListener('resize', ajustarAlturaCorreta);
+window.addEventListener('resize', aplicarAlturaComDelay);
