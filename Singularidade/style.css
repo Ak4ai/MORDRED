@@ -50,38 +50,41 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
-/* ========================= */
-/* 1) CSS Adicional          */
-/* ========================= */
-
-/* Só quando em iOS standalone */
-html.ios, html.ios body {
-  /* trava qualquer overscroll, bounce ou rolagem */
-  overscroll-behavior: none;
-  overscroll-behavior-y: none;
-  /* garante que corpo cubra 100% da viewport ajustada */
-  min-height: 500px !important;
-  height: 500px !important;
+/* ========================================= */
+/* 1) Regras únicas para html e body em iOS  */
+/* ========================================= */
+html.ios,
+html.ios body {
+  /* altura exata do viewport ajustado */
+  height: var(--altura-visivel) !important;
   width: 100vw !important;
-  /* fundo igual pra evitar faixa preta */
+
+  /* nenhum scroll ou “bounce” */
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+
+  /* cor de fundo única (sem faixa preta) */
   background-color: #ccc !important;
-}
 
-/* Se quiser mais compatibilidade WebKit */
-html.ios, html.ios body {
-  -webkit-overflow-scrolling: touch;
-  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - 500px) !important;
-}
-
-/* Se ainda aparecer borda extra, assegura que não haja margin nem padding */
-html.ios, html.ios body {
+  /* safe-areas (notch, barras) */
   margin: 0 !important;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-           env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left) !important;
+
+  /* garantir que toque não mostre highlight estranho */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
+/* ================================= */
+/* 2) Ajuste da posição do container */
+/* ================================= */
 html.ios .container {
-  top: calc(1dvh + env(safe-area-inset-top)) !important;
+  top: calc(env(safe-area-inset-top) + 1dvh) !important;
   height: calc(var(--altura-visivel) - 2dvh - 12px - env(safe-area-inset-top)) !important;
 }
 
