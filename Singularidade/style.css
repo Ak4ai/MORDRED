@@ -49,33 +49,35 @@ body {
   flex-direction: column;
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
-
 /* ========================================= */
 /* 1) Regras únicas para html e body em iOS  */
 /* ========================================= */
 html.ios,
 html.ios body {
-  /* fixa o elemento na viewport inteira */
   position: fixed !important;
-  inset: 0 !important;              /* top:0; right:0; bottom:0; left:0 */
+  inset: 0 !important;
   width: 100vw !important;
-  
-  /* se o seu iOS suportar as viewport units level-4: */
+
+  /* cobre 100svh + o inset bottom (home-indicator) */
   height: 100svh !important;
-  /* caso não, cai pro var(--altura-visivel) que o JS define */
-  height: var(--altura-visivel) !important;
-  
-  overflow: hidden !important;              /* remove qualquer scroll externo */
-  overscroll-behavior: none !important;     /* remove “bounce” */
-  
-  /* safe-area-insets para não infrigir notch/barra */
+  height: calc(var(--altura-visivel) + env(safe-area-inset-bottom)) !important;
+
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+
+  margin: 0 !important;
   padding: env(safe-area-inset-top)
            env(safe-area-inset-right)
            env(safe-area-inset-bottom)
            env(safe-area-inset-left) !important;
-  
-  margin: 0 !important;
-  background-color: #251f28 !important;        /* evita faixa preta */
+
+  /* mesmíssimo background do body */
+  background: #38243e80 url('image.jpg') center/cover no-repeat !important;
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ================================= */
@@ -83,7 +85,12 @@ html.ios body {
 /* ================================= */
 html.ios .container {
   top: calc(env(safe-area-inset-top) + 1dvh) !important;
-  height: calc(var(--altura-visivel) - 2dvh - 12px - env(safe-area-inset-top)) !important;
+  height: calc(
+    var(--altura-visivel)
+    - 2dvh
+    - 12px
+    - env(safe-area-inset-top)
+  ) !important;
 }
 
 
