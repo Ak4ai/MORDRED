@@ -2893,46 +2893,45 @@ if (event.persisted) {
 window.addEventListener('resize', aplicarAlturaComDelay);
 
 (function() {
-    // detecta iPhone / iPad / iPod
-    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
-    // detecta PWA em standalone (opcional)
+    const ua       = navigator.userAgent;
+    const platform = navigator.platform;
+    const hasTouch = navigator.maxTouchPoints > 1;
+  
+    // 1) iPadOS 13+ se mascara de Mac, então:
+    const isIos = /iPhone|iPod/.test(ua)
+               || (/iPad/.test(ua))
+               || (platform === 'MacIntel' && hasTouch);
+  
+    // 2) Detecta standalone PWA no iOS:
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
                        || window.navigator.standalone === true;
-
+  
+    console.log({
+      ua, platform, maxTouchPoints: navigator.maxTouchPoints,
+      isIos, isStandalone
+    });
+  
     if (!isIos /*|| !isStandalone*/) return;
+  
     document.documentElement.classList.add('ios');
     mostrarMensagem('iOS detectado!');
     console.log('iOS detectado!');
-
-    function ajustarAlturaCorreta() {
-      const alturaVisivel = window.visualViewport?.height || window.innerHeight;
-      document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
-      document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
-      console.log('Altura visível ajustada para:', alturaVisivel);
-    }
-
-    function aplicarAlturaComDelay() {
-      ajustarAlturaCorreta();
-      setTimeout(ajustarAlturaCorreta, 100);  // garantia após redraw
-    }
-
-    // Executa ao carregar
-    aplicarAlturaComDelay();
-
-    // Quando volta de outra aba
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        setTimeout(aplicarAlturaComDelay, 100);
-      }
-    });
-
-    // Voltando pelo histórico (cache)
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        setTimeout(aplicarAlturaComDelay, 100);
-      }
-    });
-
-    // Em redimensionamentos
-    window.addEventListener('resize', aplicarAlturaComDelay);
+  
+    const updateHeight = () => {
+      const h = window.visualViewport
+                ? window.visualViewport.height
+                : window.innerHeight;
+      document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
+      document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+      // trava scroll residual
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.height   = `${h}px`;
+    };
+  
+    updateHeight();
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+    window.addEventListener('pageshow', updateHeight);
 })();
+  
