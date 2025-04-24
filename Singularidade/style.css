@@ -45,10 +45,36 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
-html.ios,
-body.ios {
-  background-color: #38254091;
-  background-image: none; /* Remove a imagem de fundo para iOS */
+/* bloqueia scroll no iOS PWA */
+html.ios, body.ios {
+  background: transparent !important;
+  overflow: hidden  !important;
+}
+
+/* safe-area superior pintada da cor que você quiser */
+html.ios::before {
+  content: '';
+  position: fixed;
+  top:    0;
+  left:   0;
+  right:  0;
+  height: env(safe-area-inset-top);
+  background-color: #38254091;  /* sua cor fixa */
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* safe-area inferior pintada da mesma cor */
+html.ios::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left:   0;
+  right:  0;
+  height: env(safe-area-inset-bottom);
+  background-color: #38254091;  /* mesma cor */
+  z-index: 999;
+  pointer-events: none;
 }
 
 /* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
