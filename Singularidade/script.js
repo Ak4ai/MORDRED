@@ -2860,13 +2860,19 @@ document.getElementById("toggleselection1").addEventListener("click", function (
 function ajustarAlturaCorreta() {
     const altura = window.innerHeight + 'px';
     document.documentElement.style.setProperty('--altura-visivel', altura);
-}
-  
-document.addEventListener('visibilitychange', () => {
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+
+  // Executa ao carregar
+  ajustarAlturaCorreta();
+
+  // Executa quando volta de outra aba
+  document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-        ajustarAlturaCorreta(); // recalcula altura ao voltar
+        console.log('Aba visível novamente!');
+      ajustarAlturaCorreta();
     }
-});
-  
-window.addEventListener('resize', ajustarAlturaCorreta);
-ajustarAlturaCorreta();
+  });
+
+  // Executa em redimensionamentos
+  window.addEventListener('resize', ajustarAlturaCorreta);
