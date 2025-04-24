@@ -82,6 +82,7 @@ html.ios .container {
 html.ios #mapa-container,
 body.ios #mapa-container {
   background-color: transparent !important;
+  top: env(safe-area-inset-top) !important;
 }
 
 
