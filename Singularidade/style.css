@@ -55,30 +55,27 @@ body {
 /* ========================================= */
 html.ios,
 html.ios body {
-  /* altura exata do viewport ajustado */
-  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 100px) !important;
-  min-height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom)- 100px) !important;
+  /* fixa o elemento na viewport inteira */
+  position: fixed !important;
+  inset: 0 !important;              /* top:0; right:0; bottom:0; left:0 */
   width: 100vw !important;
-
-  /* nenhum scroll ou “bounce” */
-  overflow: hidden !important;
-  overscroll-behavior: none !important;
-
-  /* cor de fundo única (sem faixa preta) */
-  background-color: #ccc !important;
-
-  /* safe-areas (notch, barras) */
-  margin: 0 !important;
+  
+  /* se o seu iOS suportar as viewport units level-4: */
+  height: 100svh !important;
+  /* caso não, cai pro var(--altura-visivel) que o JS define */
+  height: var(--altura-visivel) !important;
+  
+  overflow: hidden !important;              /* remove qualquer scroll externo */
+  overscroll-behavior: none !important;     /* remove “bounce” */
+  
+  /* safe-area-insets para não infrigir notch/barra */
   padding: env(safe-area-inset-top)
            env(safe-area-inset-right)
            env(safe-area-inset-bottom)
            env(safe-area-inset-left) !important;
-
-  /* garantir que toque não mostre highlight estranho */
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-overflow-scrolling: touch;
+  
+  margin: 0 !important;
+  background-color: #ccc !important;        /* evita faixa preta */
 }
 
 /* ================================= */
