@@ -36,8 +36,8 @@ body {
   position:absolute;
   display: flex;
   color: #c9c9da;
-  top: 1vh;
-  bottom: 1vh;
+  top: 1dvh;
+  bottom: 1dvh;
   padding: 25px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -52,6 +52,10 @@ body {
   overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
   overflow-x: hidden;
   flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 
