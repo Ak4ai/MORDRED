@@ -19,10 +19,8 @@ html, body {
 .background {
   position: fixed;
   /* empurra pra fora das safe-areas em TODOS os lados */
-  top:    calc(-1 * env(safe-area-inset-top));
-  bottom: calc(-1 * env(safe-area-inset-bottom));
-  left:   calc(-1 * env(safe-area-inset-left));
-  right:  calc(-1 * env(safe-area-inset-right));
+  width: 100vw;
+  height: var(--altura-visivel);
   z-index: -1;
 
   background-image: url('image.jpg');
