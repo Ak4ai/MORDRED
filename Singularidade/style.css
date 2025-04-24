@@ -63,6 +63,7 @@ html.ios body {
   /* se o seu iOS suportar as viewport units level-4: */
   height: 100svh !important;
   /* caso não, cai pro var(--altura-visivel) que o JS define */
+  height: var(--altura-visivel) !important;
   
   overflow: hidden !important;              /* remove qualquer scroll externo */
   overscroll-behavior: none !important;     /* remove “bounce” */
@@ -74,7 +75,7 @@ html.ios body {
            env(safe-area-inset-left) !important;
   
   margin: 0 !important;
-  background: #38243e80 url('image.jpg') center/cover no-repeat !important;
+  background-color: #38243e !important;        /* evita faixa preta */
 }
 
 /* ================================= */
