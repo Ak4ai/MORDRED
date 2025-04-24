@@ -2858,21 +2858,30 @@ document.getElementById("toggleselection1").addEventListener("click", function (
 });
 
 function ajustarAlturaCorreta() {
-    const altura = window.innerHeight + 'px';
-    document.documentElement.style.setProperty('--altura-visivel', altura);
-    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
-  }
+    const alturaVisivel = window.visualViewport?.height || window.innerHeight;
+    document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
+    document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
+    console.log('Altura visual ajustada para:', alturaVisivel);
+}
+  
 
-  // Executa ao carregar
-  ajustarAlturaCorreta();
+// Executa ao carregar
+ajustarAlturaCorreta();
 
-  // Executa quando volta de outra aba
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        console.log('Aba visível novamente!');
-      ajustarAlturaCorreta();
-    }
-  });
+// Executa quando volta de outra aba
+document.addEventListener('visibilitychange', () => {
+if (document.visibilityState === 'visible') {
+    setTimeout(ajustarAlturaCorreta, 100);
+}
+});
 
-  // Executa em redimensionamentos
-  window.addEventListener('resize', ajustarAlturaCorreta);
+window.addEventListener('pageshow', (event) => {
+if (event.persisted) {
+    // Vindo do cache (back/forward)
+    setTimeout(ajustarAlturaCorreta, 100);
+}
+});
+  
+
+// Executa em redimensionamentos
+window.addEventListener('resize', ajustarAlturaCorreta);
