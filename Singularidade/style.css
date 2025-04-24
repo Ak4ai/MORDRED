@@ -1,3 +1,9 @@
+:root {
+  --bg-main: 
+    linear-gradient(rgba(56,36,62,0.5), rgba(56,36,62,0.5)),
+    url('image.jpg') center/cover no-repeat fixed;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -51,34 +57,25 @@ body {
 }
 
 /* 1) Fix geral de html/body em iOS PWA */
-html.ios,
-html.ios body {
+html.ios {
+  /* fundo único, fixado ao viewport */
+  background: var(--bg-main) !important;
+  /* garante que cubra até a safe-area bottom */
+  background-attachment: fixed !important;
+
+  /* o resto do fix: */
   position: fixed !important;
   inset: 0 !important;
-  margin: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  height: var(--altura-visivel) !important;
   overflow: hidden !important;
   overscroll-behavior: none !important;
-}
-
-/* 2) Seu background principal no body */
-html.ios body {
-  background: 
-    linear-gradient(rgba(56,36,62,0.5), rgba(56,36,62,0.5)),
-    url('image.jpg') center/cover no-repeat !important;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* 3) Pseudo para cobrir o inset-bottom */
-html.ios body::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: env(safe-area-inset-bottom);
-  /* repete exatamente o mesmo fundo do body */
-  background: inherit;
-  background-clip: content-box;
-  z-index: -1;
+  margin: 0 !important;
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left) !important;
 }
 
 /* 4) Seu container continua scrollável */
