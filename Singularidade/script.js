@@ -2811,17 +2811,23 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     container.style.display = isHidden ? "flex" : "none";
 
     if (isMobile) {
-      blackoverlay.style.display = isHidden ? "block" : "none";
+        if (isHidden) {
+          blackoverlay.classList.add("active");
+        } else {
+          blackoverlay.classList.remove("active");
+        }
     }
+      
 
     // Remover o listener anterior se houver
     document.removeEventListener("click", outsideListenerFn);
 
     // Esperar um pequeno tempo para evitar conflito com o clique que abre
     if (isMobile && isHidden) {
-      setTimeout(() => {
-        document.addEventListener("click", outsideListenerFn);
-      }, 10); // 10ms é suficiente
+        setTimeout(() => {
+            document.addEventListener("click", outsideListenerFn);
+            document.addEventListener("touchstart", outsideListenerFn);
+          }, 10);          
     }
   }
 
@@ -2831,7 +2837,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
       !toggleButton1.contains(event.target)
     ) {
       playerContainer1.style.display = "none";
-      blackoverlay.style.display = "none";
+        blackoverlay.classList.remove("active");
       document.removeEventListener("click", outsideClickListener);
     }
   }
@@ -2842,7 +2848,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
       !toggleChatButton.contains(event.target)
     ) {
       chatContainer.style.display = "none";
-      blackoverlay.style.display = "none";
+      blackoverlay.classList.remove("active");
       document.removeEventListener("click", outsideClickChatListener);
     }
   }
