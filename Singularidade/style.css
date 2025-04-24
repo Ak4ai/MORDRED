@@ -23,6 +23,8 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden; 
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .container {
@@ -45,8 +47,6 @@ body {
   overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
   overflow-x: hidden;
   flex-direction: column;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
   max-height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
 
