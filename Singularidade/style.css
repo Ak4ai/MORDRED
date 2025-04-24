@@ -18,16 +18,16 @@ html, body {
 
 .background {
   position: fixed;
-  /* puxa o top pra debaixo da status-bar e o bottom pra debaixo do home-indicator */
-  top:   calc(-1 * env(safe-area-inset-top));
-  bottom:calc(-1 * env(safe-area-inset-bottom));
-  left:  0;
-  right: 0;
+  /* empurra pra fora das safe-areas em TODOS os lados */
+  top:    calc(-1 * env(safe-area-inset-top));
+  bottom: calc(-1 * env(safe-area-inset-bottom));
+  left:   calc(-1 * env(safe-area-inset-left));
+  right:  calc(-1 * env(safe-area-inset-right));
   z-index: -1;
 
   background-image: url('image.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
 }
 
@@ -35,7 +35,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('image.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
