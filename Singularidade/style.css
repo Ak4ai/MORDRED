@@ -1019,7 +1019,7 @@ textarea:focus {
     right: 6vw !important;
     bottom: 2vh;
     max-height: none; /* <<< importante para evitar conflito */
-    height: calc(var(--altura-visivel) - (var(--essential-info-height) + 4vh + 34px));
+    height: calc(var(--altura-visivel) - (var(--essential-info-height) + 12vh + 34px));
     display: flex;
     flex-direction: column;
     flex-grow: 1;
