@@ -56,8 +56,8 @@ body {
 html.ios,
 html.ios body {
   /* altura exata do viewport ajustado */
-  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-  min-height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 100px) !important;
+  min-height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom)- 100px) !important;
   width: 100vw !important;
 
   /* nenhum scroll ou “bounce” */
