@@ -2801,7 +2801,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
   const blackoverlay = document.querySelector("#black-overlay");
 
   function isMobileDevice() {
-    return window.innerWidth <= 768;
+    return window.innerWidth <= 1300;
   }
 
   function toggleVisibility(container, button, outsideListenerFn) {
