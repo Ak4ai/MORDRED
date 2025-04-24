@@ -54,10 +54,11 @@ body {
    html.ios {
     margin: 0;
     padding: 0;
+    border: #ccc solid 5px;
     /* fallback para navegadores que não suportam visualViewport */
     --vh: 1vh;
   }
-  
+
   html.ios, html.ios body {
     min-height: 100dvh;
     height: var(--altura-visivel);
@@ -80,6 +81,7 @@ body {
     background-size: cover;
     background-position: center center;
   }
+
   html.ios .container {
     position: absolute;
     top: 1dvh;
