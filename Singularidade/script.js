@@ -2897,45 +2897,46 @@ window.addEventListener('resize', aplicarAlturaComDelay);
     const ua       = navigator.userAgent;
     const platform = navigator.platform;
     const hasTouch = navigator.maxTouchPoints > 1;
-  
+
     // 1) iPadOS 13+ se mascara de Mac, então:
     const isIos = /iPhone|iPod/.test(ua)
-               || (/iPad/.test(ua))
-               || (platform === 'MacIntel' && hasTouch);
-  
+            || (/iPad/.test(ua))
+            || (platform === 'MacIntel' && hasTouch);
+
     // 2) Detecta standalone PWA no iOS:
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                       || window.navigator.standalone === true;
-  
+                    || window.navigator.standalone === true;
+
     console.log({
-      ua, platform, maxTouchPoints: navigator.maxTouchPoints,
-      isIos, isStandalone
+    ua, platform, maxTouchPoints: navigator.maxTouchPoints,
+    isIos, isStandalone
     });
-  
+
     if (!isIos /*|| !isStandalone*/) return;
-  
+
     document.documentElement.classList.add('ios');
+    document.body.classList.add('ios');
     mostrarMensagem('iOS detectado!');
     console.log('iOS detectado!');
-  
+
     const updateHeight = () => {
-      const h = window.visualViewport
+    const h = window.visualViewport
                 ? window.visualViewport.height
                 : window.innerHeight;
-      document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
-      document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
-      // trava scroll residual
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      document.body.style.height   = `${h}px`;
+    document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
+    document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+    // trava scroll residual
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.height   = `${h}px`;
     };
-  
+
     updateHeight();
     window.visualViewport?.addEventListener('resize', updateHeight);
     window.addEventListener('orientationchange', updateHeight);
     window.addEventListener('pageshow', updateHeight);
 })();
-  
+
 
 // 1) Seleciona o elemento
 const essential = document.getElementById('essential-info');

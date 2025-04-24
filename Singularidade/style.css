@@ -50,6 +50,12 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
+/* garante total transparência por trás da status bar */
+html.ios,
+body.ios {
+  background-color: transparent !important;
+}
+
 /* 1) Fix geral de html/body em iOS PWA */
 html.ios {
   position: fixed !important;
