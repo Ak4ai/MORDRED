@@ -975,7 +975,7 @@ textarea:focus {
   }
 
   .abas-mostradas #black-overlay {
-    display: block;
+    display: block !important;
   }  
 
   html, body {
