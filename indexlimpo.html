@@ -1,78 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <link rel="icon" type="image/png" href="android-icon-192x192.png">
-  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>MORDRED</title>
-  <meta name="theme-color" content="#29243e"> <!-- Android -->
+  <meta name="theme-color" content="#29243e"> <!-- Android e outras -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- iOS -->
+
+  <link rel="icon" type="image/png" href="android-icon-192x192.png">
+  <link rel="manifest" href="manifest.json">
+  <title>MORDRED</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
   <style>
+    /* Variáveis de viewport dinâmico para iOS PWA */
+    :root {
+      --altura-visivel: 100vh;
+      --vh: 1vh;
+    }
+
+    /* Bloqueio total no iOS standalone */
+    html.ios,
+    html.ios body {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: var(--altura-visivel) !important;
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      padding: env(safe-area-inset-top)
+               env(safe-area-inset-right)
+               env(safe-area-inset-bottom)
+               env(safe-area-inset-left) !important;
+      margin: 0 !important;
+      background-color: #121212 !important; /* Fundo uniforme */
+      background-image: var(--bg-image) !important;
+      background-size: cover !important;
+      background-position: center center !important;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
     body {
-      background-color: #121212;
-      color: #fff;
       font-family: sans-serif;
+      color: #fff;
       text-align: center;
-      height: 100dvh;
-      overflow: hidden;
-      overflow-y: hidden;
+      display: flex;
       justify-content: center;
-      background-image: url(''); /* Imagem inicial do fundo */
-      background-size: cover;
-      background-position: center;
-      transition: background-image 0.5s ease-in-out; /* Transição suave para a troca de imagem de fundo */
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      align-items: center;
+      overflow: hidden;
+      transition: background-image 0.5s ease-in-out;
+      background-color: #121212;
+      --bg-image: url('');
     }
 
-    self{
-        backdrop-filter: var(--backdrop-filter, blur(5px));
-    }
-
-    h1 {
-      margin-bottom: 2rem;
-    }
+    h1 { margin-bottom: 2rem; }
 
     .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); /* Centraliza o conteúdo em relação ao ponto 50%, 50% */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 90vh;
-        width: 90vw;
-        background-color: #1e1e1eb8;
-        backdrop-filter: blur(5px);
-        border: 3px #ccc solid;
-        border-radius: 1rem;
-        max-width: 1100px;
+      position: absolute;
+      top: calc(env(safe-area-inset-top) + 50%);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90vw;
+      max-width: 1100px;
+      height: 90vh;
+      background-color: #1e1e1eb8;
+      backdrop-filter: blur(5px);
+      border: 3px #ccc solid;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
     .systems {
       display: flex;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      width: 90vw;
-      max-width: 800px;
-      height: 98vh;
-      border-radius: 1rem;
-      margin: 0 auto;
       flex-direction: column;
       justify-content: space-evenly;
-      flex-wrap: nowrap;
-      align-content: flex-start;
       align-items: center;
-  }
+      width: 90vw;
+      max-width: 800px;
+      height: calc(100% - 2rem);
+      gap: 1rem;
+      overflow-y: auto;
+    }
 
     .system-btn {
       display: flex;
@@ -80,100 +98,96 @@
       align-items: center;
       background-color: #1e1e1e2c;
       border: 2px solid #ccc;
-      backdrop-filter: blur(5px);
       box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
       height: 15vh;
       width: 55vw;
       max-width: 912px;
       min-width: 300px;
       border-radius: 1rem;
-      font-size: 1.2rem;    
+      font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .system-btn:hover {
-      border-color: #ccc;
-      padding: 3rem;
       transform: scale(1.05);
+      border-color: #ccc;
     }
 
     @media (max-width: 600px) {
-      .system-btn {
-        font-size: 1rem; /* Tamanho da fonte reduzido para telas menores */
-      }
-      .system-btn:hover {
-        padding: 2rem;
-        transform: scale(0.85);
-      }
+      .system-btn { font-size: 1rem; }
+      .system-btn:hover { transform: scale(0.85); }
     }
 
-    #sing {
-      font-size: 5vw;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    #sunny {
-      font-size: 5vw;
-      font-family: 'Cinzel', sans-serif;
-    }
-
-    #nexus {
-      font-size: 6vw;
-      font-family: 'Rajdhani', sans-serif;
-      text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
-    }
-
-    #cda {
-      font-size: 5vw;
-      font-family: 'UnifrakturCook', sans-serif;
-    }
+    #sing { font: 500 5vw 'Orbitron', sans-serif; }
+    #sunny { font: 700 5vw 'Cinzel', serif; }
+    #nexus { font: 500 6vw 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4); }
+    #cda { font: 700 5vw 'UnifrakturCook', cursive; }
   </style>
 </head>
 <body>
-    <div class="container">
-        <div class="systems">
-            <div id="sing" class="system-btn" onmouseover="changeBackground('singularidade')" onclick="selectSystem('Singularidade')">Singularidade</div>
-            <div id="sunny" class="system-btn" onmouseover="changeBackground('sunnyata')" onclick="selectSystem('Sunnyata')">Sunnyata</div>
-            <div id="nexus" class="system-btn" onmouseover="changeBackground('nexus')" onclick="selectSystem('vampire')">Nexus</div>
-            <div id="cda" class="system-btn" onmouseover="changeBackground('cthulhu')" onclick="selectSystem('cthulhu')">Contos do Abismo</div>
-        </div>
+  <div class="container">
+    <div class="systems">
+      <div id="sing" class="system-btn" 
+           onmouseover="changeBackground('singularidade')" 
+           onclick="selectSystem('Singularidade')">Singularidade</div>
+      <div id="sunny" class="system-btn" 
+           onmouseover="changeBackground('sunnyata')" 
+           onclick="selectSystem('Sunnyata')">Sunnyata</div>
+      <div id="nexus" class="system-btn" 
+           onmouseover="changeBackground('nexus')" 
+           onclick="selectSystem('vampire')">Nexus</div>
+      <div id="cda" class="system-btn" 
+           onmouseover="changeBackground('cthulhu')" 
+           onclick="selectSystem('cthulhu')">Contos do Abismo</div>
     </div>
+  </div>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(error) {
-            console.log('ServiceWorker registration failed: ', error);
-          });
-        });
-      }
+  <script>
+    // iOS PWA height fix
+    (function() {
+      const ua = navigator.userAgent;
+      const platform = navigator.platform;
+      const hasTouch = navigator.maxTouchPoints > 1;
+      const isIos = /iPhone|iPod/.test(ua) || /iPad/.test(ua)
+                 || (platform === 'MacIntel' && hasTouch);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                         || window.navigator.standalone === true;
+      if (!isIos || !isStandalone) return;
+      document.documentElement.classList.add('ios');
+      const updateHeight = () => {
+        const h = window.visualViewport?.height || window.innerHeight;
+        document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
+      };
+      updateHeight();
+      window.visualViewport?.addEventListener('resize', updateHeight);
+      window.addEventListener('orientationchange', updateHeight);
+      window.addEventListener('pageshow', updateHeight);
+    })();
 
-      function selectSystem(systemId) {
-        // Salva a escolha no localStorage
-        localStorage.setItem('sistemaEscolhido', systemId);
-    
-        // Redireciona para a página específica do sistema
-        window.location.href = `${systemId}/${systemId}.html`;
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('SW registrado:', reg.scope))
+          .catch(err => console.log('SW falhou:', err));
+      });
+    }
+
+    // Navegação e background
+    function selectSystem(systemId) {
+      localStorage.setItem('sistemaEscolhido', systemId);
+      window.location.href = `${systemId}/${systemId}.html`;
+    }
+    function changeBackground(system) {
+      let url = '';
+      switch(system) {
+        case 'singularidade': url = 'https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg'; break;
+        case 'sunnyata':     url = 'https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg'; break;
+        case 'nexus':        url = 'https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg'; break;
+        case 'cthulhu':      url = 'https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg'; break;
       }
-      
-      function changeBackground(system) {
-        let bgImage = '';
-    
-        if(system === 'singularidade') {
-          bgImage = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?width=1680&format=pjpg&auto=webp&s=9fab219a771aca724c230e3639ac00e2aecfdc99")';
-        } else if(system === 'sunnyata') {
-          bgImage = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")';
-        } else if(system === 'nexus') {
-          bgImage = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")';
-        } else if(system === 'cthulhu') {
-          bgImage = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg?1536076913")';
-        }
-    
-        document.body.style.backgroundImage = bgImage;
-      }
-    </script>    
+      document.body.style.setProperty('--bg-image', `url('${url}')`);
+    }
+  </script>
 </body>
 </html>

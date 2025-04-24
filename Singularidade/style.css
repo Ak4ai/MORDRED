@@ -87,8 +87,6 @@ html.ios .container {
 }
 
 
-
-
 /* Estilos para caixas de entrada de texto */
 input {
   width: 100%;
@@ -955,14 +953,6 @@ textarea:focus {
   -webkit-backdrop-filter: blur(8px); /* suporte para Safari */
   z-index: 998;
   display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#black-overlay.active {
-  display: block;
-  opacity: 1;
-  transition: opacity 0.3s ease;
 }
 
 

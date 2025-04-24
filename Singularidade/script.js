@@ -2801,7 +2801,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
   const blackoverlay = document.querySelector("#black-overlay");
 
   function isMobileDevice() {
-    return window.innerWidth <= 1300;
+    return window.innerWidth <= 1300; // Ajuste o valor conforme necessário
   }
 
   function toggleVisibility(container, button, outsideListenerFn) {
@@ -2811,13 +2811,8 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     container.style.display = isHidden ? "flex" : "none";
 
     if (isMobile) {
-        if (isHidden) {
-          blackoverlay.classList.add("active");
-        } else {
-          blackoverlay.classList.remove("active");
-        }
+      blackoverlay.style.display = isHidden ? "block" : "none";
     }
-      
 
     // Remover o listener anterior se houver
     document.removeEventListener("click", outsideListenerFn);
@@ -2837,7 +2832,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
       !toggleButton1.contains(event.target)
     ) {
       playerContainer1.style.display = "none";
-        blackoverlay.classList.remove("active");
+      blackoverlay.style.display = "none";
       document.removeEventListener("click", outsideClickListener);
     }
   }
@@ -2848,7 +2843,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
       !toggleChatButton.contains(event.target)
     ) {
       chatContainer.style.display = "none";
-      blackoverlay.classList.remove("active");
+      blackoverlay.style.display = "none";
       document.removeEventListener("click", outsideClickChatListener);
     }
   }
