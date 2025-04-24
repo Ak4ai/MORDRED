@@ -70,7 +70,7 @@ html.ios, html.ios body {
 /* Se quiser mais compatibilidade WebKit */
 html.ios, html.ios body {
   -webkit-overflow-scrolling: touch;
-  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
 
 /* Se ainda aparecer borda extra, assegura que não haja margin nem padding */
