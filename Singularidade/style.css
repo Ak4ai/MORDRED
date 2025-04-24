@@ -75,7 +75,7 @@ html.ios body {
            env(safe-area-inset-left) !important;
   
   margin: 0 !important;
-  background-color: #38243e !important;        /* evita faixa preta */
+  background-color: #251f28 !important;        /* evita faixa preta */
 }
 
 /* ================================= */
