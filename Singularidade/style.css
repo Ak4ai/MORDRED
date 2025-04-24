@@ -4,6 +4,7 @@ html, body {
   min-height: 100dvh;
   max-height: 100dvh;
   height: 100dvh;
+  height: var(--altura-visivel); /* ajustado dinamicamente */
   background-color: #38243e80; /* Cor de fundo */
   overflow-x: hidden; /* Evita o scroll horizontal */
   overflow-y: hidden;
@@ -11,9 +12,7 @@ html, body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom); 
 }
 
 body {
@@ -27,9 +26,7 @@ body {
   background-repeat: no-repeat;
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom); 
 }
 
 .container {
@@ -54,6 +51,9 @@ body {
   flex-direction: column;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  max-height: calc(var(--vh) * 100
+  - env(safe-area-inset-top)
+  - env(safe-area-inset-bottom));
 }
 
 

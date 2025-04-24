@@ -2857,17 +2857,16 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     toggleVisibility(chatContainer, toggleChatButton, outsideClickChatListener);
 });
 
-function ajustarAlturaVisivel() {
+function ajustarAlturaCorreta() {
     const altura = window.innerHeight + 'px';
     document.documentElement.style.setProperty('--altura-visivel', altura);
 }
   
 document.addEventListener('visibilitychange', () => {
-if (document.visibilityState === 'visible') {
-    ajustarAlturaVisivel();
-}
+    if (document.visibilityState === 'visible') {
+        ajustarAlturaCorreta(); // recalcula altura ao voltar
+    }
 });
   
-window.addEventListener('resize', ajustarAlturaVisivel);
-ajustarAlturaVisivel();
-  
+window.addEventListener('resize', ajustarAlturaCorreta);
+ajustarAlturaCorreta();
