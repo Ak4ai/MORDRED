@@ -2891,3 +2891,48 @@ if (event.persisted) {
 
 // Executa em redimensionamentos
 window.addEventListener('resize', aplicarAlturaComDelay);
+
+(function() {
+    // detecta iPhone / iPad / iPod
+    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // detecta PWA em standalone (opcional)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+
+    if (!isIos /*|| !isStandalone*/) return;
+    document.documentElement.classList.add('ios');
+    mostrarMensagem('iOS detectado!');
+    console.log('iOS detectado!');
+
+    function ajustarAlturaCorreta() {
+      const alturaVisivel = window.visualViewport?.height || window.innerHeight;
+      document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
+      document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
+      console.log('Altura visível ajustada para:', alturaVisivel);
+    }
+
+    function aplicarAlturaComDelay() {
+      ajustarAlturaCorreta();
+      setTimeout(ajustarAlturaCorreta, 100);  // garantia após redraw
+    }
+
+    // Executa ao carregar
+    aplicarAlturaComDelay();
+
+    // Quando volta de outra aba
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        setTimeout(aplicarAlturaComDelay, 100);
+      }
+    });
+
+    // Voltando pelo histórico (cache)
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        setTimeout(aplicarAlturaComDelay, 100);
+      }
+    });
+
+    // Em redimensionamentos
+    window.addEventListener('resize', aplicarAlturaComDelay);
+})();
