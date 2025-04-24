@@ -49,41 +49,41 @@ body {
   flex-direction: column;
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
-/* ========================================= */
-/* 1) Regras únicas para html e body em iOS  */
-/* ========================================= */
+
+/* 1) Fix geral de html/body em iOS PWA */
 html.ios,
 html.ios body {
   position: fixed !important;
   inset: 0 !important;
-  width: 100vw !important;
-
-  /* cobre 100svh + o inset bottom (home-indicator) */
-  height: 100svh !important;
-  height: calc(var(--altura-visivel) + env(safe-area-inset-bottom)) !important;
-
+  margin: 0 !important;
   overflow: hidden !important;
   overscroll-behavior: none !important;
-
-  margin: 0 !important;
-  padding: env(safe-area-inset-top)
-           env(safe-area-inset-right)
-           env(safe-area-inset-bottom)
-           env(safe-area-inset-left) !important;
-
-  /* mesmíssimo background do body */
-  background: #38243e80 url('image.jpg') center/cover no-repeat !important;
-
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* ================================= */
-/* 2) Ajuste da posição do container */
-/* ================================= */
+/* 2) Seu background principal no body */
+html.ios body {
+  background: 
+    linear-gradient(rgba(56,36,62,0.5), rgba(56,36,62,0.5)),
+    url('image.jpg') center/cover no-repeat !important;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 3) Pseudo para cobrir o inset-bottom */
+html.ios body::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: env(safe-area-inset-bottom);
+  /* repete exatamente o mesmo fundo do body */
+  background: inherit;
+  background-clip: content-box;
+  z-index: -1;
+}
+
+/* 4) Seu container continua scrollável */
 html.ios .container {
+  position: absolute;
   top: calc(env(safe-area-inset-top) + 1dvh) !important;
   height: calc(
     var(--altura-visivel)
@@ -91,6 +91,7 @@ html.ios .container {
     - 12px
     - env(safe-area-inset-top)
   ) !important;
+  /* resto da sua configuração... */
 }
 
 
