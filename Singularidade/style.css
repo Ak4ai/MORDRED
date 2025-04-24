@@ -1541,7 +1541,7 @@ textarea:focus {
 
 .toggle-container {
   position: fixed;
-  top: 1rem;
+  top: calc(1rem + env(safe-area-inset-top));
   right: 0.5vw;
   z-index: 50;
   background-color: #3b2540b6;
