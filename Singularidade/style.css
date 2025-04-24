@@ -16,23 +16,11 @@ html, body {
   padding-right: env(safe-area-inset-right);
 }
 
-.background {
-  position: fixed;
-  /* empurra pra fora das safe-areas em TODOS os lados */
-  width: 100vw;
-  height: var(--altura-visivel);
-  z-index: -1;
-
-  background-image: url('image.jpg');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
 body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url('image.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -64,7 +52,8 @@ body {
 
 html.ios,
 body.ios {
-  background-color: transparent !important;
+  background-color: #38254091;
+  background-image: none; /* Remove a imagem de fundo para iOS */
 }
 
 /* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
