@@ -83,6 +83,13 @@ html.ios .container {
   /* resto da sua configuração... */
 }
 
+/* Aplica só quando estiver no modo iOS */
+html.ios #mapa-container,
+body.ios #mapa-container {
+  background-color: transparent !important;
+}
+
+
 /* Estilos para caixas de entrada de texto */
 input {
   width: 100%;
