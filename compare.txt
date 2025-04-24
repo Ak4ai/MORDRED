@@ -1,0 +1,93 @@
+// redireciona botão de seleção
+document.getElementById("toggleselection1")
+  .addEventListener("click", () => {
+    window.location.href = "../indexlimpo.html";
+  });
+
+const toggleButton1   = document.getElementById("toggleplayer1");
+const playerContainer1 = document.querySelector(".player-container");
+const toggleChatButton = document.getElementById("togglechat1");
+const chatContainer    = document.getElementById("chat-container");
+const blackoverlay     = document.querySelector("#black-overlay");
+
+function isMobileDevice() {
+  return window.innerWidth <= 1300;
+}
+
+function toggleVisibility(container, button, outsideListener) {
+  const isHidden = getComputedStyle(container).display === "none";
+  container.style.display = isHidden ? "flex" : "none";
+
+  if (isMobileDevice()) {
+    blackoverlay.style.display = isHidden ? "block" : "none";
+    // remove listener anterior e, se abrindo, adiciona de novo após um tick
+    document.removeEventListener("click", outsideListener);
+    document.removeEventListener("touchstart", outsideListener);
+    if (isHidden) {
+      setTimeout(() => {
+        document.addEventListener("click", outsideListener);
+        document.addEventListener("touchstart", outsideListener);
+      }, 10);
+    }
+  }
+}
+
+// fecha player se clicar fora dele ou do botão
+function outsideClickListenerPlayer(event) {
+  if (
+    !playerContainer1.contains(event.target) &&
+    !toggleButton1.contains(event.target)
+  ) {
+    playerContainer1.style.display = "none";
+    blackoverlay.style.display     = "none";
+    document.removeEventListener("click", outsideClickListenerPlayer);
+    document.removeEventListener("touchstart", outsideClickListenerPlayer);
+  }
+}
+
+// fecha chat se clicar fora dele ou do botão
+function outsideClickListenerChat(event) {
+  if (
+    !chatContainer.contains(event.target) &&
+    !toggleChatButton.contains(event.target)
+  ) {
+    chatContainer.style.display = "none";
+    blackoverlay.style.display  = "none";
+    document.removeEventListener("click", outsideClickListenerChat);
+    document.removeEventListener("touchstart", outsideClickListenerChat);
+  }
+}
+
+// --- IMPORTANTE: estas linhas garantem que cliques DENTRO do container
+// não estouram para o document e fecham o overlay
+playerContainer1.addEventListener("click", e => e.stopPropagation());
+chatContainer.addEventListener("click", e => e.stopPropagation());
+
+// eventos de abertura dos containers
+toggleButton1.addEventListener("click", e => {
+  e.stopPropagation();
+  toggleVisibility(
+    playerContainer1,
+    toggleButton1,
+    outsideClickListenerPlayer
+  );
+});
+
+toggleChatButton.addEventListener("click", e => {
+  e.stopPropagation();
+  toggleVisibility(
+    chatContainer,
+    toggleChatButton,
+    outsideClickListenerChat
+  );
+});
+
+// função de ajuste de altura (sem alterações)
+function ajustarAlturaCorreta() {
+  const alturaVisivel = window.visualViewport?.height || window.innerHeight;
+  document.documentElement.style
+    .setProperty('--altura-visivel', `${alturaVisivel}px`);
+  document.documentElement.style
+    .setProperty('--vh', `${alturaVisivel * 0.01}px`);
+  console.log('Altura visível ajustada para:', alturaVisivel);
+}
