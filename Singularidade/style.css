@@ -4,7 +4,7 @@ html, body {
   min-height: 100dvh;
   height: 100dvh;
   height: var(--altura-visivel);
-  background-color: #38243e; /* Cor de fundo */
+  background-color: #38243e80; /* Cor de fundo */
   overflow-x: hidden; /* Evita o scroll horizontal */
   overflow-y: hidden;
   -webkit-user-select: none;
@@ -45,36 +45,10 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
-/* bloqueia scroll no iOS PWA */
-html.ios, body.ios {
-  background: transparent !important;
-  overflow: hidden  !important;
-}
-
-/* safe-area superior pintada da cor que você quiser */
-html.ios::before {
-  content: '';
-  position: fixed;
-  top:    0;
-  left:   0;
-  right:  0;
-  height: env(safe-area-inset-top);
-  background-color: #38254091;  /* sua cor fixa */
-  z-index: 999;
-  pointer-events: none;
-}
-
-/* safe-area inferior pintada da mesma cor */
-html.ios::after {
-  content: '';
-  position: fixed;
-  bottom: 0;
-  left:   0;
-  right:  0;
-  height: env(safe-area-inset-bottom);
-  background-color: #38254091;  /* mesma cor */
-  z-index: 999;
-  pointer-events: none;
+html.ios,
+body.ios {
+  background-color: #38254091;
+  background-image: none; /* Remove a imagem de fundo para iOS */
 }
 
 /* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
@@ -108,7 +82,6 @@ html.ios .container {
 html.ios #mapa-container,
 body.ios #mapa-container {
   background-color: transparent !important;
-  top: calc(0vh + env(safe-area-inset-top)) !important;
 }
 
 
