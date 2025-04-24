@@ -60,10 +60,10 @@ html.ios, html.ios body {
   overscroll-behavior: none;
   overscroll-behavior-y: none;
   /* garante que corpo cubra 100% da viewport ajustada */
-  height: var(--altura-visivel) !important;
+  height: 500px !important;
   width: 100vw !important;
   /* fundo igual pra evitar faixa preta */
-  background-color: #38243e80 !important;
+  background-color: #ffffff !important;
 }
 
 /* Se quiser mais compatibilidade WebKit */
