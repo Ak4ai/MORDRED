@@ -2936,3 +2936,24 @@ window.addEventListener('resize', aplicarAlturaComDelay);
     window.addEventListener('pageshow', updateHeight);
 })();
   
+
+// 1) Seleciona o elemento
+const essential = document.getElementById('essential-info');
+
+// 2) Se estiver com display:none, o offsetHeight será zero.
+//    Para medir mesmo estando "hidden", você pode:
+//    a) trocar temporariamente o estilo para visível mas invisível ao usuário:
+const prevDisplay = essential.style.display;
+essential.style.visibility = 'hidden';
+essential.style.display = 'block';
+
+// 3) Agora mede
+const height = essential.getBoundingClientRect().height;
+console.log('altura do essential-info:', height);
+
+// 4) Restaura o estilo original
+essential.style.display = prevDisplay;
+essential.style.visibility = '';
+
+// 5) Exporta a altura para uma variável CSS
+document.documentElement.style.setProperty('--essential-info-height', `${height}px`);

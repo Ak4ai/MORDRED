@@ -1020,7 +1020,7 @@ textarea:focus {
     right: 6vw !important;
     bottom: 2vh;
     max-height: none; /* <<< importante para evitar conflito */
-    height: calc(100vh - (8vh + 250px) - 8vh);
+    height: calc(var(--altura-visivel) - (var(--essential-info-height) + 4vh + 34px));
     display: flex;
     flex-direction: column;
     flex-grow: 1;
