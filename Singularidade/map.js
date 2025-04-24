@@ -34,7 +34,7 @@ Array.from(toggleButtons).forEach(btn => {
   btn.addEventListener('click', () => {
     hidden = !hidden;
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
 
     // Esconde apenas em dispositivos não móveis
     container.style.display = hidden ? 'none' : 'flex';
