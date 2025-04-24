@@ -1,74 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#29243e"> <!-- Android & UI bars no iOS -->
   <link rel="icon" type="image/png" href="android-icon-192x192.png">
   <link rel="manifest" href="manifest.json">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MORDRED</title>
-  <meta name="theme-color" content="#29243e"> <!-- Android -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- iOS -->
+
+  <!-- Fontes -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
   <style>
+    /* fallback inicial */
+    :root {
+      --altura-visivel: 100vh;
+      --vh: 1vh;
+    }
+
+    /* ============================== */
+    /* 1) FIX DE ALTURA PARA iOS PWA */
+    /* ============================== */
+    html.ios,
+    html.ios body {
+      position: fixed !important;
+      inset: 0 !important;                     /* top/right/bottom/left = 0 */
+      width: 100vw !important;
+      height: 100svh !important;               /* viewport units level-4 */
+      height: var(--altura-visivel) !important;
+      overflow: hidden !important;             /* bloqueia scroll global */
+      overscroll-behavior: none !important;    /* bloqueia bounce */
+      margin: 0 !important;
+      padding: env(safe-area-inset-top)
+               env(safe-area-inset-right)
+               env(safe-area-inset-bottom)
+               env(safe-area-inset-left) !important;
+      background-color: #121212 !important;    /* corresponde ao body sem imagem */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ============================== */
+    /* 2) SEU CSS ORIGINAL, SEM MUDANÇAS */
+    /* ============================== */
     body {
       background-color: #121212;
       color: #fff;
       font-family: sans-serif;
       text-align: center;
-      height: 100dvh;                    /* dynamic viewport */
-      /* padding de safe areas */
-      padding-top: env(safe-area-inset-top);
-      padding-right: env(safe-area-inset-right);
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-left: env(safe-area-inset-left);
-      overflow: hidden;                  /* mantém seu efeito geral */
+      /* esses “height” serão sobrescritos pelo fix em iOS */
+      height: 100dvh;
+      overflow: hidden;
+      justify-content: center;
+      background-image: url('');
       background-size: cover;
       background-position: center;
       transition: background-image 0.5s ease-in-out;
-    }
-
-    self{
-        backdrop-filter: var(--backdrop-filter, blur(5px));
-    }
-
-    h1 {
-      margin-bottom: 2rem;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
 
     .container {
-      position: fixed;                   /* fixa em relação à janela */
-      top: env(safe-area-inset-top);
-      left: env(safe-area-inset-left);
-      right: env(safe-area-inset-right);
-      bottom: env(safe-area-inset-bottom);
-      margin: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      max-width: 1100px;
-      max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      height: 90vh;
       width: 90vw;
       background-color: #1e1e1eb8;
       backdrop-filter: blur(5px);
       border: 3px #ccc solid;
       border-radius: 1rem;
-      overflow-y: auto;                  /* permite rolagem, evita corte */
+      max-width: 1100px;
     }
 
     .systems {
       display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
       width: 90vw;
       max-width: 800px;
-      /* height removido ou, se preferir, dynamic */
-      max-height: calc(100% - 2rem);
-      overflow-y: auto;                  /* scroll interno */
-      padding-bottom: 1rem;
+      height: 98vh;
+      border-radius: 1rem;
+      margin: 0 auto;
+      flex-direction: column;
+      justify-content: space-evenly;
+      flex-wrap: nowrap;
+      align-content: flex-start;
+      align-items: center;
     }
 
     .system-btn {
@@ -88,93 +120,103 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
-    @media (max-width: 600px) {
-      .system-btn {
-        font-size: 1rem; /* Tamanho da fonte reduzido para telas menores */
-      }
-    }
-
     .system-btn:hover {
       border-color: #ccc;
       padding: 3rem;
       transform: scale(1.05);
     }
-
-    #sing {
-      font-size: 5vw;
-      font-family: 'Orbitron', sans-serif;
+    @media (max-width: 600px) {
+      .system-btn { font-size: 1rem; }
+      .system-btn:hover {
+        padding: 2rem;
+        transform: scale(0.85);
+      }
     }
 
-    #sunny {
-      font-size: 5vw;
-      font-family: 'Cinzel', sans-serif;
-    }
-
-    #nexus {
-      font-size: 6vw;
-      font-family: 'Rajdhani', sans-serif;
-      text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
-    }
-
-    #cda {
-      font-size: 5vw;
-      font-family: 'UnifrakturCook', sans-serif;
-    }
+    #sing { font-size: 5vw; font-family: 'Orbitron', sans-serif; }
+    #sunny{ font-size: 5vw; font-family: 'Cinzel', sans-serif; }
+    #nexus{ font-size: 6vw; font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
+    #cda  { font-size: 5vw; font-family: 'UnifrakturCook', sans-serif; }
   </style>
 </head>
-<body>
-    <div class="container">
-        <div class="systems">
-            <div id="sing" class="system-btn" onmouseover="changeBackground('singularidade')" onclick="selectSystem('Singularidade')">Singularidade</div>
-            <div id="sunny" class="system-btn" onmouseover="changeBackground('sunnyata')" onclick="selectSystem('gurps')">Sunnyata</div>
-            <div id="nexus" class="system-btn" onmouseover="changeBackground('nexus')" onclick="selectSystem('vampire')">Nexus</div>
-            <div id="cda" class="system-btn" onmouseover="changeBackground('cthulhu')" onclick="selectSystem('cthulhu')">Contos do Abismo</div>
-        </div>
-    </div>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-          }, function(error) {
-            console.log('ServiceWorker registration failed: ', error);
-          });
-        });
+<body>
+  <div class="container">
+    <div class="systems">
+      <div id="sing"   class="system-btn"
+           onmouseover="changeBackground('singularidade')"
+           onclick="selectSystem('Singularidade')">Singularidade</div>
+      <div id="sunny"  class="system-btn"
+           onmouseover="changeBackground('sunnyata')"
+           onclick="selectSystem('Sunnyata')">Sunnyata</div>
+      <div id="nexus"  class="system-btn"
+           onmouseover="changeBackground('nexus')"
+           onclick="selectSystem('vampire')">Nexus</div>
+      <div id="cda"    class="system-btn"
+           onmouseover="changeBackground('cthulhu')"
+           onclick="selectSystem('cthulhu')">Contos do Abismo</div>
+    </div>
+  </div>
+
+  <script>
+    // registra service worker (sem alterações)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () =>
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('SW registrado:', reg.scope))
+          .catch(err => console.log('SW falhou:', err))
+      );
+    }
+
+    // funções originais
+    function selectSystem(systemId) {
+      localStorage.setItem('sistemaEscolhido', systemId);
+      window.location.href = `${systemId}/${systemId}.html`;
+    }
+    function changeBackground(system) {
+      let bg = '';
+      if (system==='singularidade') bg = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?auto=webp")';
+      if (system==='sunnyata')      bg = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")';
+      if (system==='nexus')         bg = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")';
+      if (system==='cthulhu')       bg = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg")';
+      document.body.style.backgroundImage = bg;
+    }
+
+    // ============================
+    // ALTURA DINÂMICA PARA iOS PWA
+    // ============================
+    (function() {
+      const ua       = navigator.userAgent;
+      const platform = navigator.platform;
+      const hasTouch = navigator.maxTouchPoints > 1;
+      const isIos = /iPhone|iPod/.test(ua)
+                 || /iPad/.test(ua)
+                 || (platform==='MacIntel' && hasTouch);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                         || window.navigator.standalone === true;
+      if (!isIos || !isStandalone) return;
+      document.documentElement.classList.add('ios');
+
+      const updateHeight = () => {
+        const h = window.visualViewport?.height || window.innerHeight;
+        document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
+        document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+      };
+
+      updateHeight();
+      window.visualViewport?.addEventListener('resize', updateHeight);
+      window.addEventListener('orientationchange', updateHeight);
+      window.addEventListener('pageshow', updateHeight);
+    })();
+
+    // Verifica se já existe uma escolha salva no localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const sistemaSalvo = localStorage.getItem('sistemaEscolhido');
+      if (sistemaSalvo) {
+        window.location.href = `${sistemaSalvo}/${sistemaSalvo}.html`;
       }
-      
-      function selectSystem(systemId) {
-        // Salva a escolha no localStorage
-        localStorage.setItem('sistemaEscolhido', systemId);
-    
-        // Redireciona para a página específica do sistema
-        window.location.href = `${systemId}/${systemId}.html`;
-      }
-    
-      function changeBackground(system) {
-        let bgImage = '';
-    
-        if(system === 'singularidade') {
-          bgImage = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?width=1680&format=pjpg&auto=webp&s=9fab219a771aca724c230e3639ac00e2aecfdc99")';
-        } else if(system === 'sunnyata') {
-          bgImage = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")';
-        } else if(system === 'nexus') {
-          bgImage = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")';
-        } else if(system === 'cthulhu') {
-          bgImage = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg?1536076913")';
-        }
-    
-        document.body.style.backgroundImage = bgImage;
-      }
-    
-      // Verifica se já existe uma escolha salva no localStorage
-      window.addEventListener('DOMContentLoaded', () => {
-        const sistemaSalvo = localStorage.getItem('sistemaEscolhido');
-        if (sistemaSalvo) {
-          window.location.href = `${sistemaSalvo}/${sistemaSalvo}.html`;
-        }
-      });
-    </script>    
+    });
+  </script>
 </body>
 </html>
+
