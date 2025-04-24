@@ -16,6 +16,21 @@ html, body {
   padding-right: env(safe-area-inset-right);
 }
 
+.background {
+  position: fixed;
+  /* puxa o top pra debaixo da status-bar e o bottom pra debaixo do home-indicator */
+  top:   calc(-1 * env(safe-area-inset-top));
+  bottom:calc(-1 * env(safe-area-inset-bottom));
+  left:  0;
+  right: 0;
+  z-index: -1;
+
+  background-image: url('image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 body {
   display: flex;
   justify-content: center;
@@ -50,26 +65,23 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
-/* garante total transparência por trás da status bar */
 html.ios,
 body.ios {
   background-color: transparent !important;
 }
 
-/* 1) Fix geral de html/body em iOS PWA */
+/* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
 html.ios {
   position: fixed !important;
   inset: 0 !important;
   width: 100vw !important;
-  height: 100svh !important;
   height: var(--altura-visivel) !important;
-  overflow: hidden !important;
   overscroll-behavior: none !important;
-  margin: 0 !important;
-  padding: env(safe-area-inset-top)
-           env(safe-area-inset-right)
-           env(safe-area-inset-bottom)
-           env(safe-area-inset-left) !important;
+}
+
+body.ios {
+  overflow: hidden !important;
+  height: var(--altura-visivel) !important;
 }
 
 /* 4) Seu container continua scrollável */
@@ -84,7 +96,6 @@ html.ios .container {
   ) !important;
   /* resto da sua configuração... */
 }
-
 
 /* Estilos para caixas de entrada de texto */
 input {
