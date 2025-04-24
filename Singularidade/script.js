@@ -2858,15 +2858,12 @@ document.getElementById("toggleselection1").addEventListener("click", function (
 });
 
 function ajustarAlturaCorreta() {
-    const viewportAltura = window.visualViewport?.height || window.innerHeight;
-    const insetBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("env(safe-area-inset-bottom)")) || 0;
-    const alturaFinal = viewportAltura;
-  
-    // Define o valor exato
-    document.documentElement.style.setProperty('--altura-visivel', alturaFinal + 'px');
-    document.documentElement.style.setProperty('--vh', (alturaFinal * 0.01) + 'px');
-  
-    console.log('Ajuste de altura final:', alturaFinal, '| inset-bottom:', insetBottom);
+    const alturaVisivel = window.visualViewport?.height || window.innerHeight;
+
+    document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
+    document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
+
+    console.log('Altura visível ajustada para:', alturaVisivel);
 }
 
 function aplicarAlturaComDelay() {

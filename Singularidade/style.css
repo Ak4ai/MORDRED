@@ -4,7 +4,6 @@ html, body {
   min-height: 100dvh;
   max-height: 100dvh;
   height: 100dvh;
-  height: var(--altura-visivel); /* ajustado dinamicamente */
   background-color: #38243e80; /* Cor de fundo */
   overflow-x: hidden; /* Evita o scroll horizontal */
   overflow-y: hidden;
@@ -23,8 +22,6 @@ body {
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden; 
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .container {
@@ -32,7 +29,6 @@ body {
   display: flex;
   color: #c9c9da;
   top: 1dvh;
-  bottom: 1dvh;
   padding: 25px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -47,7 +43,7 @@ body {
   overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
   overflow-x: hidden;
   flex-direction: column;
-  max-height: calc(var(--altura-visivel) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
 
