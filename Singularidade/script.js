@@ -2856,3 +2856,18 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     e.stopPropagation();
     toggleVisibility(chatContainer, toggleChatButton, outsideClickChatListener);
 });
+
+function ajustarAlturaVisivel() {
+    const altura = window.innerHeight + 'px';
+    document.documentElement.style.setProperty('--altura-visivel', altura);
+}
+  
+document.addEventListener('visibilitychange', () => {
+if (document.visibilityState === 'visible') {
+    ajustarAlturaVisivel();
+}
+});
+  
+window.addEventListener('resize', ajustarAlturaVisivel);
+ajustarAlturaVisivel();
+  
