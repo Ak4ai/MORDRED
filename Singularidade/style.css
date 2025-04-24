@@ -79,9 +79,10 @@ html.ios, html.ios body {
            env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
 }
 
-.container.ios {
+html.ios .container {
   top: calc(1dvh + env(safe-area-inset-top)) !important;
 }
+
 
 /* Estilos para caixas de entrada de texto */
 input {
