@@ -29,13 +29,17 @@ body {
 
 .background {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh;
   z-index: -1;
   background-image: url('image.jpg');
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll; /* evita bugs no iOS com fixed */
+  pointer-events: none; /* só por precaução */
 }
 
 .container {
@@ -61,14 +65,12 @@ body {
 }
 
 /* 1) Fix geral de html/body em iOS PWA */
-html.ios {
+body.ios {
   position: fixed !important;
   inset: 0 !important;
-  width: 100vw !important;
   height: 100svh !important;
   height: var(--altura-visivel) !important;
   overflow: hidden !important;
-  overscroll-behavior: none !important;
   margin: 0 !important;
   padding: env(safe-area-inset-top)
            env(safe-area-inset-right)

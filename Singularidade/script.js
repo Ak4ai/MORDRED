@@ -2914,6 +2914,7 @@ window.addEventListener('resize', aplicarAlturaComDelay);
   
     if (!isIos /*|| !isStandalone*/) return;
   
+    document.body.classList.add('ios'); // Adiciona aqui
     document.documentElement.classList.add('ios');
     mostrarMensagem('iOS detectado!');
     console.log('iOS detectado!');
