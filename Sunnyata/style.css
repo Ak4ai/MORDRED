@@ -23,6 +23,16 @@ body {
   overflow-y: hidden;
 }
 
+/* Se quiser remover de todos os elementos, mas avalie impacto em usabilidade: */
+* {
+  -webkit-tap-highlight-color: transparent;        /* :contentReference[oaicite:2]{index=2} */
+  -webkit-touch-callout: none;                    /* :contentReference[oaicite:2]{index=2} */
+  -webkit-user-drag: none;                        /* :contentReference[oaicite:2]{index=2} */
+  -webkit-text-size-adjust: none;                 /* :contentReference[oaicite:2]{index=2} */
+  -webkit-overflow-scrolling: touch;              /* :contentReference[oaicite:2]{index=2} */
+  -webkit-font-smoothing: antialiased;            /* :contentReference[oaicite:2]{index=2} */
+}
+
 .container {
   position:absolute;
   display: flex;
