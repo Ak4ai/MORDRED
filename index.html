@@ -18,18 +18,16 @@
       color: #fff;
       font-family: sans-serif;
       text-align: center;
-      height: 100dvh;
-      overflow: hidden;
-      overflow-y: hidden;
-      justify-content: center;
-      background-image: url(''); /* Imagem inicial do fundo */
-      background-size: cover;
-      background-position: center;
-      transition: background-image 0.5s ease-in-out; /* Transição suave para a troca de imagem de fundo */
+      height: 100dvh;                    /* dynamic viewport */
+      /* padding de safe areas */
       padding-top: env(safe-area-inset-top);
+      padding-right: env(safe-area-inset-right);
       padding-bottom: env(safe-area-inset-bottom);
       padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      overflow: hidden;                  /* mantém seu efeito geral */
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease-in-out;
     }
 
     self{
@@ -41,38 +39,37 @@
     }
 
     .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); /* Centraliza o conteúdo em relação ao ponto 50%, 50% */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 90vh;
-        width: 90vw;
-        background-color: #1e1e1eb8;
-        backdrop-filter: blur(5px);
-        border: 3px #ccc solid;
-        border-radius: 1rem;
-        max-width: 1100px;
+      position: fixed;                   /* fixa em relação à janela */
+      top: env(safe-area-inset-top);
+      left: env(safe-area-inset-left);
+      right: env(safe-area-inset-right);
+      bottom: env(safe-area-inset-bottom);
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 1100px;
+      max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      width: 90vw;
+      background-color: #1e1e1eb8;
+      backdrop-filter: blur(5px);
+      border: 3px #ccc solid;
+      border-radius: 1rem;
+      overflow-y: auto;                  /* permite rolagem, evita corte */
     }
 
     .systems {
       display: flex;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      flex-direction: column;
       gap: 1rem;
       width: 90vw;
       max-width: 800px;
-      height: 98vh;
-      border-radius: 1rem;
-      margin: 0 auto;
-      flex-direction: column;
-      justify-content: space-evenly;
-      flex-wrap: nowrap;
-      align-content: flex-start;
-      align-items: center;
-  }
+      /* height removido ou, se preferir, dynamic */
+      max-height: calc(100% - 2rem);
+      overflow-y: auto;                  /* scroll interno */
+      padding-bottom: 1rem;
+    }
 
     .system-btn {
       display: flex;
