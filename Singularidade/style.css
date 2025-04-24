@@ -50,58 +50,33 @@ body {
   height: calc(var(--altura-visivel) - 2dvh - 12px);
 }
 
-   /* Só aplica o comportamento especial em iOS */
-   html.ios {
-    margin: 0;
-    padding: 0;
-    border: #ccc solid 5px;
-    /* fallback para navegadores que não suportam visualViewport */
-    --vh: 1vh;
-  }
+/* ========================= */
+/* 1) CSS Adicional          */
+/* ========================= */
 
-  html.ios, html.ios body {
-    min-height: 100dvh;
-    height: var(--altura-visivel);
-    background-color: #38243e80;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  html.ios body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('image.jpg');
-    background-size: cover;
-    background-position: center center;
-  }
+/* Só quando em iOS standalone */
+html.ios, html.ios body {
+  /* trava qualquer overscroll, bounce ou rolagem */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  /* garante que corpo cubra 100% da viewport ajustada */
+  height: var(--altura-visivel) !important;
+  width: 100vw !important;
+  /* fundo igual pra evitar faixa preta */
+  background-color: #38243e80 !important;
+}
 
-  html.ios .container {
-    position: absolute;
-    top: 1dvh;
-    padding: 5px 25px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.22);
-    background-color: #38254091;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: all .2s ease;
-    max-width: 600px;
-    width: 80vw;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    /* Use o valor de variável que o JS irá setar */
-    height: calc(var(--altura-visivel) - 2dvh - 12px);
-  }
+/* Se quiser mais compatibilidade WebKit */
+html.ios, html.ios body {
+  -webkit-overflow-scrolling: touch;
+}
 
+/* Se ainda aparecer borda extra, assegura que não haja margin nem padding */
+html.ios, html.ios body {
+  margin: 0 !important;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+           env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+}
 
 /* Estilos para caixas de entrada de texto */
 input {
