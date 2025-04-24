@@ -576,7 +576,7 @@ button:active {
   top: 65%; /* Ajusta a distância do topo para 70% da altura da tela */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000; /* Garante que o diálogo fique acima de outros elementos */
+  z-index: 1002; /* Garante que o diálogo fique acima de outros elementos */
   overflow: hidden; /* Garante que a rolagem é controlada pela mensagem e não pelo container */
 }
 
@@ -600,7 +600,7 @@ button:active {
 }
 
 .dialog-buttons button:hover {
-  background-color: #ab90b3;
+  transform: scale(1.05);
 }
 
 #blur-background {
@@ -610,7 +610,7 @@ button:active {
   width: 100%;
   height: 100%;
   backdrop-filter: blur(10px); /* Efeito de blur */
-  z-index: 999; /* Z-index menor que o diálogo para que fique atrás dele */
+  z-index: 1001; /* Z-index menor que o diálogo para que fique atrás dele */
   display: none; /* Inicialmente oculto */
 }
 

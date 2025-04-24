@@ -2,40 +2,32 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100dvh;
+  height: 100dvh;
+  height: var(--altura-visivel);
   background-color: #38243e80; /* Cor de fundo */
   overflow-x: hidden; /* Evita o scroll horizontal */
   overflow-y: hidden;
   -webkit-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
 }
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   background-image: url('image.webp');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  overflow: hidden;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  overflow-x: hidden; /* Evita o scroll horizontal */
+  overflow-y: hidden;
 }
 
 .container {
   position:absolute;
   display: flex;
   color: #c9c9da;
-  top: 1vh;
-  bottom: 1vh;
+  top: 1dvh;
   padding: 25px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -50,6 +42,47 @@ body {
   overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
   overflow-x: hidden;
   flex-direction: column;
+  height: calc(var(--altura-visivel) - 2dvh - 12px);
+}
+
+html.ios,
+body.ios {
+  background-color: #38254091;
+  background-image: none; /* Remove a imagem de fundo para iOS */
+}
+
+/* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
+html.ios {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: var(--altura-visivel) !important;
+  overscroll-behavior: none !important;
+}
+
+body.ios {
+  overflow: hidden !important;
+  height: var(--altura-visivel) !important;
+}
+
+/* 4) Seu container continua scrollável */
+html.ios .container {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 1dvh) !important;
+  height: calc(
+    var(--altura-visivel)
+    - 2dvh
+    - 12px
+    - env(safe-area-inset-top)
+  ) !important;
+  /* resto da sua configuração... */
+}
+
+/* Aplica só quando estiver no modo iOS */
+html.ios #mapa-container,
+body.ios #mapa-container {
+  background-color: transparent !important;
+  top: env(safe-area-inset-top) !important;
 }
 
 
@@ -297,6 +330,12 @@ select:focus option:checked {
   line-height: 25px;
 }
 
+#status-traco-historia {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
 .status-info2 {
   display: flex;
   flex-wrap: wrap;
@@ -437,12 +476,6 @@ button:active {
   border: 1px solid rgba(255, 255, 255, 0.222);
   background-color: #29254091;
   border-radius: 0.5rem;
-}
-
-#status-traco-historia{
-  border: 0;
-  margin: 0;
-  padding: 0;
 }
 
 .status-column4 .status-item {
@@ -938,7 +971,7 @@ textarea:focus {
   }
 
   .abas-mostradas #black-overlay {
-    display: block;
+    display: block !important;
   }  
 
   html, body {
@@ -951,7 +984,6 @@ textarea:focus {
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid rgba(255, 255, 255, 0.222);
-    background-color: #26243e80;
     color: #ccc;
     border-radius: 4px;
     font-size: 16px;
@@ -984,7 +1016,7 @@ textarea:focus {
     right: 6vw !important;
     bottom: 2vh;
     max-height: none; /* <<< importante para evitar conflito */
-    height: calc(100vh - (8vh + 250px) - 8vh);
+    height: calc(var(--altura-visivel) - (var(--essential-info-height) + 4vh + 34px));
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -1035,7 +1067,7 @@ textarea:focus {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 2px;
   }
 
   #essential-info img {
@@ -1087,6 +1119,12 @@ textarea:focus {
     display: block;
     transform: translateY(0) !important;
     opacity: 1;
+  }
+
+    
+  body.abas-mostradas #essential-info,
+  body.abas-mostradas #essential-info2 {
+    display: block;
   }
 }
 

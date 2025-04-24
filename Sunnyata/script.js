@@ -2354,6 +2354,12 @@ document.getElementById('clear-data-btn').addEventListener('click', function() {
 });
 
 
+document.getElementById('toggleinfo1')?.addEventListener('click', (e) => {
+    e.stopPropagation(); // <-- isso evita o conflito!
+    console.log('Clicou no botão!');
+    document.body.classList.add('abas-mostradas');
+});   
+
 document.addEventListener('DOMContentLoaded', () => {
     let startY = 0;
     let isAtBottom = false;
@@ -2434,11 +2440,6 @@ document.addEventListener('DOMContentLoaded', () => {
       indicador.style.backgroundImage = `url('${imagemPersonagem}')`;
   }
   
-
-
-
-
-  
 function carregarFichasNaBarra() {
     const barra = document.getElementById('barra-fichas');
     barra.innerHTML = ''; // Limpa
@@ -2471,6 +2472,7 @@ function carregarFichasNaBarra() {
     let iconesAdicionados = 0;
   
 // Adiciona ficha marcada com check: 1
+  
 if (fichaCheckada) {
     const nome = fichaCheckada.chave.replace('-personagem', '');
     const img = document.createElement('img');
@@ -2568,7 +2570,6 @@ window.addEventListener("DOMContentLoaded", () => {
     atualizarStatusAdmin();
 });
 
-
 document.getElementById("toggleselection1").addEventListener("click", function () {
     window.location.href = "../indexlimpo.html";
   });
@@ -2580,7 +2581,7 @@ document.getElementById("toggleselection1").addEventListener("click", function (
   const blackoverlay = document.querySelector("#black-overlay");
 
   function isMobileDevice() {
-    return window.innerWidth <= 768;
+    return window.innerWidth <= 1300; // Ajuste o valor conforme necessário
   }
 
   function toggleVisibility(container, button, outsideListenerFn) {
@@ -2599,8 +2600,9 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     // Esperar um pequeno tempo para evitar conflito com o clique que abre
     if (isMobile && isHidden) {
       setTimeout(() => {
-        document.addEventListener("click", outsideListenerFn);
-      }, 10); // 10ms é suficiente
+            document.addEventListener("click", outsideListenerFn);
+            document.addEventListener("touchstart", outsideListenerFn);
+          }, 10);          
     }
   }
 
@@ -2635,3 +2637,104 @@ document.getElementById("toggleselection1").addEventListener("click", function (
     e.stopPropagation();
     toggleVisibility(chatContainer, toggleChatButton, outsideClickChatListener);
   });
+
+function ajustarAlturaCorreta() {
+    const alturaVisivel = window.visualViewport?.height || window.innerHeight;
+
+    document.documentElement.style.setProperty('--altura-visivel', alturaVisivel + 'px');
+    document.documentElement.style.setProperty('--vh', (alturaVisivel * 0.01) + 'px');
+
+    console.log('Altura visível ajustada para:', alturaVisivel);
+}
+
+function aplicarAlturaComDelay() {
+    ajustarAlturaCorreta();
+    setTimeout(ajustarAlturaCorreta, 100);  // Garantia após redraw
+}
+
+// Executa ao carregar
+aplicarAlturaComDelay();
+
+// Executa quando volta de outra aba
+document.addEventListener('visibilitychange', () => {
+if (document.visibilityState === 'visible') {
+    setTimeout(aplicarAlturaComDelay, 100);
+}
+});
+
+window.addEventListener('pageshow', (event) => {
+if (event.persisted) {
+    // Vindo do cache (back/forward)
+    setTimeout(aplicarAlturaComDelay, 100);
+}
+});
+  
+
+// Executa em redimensionamentos
+window.addEventListener('resize', aplicarAlturaComDelay);
+
+(function() {
+    const ua       = navigator.userAgent;
+    const platform = navigator.platform;
+    const hasTouch = navigator.maxTouchPoints > 1;
+
+    // 1) iPadOS 13+ se mascara de Mac, então:
+    const isIos = /iPhone|iPod/.test(ua)
+            || (/iPad/.test(ua))
+            || (platform === 'MacIntel' && hasTouch);
+
+    // 2) Detecta standalone PWA no iOS:
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+
+    console.log({
+    ua, platform, maxTouchPoints: navigator.maxTouchPoints,
+    isIos, isStandalone
+    });
+
+    if (!isIos /*|| !isStandalone*/) return;
+
+    document.documentElement.classList.add('ios');
+    document.body.classList.add('ios');
+    mostrarMensagem('iOS detectado!');
+    console.log('iOS detectado!');
+
+    const updateHeight = () => {
+    const h = window.visualViewport
+                ? window.visualViewport.height
+                : window.innerHeight;
+    document.documentElement.style.setProperty('--altura-visivel', `${h}px`);
+    document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+    // trava scroll residual
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.height   = `${h}px`;
+    };
+
+    updateHeight();
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+    window.addEventListener('pageshow', updateHeight);
+})();
+
+
+// 1) Seleciona o elemento
+const essential = document.getElementById('essential-info');
+
+// 2) Se estiver com display:none, o offsetHeight será zero.
+//    Para medir mesmo estando "hidden", você pode:
+//    a) trocar temporariamente o estilo para visível mas invisível ao usuário:
+const prevDisplay = essential.style.display;
+essential.style.visibility = 'hidden';
+essential.style.display = 'block';
+
+// 3) Agora mede
+const height = essential.getBoundingClientRect().height;
+console.log('altura do essential-info:', height);
+
+// 4) Restaura o estilo original
+essential.style.display = prevDisplay;
+essential.style.visibility = '';
+
+// 5) Exporta a altura para uma variável CSS
+document.documentElement.style.setProperty('--essential-info-height', `${height}px`);

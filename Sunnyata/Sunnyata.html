@@ -227,9 +227,9 @@
         </div>
     </div>         
     <div id="deviceready" class="blink"></div>
-    
     <div class="container">
         <button id="togglecontainer1"class="toggle-container"><i class="fa-solid fa-arrows-to-eye"></i></button>
+
         <div class="tabs">
             <div class="tab active" onclick="openTab('info')">Info</div>
             <div class="tab" onclick="openTab('skills')">Skills</div>
@@ -783,7 +783,6 @@
                 <div class="subtab active" onclick="openSubtab('actions', 'acoes')">Ações</div>
                 <div class="subtab" onclick="openSubtab('actions', 'ajustes')">Ajustes</div>
                 <div class="subtab" onclick="openSubtab('actions', 'testes')">Testes</div>
-                <div class="subtab" onclick="openSubtab('actions', 'dados')">Dados</div>
             </div>
             <div id="acoes" class="subcontent active">
                 <!-- Pré-visualização do Inventário -->
@@ -900,101 +899,13 @@
                 <input type="number" id="modificadorInput1" value="0"><br><br>
             
                 <button onclick="executarAcao()">Executar Ação</button>
-            </div>
-            <div id="dados" class="subcontent">
-                <h2>Rolagem de Dados</h2>
-                
-                <label for="formatoVantagem">Formato de Dados de Vantagem:</label>
-                <input type="text" id="formatoVantagem" name="formatoVantagem" placeholder="Ex: 4d20" required>
-                <br>
-                
-                <label for="numTotal">Dados de vantagem:</label>
-                <input type="number" id="numTotal" name="numTotal" min="1" value="0" required>
-                <br>
-
-                <hr>
-                <br>
-                
-                <label for="tipoDado1">Tipo de Dado 1:</label>
-                    <select id="tipoDado1" name="tipoDado1" required>
-                        <option value="">Nenhum</option>
-                        <option value="2">d2</option>
-                        <option value="3">d3</option>
-                        <option value="4">d4</option>
-                        <option value="6">d6</option>
-                        <option value="8">d8</option>
-                        <option value="10">d10</option>
-                        <option value="12">d12</option>
-                        <option value="20">d20</option>
-                    </select>
-                <label for="numTipoDado1">Número:</label>
-                    <input type="number" id="numTipoDado1" name="numTipoDado1" min="1" value="1" required>
-                <br>
-                
-
-                <hr>
-                <br>
-
-
-                <label for="tipoDado2">Tipo de Dado 2 (opcional):</label>
-                <select id="tipoDado2" name="tipoDado2">
-                    <option value="">Nenhum</option>
-                    <option value="2">d2</option>
-                    <option value="3">d3</option>
-                    <option value="4">d4</option>
-                    <option value="6">d6</option>
-                    <option value="8">d8</option>
-                    <option value="10">d10</option>
-                    <option value="12">d12</option>
-                    <option value="20">d20</option>
-                </select>
-                <label for="numTipoDado2">Número:</label>
-                <input type="number" id="numTipoDado2" name="numTipoDado2" min="0" value="0">
-                <br>
-
-
-                <hr>
-                <br>
-
-                
-                <label for="tipoDado3">Tipo de Dado 3 (opcional):</label>
-                <select id="tipoDado3" name="tipoDado3">
-                    <option value="">Nenhum</option>
-                    <option value="2">d2</option>
-                    <option value="3">d3</option>
-                    <option value="4">d4</option>
-                    <option value="6">d6</option>
-                    <option value="8">d8</option>
-                    <option value="10">d10</option>
-                    <option value="12">d12</option>
-                    <option value="20">d20</option>
-                </select>
-                <label for="numTipoDado3">Número:</label>
-                <input type="number" id="numTipoDado3" name="numTipoDado3" min="0" value="0">
-                <br>
-                
-                
-                <hr>
-                <br>
-
-
-                <label for="somatorio">Somatório ao Número Total:</label>
-                <input type="number" id="somatorio" name="somatorio" value="0" required>
-                <br>
-                
-                <button type="button" onclick="rolarDados()">Rolar Dados</button>
-                
-                <h3>Resultado:</h3>
-                <div id="resultadoRolagem"></div>
-
-
             </div> 
         </div> 
         <div id="bottom-toggles">
             <button id="togglechat1"class="toggle-bot">Chat</button>
             <button id="toggleplayer1"class="toggle-bot">Player</i></button>
             <button id="toggleselection1"class="toggle-bot">Menu</i></button>
-            <button id="toggleselection1"class="toggle-bot">Infos</i></button>
+            <button id="toggleinfo1"class="toggle-bot">Infos</i></button>
         </div>
     </div>                                               
         <script src="https://apis.google.com/js/api.js" defer></script>
@@ -1007,7 +918,6 @@
                     }
             }
         </script>
-        <script src="https://www.youtube.com/iframe_api"></script>
         <script src="google.js?v=1.0.11" defer></script>
         <script src="youtube.js?v=1.0.11" defer></script>
         <script src="https://accounts.google.com/gsi/client" async defer onload="handleGisLoaded()"></script>        
