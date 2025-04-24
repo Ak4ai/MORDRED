@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         for (let key in localStorage) {
             // Garante que a propriedade pertence ao localStorage
             if (localStorage.hasOwnProperty(key)) {
-                // Verifica se a chave termina com '-personagem302X'
-                if (key.endsWith('-personagem302X')) {
+                // Verifica se a chave termina com '-302Xpersonagem'
+                if (key.endsWith('-302Xpersonagem')) {
                     // Tenta fazer o parse do conteúdo JSON da chave
                     try {
                         const data = JSON.parse(localStorage.getItem(key));
@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error("Nenhum personagem com 'check' igual a 1 foi encontrado no localStorage.");
         }
 
-        // Armazena o nome do arquivo sem o sufixo '-personagem302X' na variável global
-        window.nomepersonagem = chavePersonagemSelecionado.replace('-personagem302X', '');
+        // Armazena o nome do arquivo sem o sufixo '-302Xpersonagem' na variável global
+        window.nomepersonagem = chavePersonagemSelecionado.replace('-302Xpersonagem', '');
         document.getElementById('status-nome').textContent = window.nomepersonagem || 'Nome do Personagem';
         console.log(`Personagem selecionado: ${chavePersonagemSelecionado}`);
         console.log(`Nome do personagem salvo em window.nomepersonagem: ${window.nomepersonagem}`);
@@ -1854,13 +1854,13 @@ async function salvarStatus() {
                 tracoHistoria: getStringValue('tracoHistoria'),
             };
 
-            localStorage.setItem(`${nome}-personagem302X`, JSON.stringify(updatedData, null, 2));
+            localStorage.setItem(`${nome}-302Xpersonagem`, JSON.stringify(updatedData, null, 2));
             mostrarMensagem('Status do personagem salvo com sucesso!');
             await carregarStatus();
 
         } else {
             // Atualiza apenas campos não-nulos
-            const storedDataStr = localStorage.getItem(`${nome}-personagem302X`);
+            const storedDataStr = localStorage.getItem(`${nome}-302Xpersonagem`);
             if (!storedDataStr) {
                 mostrarMensagem('Arquivo não existe.');
                 return;
@@ -1942,7 +1942,7 @@ async function salvarStatus() {
                 }
             });
 
-            localStorage.setItem(`${nome}-personagem302X`, JSON.stringify(currentData, null, 2));
+            localStorage.setItem(`${nome}-302Xpersonagem`, JSON.stringify(currentData, null, 2));
             mostrarMensagem('Status do personagem atualizado com sucesso!');
             await carregarStatus();
         }
@@ -2004,7 +2004,7 @@ async function carregarStatus() {
 
     carregarHabilidades(nome);
     try {
-        const data = localStorage.getItem(`${nome}-personagem302X`);
+        const data = localStorage.getItem(`${nome}-302Xpersonagem`);
         if (data) {
             const personagemData = JSON.parse(data);
             personagem = new Personagem(personagemData);
@@ -2031,7 +2031,7 @@ async function carregarStatusPorNome(nome) {
     document.getElementById('status-nome').textContent = window.nomepersonagem || 'Nome do Personagem';
 
     try {
-        const data = localStorage.getItem(`${nome}-personagem302X`);
+        const data = localStorage.getItem(`${nome}-302Xpersonagem`);
         if (data) {
             const personagemData = JSON.parse(data);
             personagem = new Personagem(personagemData);
@@ -2309,7 +2309,7 @@ function listarArquivos() {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         // Adiciona verificação para arquivos de inventário
-        if (key.includes('-personagem302X') || key.includes('-habilidades302X') || key.includes('-inventario302X') || key.includes('-inventario302X')) {
+        if (key.includes('-302Xpersonagem') || key.includes('-habilidades302X') || key.includes('-inventario302X') || key.includes('-inventario302X')) {
             console.log('Nome do arquivo:', key);
             mostrarMensagem('Nome do arquivo: ' + key);
         }
@@ -2670,7 +2670,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Busca fichas válidas
     for (let i = 0; i < localStorage.length; i++) {
       const chave = localStorage.key(i);
-      if (chave.includes('-personagem302X')) {
+      if (chave.includes('-302Xpersonagem')) {
         const dados = JSON.parse(localStorage.getItem(chave));
         if (dados.check === 1 && !fichaCheckada) {
           fichaCheckada = { chave, dados };
@@ -2694,7 +2694,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Adiciona ficha marcada com check: 1
   
 if (fichaCheckada) {
-    const nome = fichaCheckada.chave.replace('-personagem302X', '');
+    const nome = fichaCheckada.chave.replace('-302Xpersonagem', '');
     const img = document.createElement('img');
     img.src = fichaCheckada.dados.img;
     img.alt = nome;
@@ -2722,7 +2722,7 @@ if (fichaCheckada) {
   // Adiciona as outras fichas da mesma forma
   for (let i = 0; i < outrasFichas.length; i++) {
     const { chave, dados } = outrasFichas[i];
-    const nome = chave.replace('-personagem302X', '');
+    const nome = chave.replace('-302Xpersonagem', '');
     const img = document.createElement('img');
     img.src = dados.img || 'https://media.discordapp.net/attachments/1164311440224702526/1361559378695688232/dfy9prk-fd124c1f-81f6-4ecb-935e-e994799c6b5f.png?ex=67ff327c&is=67fde0fc&hm=316bace3c2ec013775631ccb7ae51781072936e089449bfbc696bac56fa28fc0&=&format=webp&quality=lossless&width=433&height=648';
     img.alt = nome;

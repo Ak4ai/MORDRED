@@ -230,7 +230,7 @@ document.addEventListener('mouseup', () => {
     if (selectedToken.classList.contains('token')) {
       const id = selectedToken.getAttribute('data-id');
       if (id) {
-        db.collection('tokens').doc(id).update({
+        db.collection('tokens-si').doc(id).update({
           x: parseFloat(selectedToken.style.left),
           y: parseFloat(selectedToken.style.top)
         }).catch(console.error);
@@ -238,7 +238,7 @@ document.addEventListener('mouseup', () => {
     } else if (selectedToken.classList.contains('background-img')) {
       const bgId = selectedToken.getAttribute('data-bg-id');
       if (bgId) {
-        db.collection('backgrounds').doc(bgId).update({
+        db.collection('backgrounds-si').doc(bgId).update({
           x: parseFloat(selectedToken.style.left),
           y: parseFloat(selectedToken.style.top),
           width: parseFloat(selectedToken.style.width),
@@ -252,7 +252,7 @@ document.addEventListener('mouseup', () => {
     if (selectedToken.classList.contains('token')) {
       const id = selectedToken.getAttribute('data-id');
       if (id) {
-        db.collection('tokens').doc(id).update({
+        db.collection('tokens-si').doc(id).update({
           x: parseFloat(selectedToken.style.left),
           y: parseFloat(selectedToken.style.top),
           size: parseFloat(selectedToken.style.width)
@@ -261,7 +261,7 @@ document.addEventListener('mouseup', () => {
     } else if (selectedToken.classList.contains('background-img')) {
       const bgId = selectedToken.getAttribute('data-bg-id');
       if (bgId) {
-        db.collection('backgrounds').doc(bgId).update({
+        db.collection('backgrounds-si').doc(bgId).update({
           x: parseFloat(selectedToken.style.left),
           y: parseFloat(selectedToken.style.top),
           width: parseFloat(selectedToken.style.width),
@@ -282,7 +282,7 @@ document.addEventListener('mouseup', () => {
 // Função para deletar o token
 function deletarToken(id) {
   // Remover o token do Firestore
-  db.collection('tokens').doc(id).delete().catch(console.error);
+  db.collection('tokens-si').doc(id).delete().catch(console.error);
 
   // Remover o token do DOM
   const tokenElement = document.querySelector(`[data-id="${id}"]`);
@@ -392,7 +392,7 @@ function criarToken({ x, y }) {
       timestamp: Date.now()
     };
 
-    db.collection('tokens').add(tokenData).catch(console.error);
+    db.collection('tokens-si').add(tokenData).catch(console.error);
     document.body.removeChild(modal);
   });
 }
@@ -520,7 +520,7 @@ function criarBarreira({ x, y }) {
     timestamp: Date.now()
   };
 
-  db.collection('backgrounds').add(bgData).catch(console.error);
+  db.collection('backgrounds-si').add(bgData).catch(console.error);
 }
 
 function criarBackground({ x, y }) {
@@ -572,7 +572,7 @@ function criarBackground({ x, y }) {
       timestamp: Date.now()
     };
 
-    db.collection('backgrounds').add(bgData).catch(console.error);
+    db.collection('backgrounds-si').add(bgData).catch(console.error);
     document.body.removeChild(modal);
   });
 }
@@ -690,7 +690,7 @@ document.addEventListener('touchend', () => {
       updateData.size = parseFloat(selectedToken.style.width);
     }
 
-    db.collection('tokens').doc(id)
+    db.collection('tokens-si').doc(id)
       .update(updateData)
       .catch(console.error);
 
@@ -704,7 +704,7 @@ document.addEventListener('touchend', () => {
     updateData.width  = parseFloat(selectedToken.style.width);
     updateData.height = parseFloat(selectedToken.style.height);
 
-    db.collection('backgrounds').doc(bgId)
+    db.collection('backgrounds-si').doc(bgId)
       .update(updateData)
       .catch(console.error);
   }
@@ -753,7 +753,7 @@ aplicarZoom();
 // ------------------------ //
 // Escuta em tempo real para novos tokens
 // Primeiro: escuta os tokens normalmente
-db.collection('tokens').onSnapshot((snapshot) => {
+db.collection('tokens-si').onSnapshot((snapshot) => {
   snapshot.docChanges().forEach((change) => {
     const tokenId = change.doc.id;
     const data = change.doc.data();
@@ -800,7 +800,7 @@ db.collection('tokens').onSnapshot((snapshot) => {
 });
 
 // Agora: escuta os backgrounds separadamente e apenas uma vez
-db.collection('backgrounds').onSnapshot((snapshot) => {
+db.collection('backgrounds-si').onSnapshot((snapshot) => {
   snapshot.docChanges().forEach((change) => {
     const bgId = change.doc.id;
     const data = change.doc.data();
@@ -960,7 +960,7 @@ tabuleiro.addEventListener('drop', (e) => {
   };
 
   // Adiciona o token ao Firestore
-  db.collection('tokens').add(tokenData).catch(console.error);
+  db.collection('tokens-si').add(tokenData).catch(console.error);
 });
 
 //funcoes de background//
@@ -968,7 +968,7 @@ tabuleiro.addEventListener('drop', (e) => {
 // Função para deletar o background
 function deletarBackground(id) {
   // Remover o background do Firestore
-  db.collection('backgrounds').doc(id).delete().catch(console.error);
+  db.collection('backgrounds-si').doc(id).delete().catch(console.error);
 
   // Remover o background do DOM
   const bgElement = document.querySelector(`[data-bg-id="${id}"]`);
