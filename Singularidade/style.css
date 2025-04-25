@@ -424,6 +424,10 @@ button:active {
   margin-top: 20px;
 }
 
+.status-pericias:active{
+  transform: scale(1.05);
+}
+
 .Labelpericia {
   width: 100%;
   text-align: center;
