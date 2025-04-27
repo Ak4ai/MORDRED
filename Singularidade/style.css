@@ -1147,7 +1147,7 @@ textarea:focus {
   }
 }
 
-@media (max-height: 800px) {
+@media (max-height: 450px) {
   #essential-info,
   #essential-info2 {
     max-height: calc(100vh - 20px); /* Ajusta a altura máxima para evitar overflow */
