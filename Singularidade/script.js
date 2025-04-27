@@ -2905,6 +2905,31 @@ document.querySelectorAll('input, textarea').forEach((input) => {
     });
 });
 
+function detectarTeclado() {
+    const alturaViewport = window.visualViewport?.height || window.innerHeight;
+    const alturaJanela = window.innerHeight;
+    const diferenca = alturaJanela - alturaViewport;
+  
+    if (diferenca > 150) {
+      document.body.classList.add('teclado-aberto');
+    } else {
+      document.body.classList.remove('teclado-aberto');
+    }
+}
+  
+window.visualViewport?.addEventListener('resize', detectarTeclado);
+window.addEventListener('resize', detectarTeclado);
+  
+document.querySelectorAll('input, textarea').forEach((el) => {
+    el.addEventListener('focus', () => {
+      document.body.classList.add('teclado-aberto');
+    });
+    el.addEventListener('blur', () => {
+      document.body.classList.remove('teclado-aberto');
+    });
+});
+  
+
 // Executa quando volta de outra aba
 document.addEventListener('visibilitychange', () => {
 if (document.visibilityState === 'visible') {

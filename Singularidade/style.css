@@ -1144,6 +1144,28 @@ textarea:focus {
   body.abas-mostradas #essential-info2 {
     display: block;
   }
+
+  body.teclado-aberto #essential-info {
+    display: none !important;
+  }
+  
+  body.teclado-aberto #essential-info2 {
+    position: fixed;
+    top: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    height: auto;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  body.teclado-aberto #essential-info2 textarea {
+    width: 100%;
+    min-height: 85% !important;
+    max-height: 85% !important;
+    resize: none;
+  }  
 }
 
 @media (max-height: 600px) {
