@@ -2901,7 +2901,7 @@ document.querySelectorAll('input, textarea').forEach((input) => {
         window.scrollTo(0, 0);
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
-      }, 50); // pequeno atraso para o teclado abrir
+      }, 200); // pequeno atraso para o teclado abrir
     });
 });
 
