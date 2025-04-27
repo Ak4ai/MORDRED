@@ -270,7 +270,6 @@ select:focus option:checked {
   background-color: #9a76a6b8;
   color: #ccc;
   border: #ccc solid 1px;
-  transform: scale(1.10);
 }
 
 /* Ajuste para dispositivos móveis */
