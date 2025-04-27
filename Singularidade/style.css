@@ -1152,10 +1152,11 @@ textarea:focus {
   body.teclado-aberto #essential-info2 {
     position: fixed !important;
     top: 1rem !important;
-    bottom: 1rem !important;
     left: 1rem !important;
     right: 1rem !important;
-    height: auto;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
     overflow-y: auto;
     z-index: 1000;
   }
