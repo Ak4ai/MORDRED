@@ -1147,7 +1147,7 @@ textarea:focus {
   }
 }
 
-@media (max-height: 450px) {
+@media (max-height: 600px) {
   #essential-info {
     display: none !important; /* ok se você quer ocultar ele de verdade */
   }
