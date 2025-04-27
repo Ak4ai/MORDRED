@@ -2886,7 +2886,7 @@ function ajustarAlturaCorreta() {
 
 function aplicarAlturaComDelay() {
     ajustarAlturaCorreta();
-    setTimeout(ajustarAlturaCorreta, 100);  // Garantia após redraw
+    setTimeout(ajustarAlturaCorreta, 1);  // Garantia após redraw
 }
 
 // Executa ao carregar
