@@ -1148,25 +1148,26 @@ textarea:focus {
 }
 
 @media (max-height: 450px) {
-  #essential-info,
+  #essential-info {
+    display: none !important; /* ok se você quer ocultar ele de verdade */
+  }
+
   #essential-info2 {
-    max-height: calc(100vh - 20px); /* Ajusta a altura máxima para evitar overflow */
-    overflow-y: auto; /* Adiciona rolagem vertical se necessário */
-  }
-
-  #essential-info{
-    display: none !important;
-  }
-
-  #essential-info2{
-    top: 1rem !important;
-    height:auto !important;
-
+    position: fixed;
+    top: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    height: auto;
+    overflow-y: auto;
+    z-index: 1000;
   }
 
   #essential-info2 textarea {
-    max-height: 85% !important;
-    min-height: 75% !important;
+    width: 100%;
+    min-height: 95%;
+    max-height: 95%;
+    resize: none; /* opcional: impede redimensionar manualmente */
   }
 }
 
