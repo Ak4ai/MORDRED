@@ -2889,10 +2889,21 @@ function aplicarAlturaComDelay() {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-}  
+}
 
 // Executa ao carregar
+
 aplicarAlturaComDelay();
+
+document.querySelectorAll('input, textarea').forEach((input) => {
+    input.addEventListener('focus', (e) => {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 50); // pequeno atraso para o teclado abrir
+    });
+});
 
 // Executa quando volta de outra aba
 document.addEventListener('visibilitychange', () => {
