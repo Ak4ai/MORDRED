@@ -240,7 +240,7 @@ select:focus option:checked {
   display: flex;
   cursor: pointer;
   color: #8684a1;
-  background-color: #27254091;  
+  background-color: #3c254059;  
   margin-bottom: 10px;
 }
 
@@ -251,16 +251,12 @@ select:focus option:checked {
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.222);
   border-radius: 0.25rem;
-  margin: 2px;
+  margin: 6px;
+  margin-bottom: 0;
+  margin-top: 0;
   background-color: #36254091;
   transition: all ease .2s;
   max-width: 350px;
-}
-
-.tab.active, .subtab.active {
-  background-color: #9a76a6b8;
-  color: #ccc;
-  border: #ccc solid 1px;
 }
 
 .tab:hover, .subtab:hover {
@@ -269,6 +265,13 @@ select:focus option:checked {
   color: #ccc;
   border: #ccc solid 2px;
   transform: scale(1.05);
+}
+
+.tab.active, .subtab.active {
+  background-color: #9a76a6b8;
+  color: #ccc;
+  border: #ccc solid 1px;
+  transform: scale(1.10);
 }
 
 /* Ajuste para dispositivos móveis */
@@ -424,10 +427,6 @@ button:active {
   margin-top: 20px;
 }
 
-.status-pericias:active{
-  transform: scale(1.05);
-}
-
 .Labelpericia {
   width: 100%;
   text-align: center;
@@ -450,11 +449,13 @@ button:active {
 .content-collapsed {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease-out;
+  transition: max-height 0.55s ease;
 }
 .content-expanded {
-  max-height: 10000px; /* Ajuste conforme necessário */
-  transition: max-height 0.12s ease-in;
+  max-height: 1000px; /* escolha um valor razoável */
+  transition: max-height 0.52s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .status-bar {
@@ -966,6 +967,7 @@ textarea:focus {
   -webkit-backdrop-filter: blur(8px); /* suporte para Safari */
   z-index: 998;
   display: none;
+  pointer-events: auto;
 }
 
 
