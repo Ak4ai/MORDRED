@@ -1009,9 +1009,9 @@ textarea:focus {
     box-sizing: border-box;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     resize: vertical;
-    height: 35vh !important;
-    max-height: 35vh !important;
-    min-height: 35vh !important;
+    height: auto;
+    max-height: 45vh !important;
+    min-height: 0px !important;
     overflow-y: auto;
   }
 
@@ -1144,6 +1144,29 @@ textarea:focus {
   body.abas-mostradas #essential-info,
   body.abas-mostradas #essential-info2 {
     display: block;
+  }
+}
+
+@media (max-height: 800px) {
+  #essential-info,
+  #essential-info2 {
+    max-height: calc(100vh - 20px); /* Ajusta a altura máxima para evitar overflow */
+    overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+  }
+
+  #essential-info{
+    display: none !important;
+  }
+
+  #essential-info2{
+    top: 1rem !important;
+    height:auto !important;
+
+  }
+
+  #essential-info2 textarea {
+    max-height: 85% !important;
+    min-height: 75% !important;
   }
 }
 
