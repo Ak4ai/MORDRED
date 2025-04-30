@@ -2254,10 +2254,42 @@ textarea:focus {
   object-fit: cover;
   cursor: grab;
   transition: transform 0.2s ease;
+  pointer-events: auto !important; /* Permite interações com o elemento */
+  -webkit-user-drag: auto !important;
+}
+
+#upload{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  background-color: #38243ed0;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+#uploadmodal{
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #38243ed0;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .ficha-icone:hover {
   transform: scale(1.1);
+}
+
+fieldset{
+  border-radius: 4px;
 }
 
 .divisor-vertical {

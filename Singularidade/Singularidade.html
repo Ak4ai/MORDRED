@@ -28,14 +28,18 @@
           https://cdn.jsdelivr.net 
           https://unpkg.com 
           https://www.youtube.com;
+    
         style-src 
           'self' 
           'unsafe-inline' 
           https://cdnjs.cloudflare.com;
+    
         font-src 
           'self' 
           https://cdnjs.cloudflare.com;
+    
         connect-src 
+          'self' 
           https://www.googleapis.com 
           https://accounts.google.com 
           https://oauth2.googleapis.com 
@@ -44,7 +48,10 @@
           https://apis.google.com 
           https://www.google.com 
           https://firestore.googleapis.com 
-          https://www.youtube.com;
+          https://www.youtube.com 
+          https://postimages.org 
+          https://postimage.me;
+    
         img-src 
           'self' 
           https://i.pinimg.com 
@@ -53,15 +60,22 @@
           https://media.discordapp.net 
           https://i.ytimg.com 
           https://via.placeholder.com 
+          https://preview.redd.it 
+          https://external-preview.redd.it 
+          https://redditmedia.com 
+          https://i.imgur.com 
+          https://i.postimg.cc 
           data:;
+    
         frame-src 
           https://accounts.google.com 
           https://content.googleapis.com 
           https://content-people.googleapis.com 
           https://www.youtube.com 
           https://www.youtube-nocookie.com;
-      ">
-
+        ">
+    
+     
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
         <!-- Firebase App -->
@@ -637,7 +651,21 @@
                     <label for="token">Token do Personagem:</label>
                     <input type="text" id="token" name="token" required>
                 </fieldset>
-
+                <br>
+                <div id="upload">
+                  <label for="uploadImage">Upload Imagem:</label>
+                  <button 
+                    type="button" 
+                    id="uploadImage"
+                    onclick="window.open(
+                      'https://postimages.org/upload',
+                      'PostImages',
+                      'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes'
+                    )"
+                  >
+                    Ir para PostImages
+                  </button>
+                </div>
                 <!-- Atributos -->
                 <fieldset>
                     <legend>Atributos</legend>
@@ -1022,8 +1050,29 @@
             <label for="item-name">Nome:</label>
             <input type="text" id="item-name" placeholder="Nome do item">
             
-            <label for="item-icon">Ícone (URL ou caminho):</label>
-            <input type="text" id="item-icon" placeholder="Caminho do ícone">
+            <fieldset>
+              
+              <legend>Icon</legend>
+              <div id="uploadmodal">
+                <label for="uploadImage">Upload Imagem:</label>
+                <button 
+                  type="button" 
+                  id="uploadImage"
+                  onclick="window.open(
+                    'https://postimages.org/upload',
+                    'PostImages',
+                    'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes'
+                  )"
+                >
+                  Ir para PostImages
+                </button>
+              </div>
+
+              
+              <label for="item-icon">Ícone (URL ou caminho):</label>
+              <input type="text" id="item-icon" placeholder="Caminho do ícone">
+            </fieldset>
+            <br>
             
             <label for="item-damage">Dano:</label>
             <input type="text" id="item-damage" placeholder="Dano">
