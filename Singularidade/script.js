@@ -2630,11 +2630,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('abas-mostradas');
       }
     });
-  });
+});
   
   
-  // Fechar abas ao clicar fora
-  document.addEventListener('click', function (event) {
+// Fechar abas ao clicar fora
+document.addEventListener('click', function (event) {
     const aba1 = document.getElementById('essential-info');
     const aba2 = document.getElementById('essential-info2');
   

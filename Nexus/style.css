@@ -1,0 +1,2551 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  height: 100dvh;
+  height: var(--altura-visivel);
+  background-color: #243e2580; /* Cor de fundo */
+  overflow-x: hidden; /* Evita o scroll horizontal */
+  overflow-y: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Se quiser remover de todos os elementos, mas avalie impacto em usabilidade: */
+* {
+  -webkit-tap-highlight-color: transparent;        /* :contentReference[oaicite:2]{index=2} */
+  -webkit-touch-callout: none;                    /* :contentReference[oaicite:2]{index=2} */
+  -webkit-user-drag: none;                        /* :contentReference[oaicite:2]{index=2} */
+  -webkit-text-size-adjust: none;                 /* :contentReference[oaicite:2]{index=2} */
+  -webkit-overflow-scrolling: touch;              /* :contentReference[oaicite:2]{index=2} */
+  -webkit-font-smoothing: antialiased;            /* :contentReference[oaicite:2]{index=2} */
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('image.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow-x: hidden; /* Evita o scroll horizontal */
+  overflow-y: hidden;
+}
+
+.container {
+  position:absolute;
+  display: flex;
+  color: #c9c9da;
+  top: 1dvh;
+  padding: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402991;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  max-width: 600px;
+  width: 80vw;
+  overflow-y: auto; /* Permite rolagem vertical se o conteúdo ultrapassar a altura máxima */
+  overflow-x: hidden;
+  flex-direction: column;
+  height: calc(var(--altura-visivel) - 2dvh - 12px);
+}
+
+html.ios,
+body.ios {
+  background-color: #25402991;
+  background-image: none; /* Remove a imagem de fundo para iOS */
+}
+
+/* bloqueia o scroll “fantasma” mas mantém o fundo transparente */
+html.ios {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: var(--altura-visivel) !important;
+  overscroll-behavior: none !important;
+}
+
+body.ios {
+  overflow: hidden !important;
+  height: var(--altura-visivel) !important;
+}
+
+/* 4) Seu container continua scrollável */
+html.ios .container {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 1dvh) !important;
+  height: calc(
+    var(--altura-visivel)
+    - 2dvh
+    - 12px
+    - env(safe-area-inset-top)
+  ) !important;
+  /* resto da sua configuração... */
+}
+
+/* Aplica só quando estiver no modo iOS */
+html.ios #mapa-container,
+body.ios #mapa-container {
+  background-color: transparent !important;
+  top: env(safe-area-inset-top) !important;
+}
+
+
+/* Estilos para caixas de entrada de texto */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #243e2580;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+}
+
+#check-defesa-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+#check-defesa {
+  position: relative;
+  top: 5px;
+  right: -65px;
+  z-index: 998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajusta a posição para dispositivos móveis ficar no centro */
+@media (max-width: 768px) {
+  #check-defesa {
+    justify-content: center;
+    right: 0;
+    top: 0;
+  }
+
+  #check-defesa label,
+  #check-defesa span {
+    display: none;
+  }
+}
+
+/* Estilos para caixas de seleção (checkbox) */
+input[type="checkbox"] {
+  appearance: none; /* Remove o estilo padrão do sistema operacional */
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #243e2580;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  top: 2.5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+}
+
+input[type="checkbox"]:checked {
+  background-color: #4CAF50; /* Cor de fundo quando marcado */
+  border: 1px solid #4CAF50;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✔'; /* Marca de verificação */
+  color: white;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input[type="checkbox"]:focus {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Sombra ao focar */
+  outline: none; /* Remove a borda de foco padrão */
+}
+
+/* Estilo quando o input está em foco */
+input:focus {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  outline: none; /* Remove a borda de foco padrão */
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Sombra ao focar */
+}
+
+/* Estilo para o dropdown do select */
+select::-ms-expand {
+  display: none; /* Esconde o ícone de dropdown no Internet Explorer */
+  background-color: #3e2424;
+}
+
+select {
+  /* Estilos gerais do select */
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #ccc;
+  text-align-last: center;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #243e2580;
+  appearance: none; /* Remove o estilo padrão do sistema operacional */
+  cursor: pointer; /* Altera o cursor ao passar o mouse */
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+/* Estilo para a lista suspensa das opções */
+select option {
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402991;
+  color: #ccc;
+}
+
+/* Estilo quando o mouse passa por cima de uma opção */
+select option:hover {
+  background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+  color: #000; /* Cor do texto ao passar o mouse */
+}
+
+/* Estilo quando o select está em foco */
+select:focus {
+  border: 1px solid rgba(250, 243, 243, 0.923);
+  background-color: #25402991;
+  outline: none; /* Remove a borda de foco padrão */
+  box-shadow: 0 0 5px rgba(240, 237, 237, 0.5); /* Sombra ao focar */
+}
+
+/* Estilo para o dropdown aberto */
+select:focus option:checked {
+  background-color: #07101a94; /* Cor de fundo das opções selecionadas ao focar */
+  color: #fff; /* Cor do texto das opções selecionadas ao focar */
+}
+
+
+.tabs, .subtabs {
+  display: flex;
+  cursor: pointer;
+  color: #8684a1;
+  background-color: #3c254000;  
+  margin-bottom: 10px;
+}
+
+.tab, .subtab {
+  flex: 1;
+  padding: 10px;
+  background-color: #90b39390;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 0.25rem;
+  margin: 4px;
+  margin-bottom: 0;
+  margin-top: 0;
+  background-color: #25402791;
+  transition: all ease .2s;
+  max-width: 350px;
+}
+
+.tab:hover, .subtab:hover {
+  background-color: #76a67a;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  color: #ccc;
+  border: #ccc solid 2px;
+  transform: scale(1.05);
+}
+
+.tab.active, .subtab.active {
+  background-color: #7aa676b8;
+  color: #ccc;
+  border: #ccc solid 1px;
+}
+
+/* Ajuste para dispositivos móveis */
+@media (max-width: 400px) {
+  .tab, .subtab {
+    padding: 8px;
+    font-size: 11px !important;
+    max-width: 100%;
+  }
+}
+
+/* Ajuste para dispositivos móveis */
+@media (max-width: 768px) {
+  .tab, .subtab {
+    padding: 8px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+}
+
+.content, .subcontent {
+  flex-grow: 1;           /* ocupa o espaço restante */
+  border: 1px solid #bdcabf6b;
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+
+.content.active, .subcontent.active {
+  display: block;
+}
+
+.status-info {
+  display: block;
+  justify-content: space-between;
+}
+
+#status-nome{
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0;
+  padding: 0;
+  color: #c9c9da;
+}
+
+.status-column {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+}
+
+.status-item {
+  margin: 10px;
+}
+
+.status-item p {
+  margin-bottom: 5px;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.status-item span {
+  padding: 3px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402791;
+  border-radius: 5px;
+  font-weight: bold;
+  line-height: 25px;
+}
+
+#status-traco-historia {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.status-info2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.status-column2 {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+}
+
+button {
+  margin: 5px 5px;
+  padding: 10px 20px;
+  color: #ffffff91;
+  background-color: #90b39190;
+  border: 1px solid #ebe0e0;
+  border-radius: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.4s ease, transform 0.4s ease;
+}
+
+/* Pseudo-elemento para o efeito ripple */
+button::after {
+  content: "";
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.648) 0%, transparent 60%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+}
+
+button:hover {
+  background-color: #90b395;
+  transform: scale(1.05);
+}
+
+button:hover::after {
+  width: 300%;
+  height: 300%;
+  opacity: 1;
+}
+
+/* Efeito de clique: encolher um pouco */
+button:active {
+  transform: scale(0.95);
+}
+
+#status-info, #dano-total {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+}
+
+#status-info, #teste-habilidade {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+}
+
+.status-pericias {
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402991;
+  padding: 10px;
+  border-radius: 0.5rem;
+  margin-top: 20px;
+}
+
+.Labelpericia {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px; /* espaçamento opcional */
+  font-weight: bold; /* negrito opcional */
+  font-size: large;
+}
+
+.status-tracos {
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402991;
+  padding: 10px;
+  border-radius: 0.5rem;
+  margin-top: 20px;
+}
+
+.collapsible {
+  cursor: pointer;
+}
+.content-collapsed {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.55s ease;
+}
+.content-expanded {
+  max-height: 1000px; /* escolha um valor razoável */
+  transition: max-height 0.52s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.status-bar {
+  position: relative;
+  height: 10px;
+  background-color: #cccccc06;
+  border: #ccc solid 1px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.status-bar-fill {
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402791;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+.status-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-column3 {
+  margin: 20px 0;
+}
+
+.status-column4 {
+  flex: 1;
+  min-width: 99%;
+  text-align: center;
+  padding-top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402791;
+  border-radius: 0.5rem;
+}
+
+.status-column4 .status-item {
+  margin: 10px;
+  text-align: left;
+  padding: 10px;
+  padding-bottom: -10px;
+}
+
+.atributos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.atributo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402791;
+}
+
+.atributo-item label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.atributo-item span {
+  display: block;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402791;
+  border-radius: 5px;
+  width: 80%;
+  text-align: center;
+}
+
+.navbar {
+  background-color: #4CAF50; /* Defina a cor de fundo desejada */
+  color: white; /* Cor do texto */
+  padding: 10px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Estilos para a barra de rolagem */
+::-webkit-scrollbar {
+  width: 8px; /* Largura da barra de rolagem */
+  height: 8px;
+  background-color: #243e2580; /* Cor de fundo da barra de título */
+}
+
+/* Track (parte de fundo da barra de rolagem) */
+::-webkit-scrollbar-track {
+  border-radius: 8px;;
+  background-color: #25402991; /* Cor de fundo da barra de título */
+}
+
+/* Thumb (parte deslizante da barra de rolagem) */
+::-webkit-scrollbar-thumb {
+  background-color: #6e987091; /* Cor de fundo da barra de título */
+  border-radius: 43px; /* Borda arredondada do thumb */
+}
+
+/* Hover state do thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.553)52591; /* Cor de fundo da barra de título */
+}
+/* Estiliza o canto onde o scroll horizontal e vertical se encontram */
+::-webkit-scrollbar-corner {
+  background-color: #25402991; /* Mesma cor do track ou do fundo */
+}
+
+
+.dialog-container {
+  border: 1px solid #999999;
+  border-radius: 0.5rem;
+  color: #c9c9da;
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  background-color: rgba(37, 50, 64, 0.167); /* Opacidade ajustada para 80% */
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: all ease 0.5s;
+  width: 80vw; /* Largura igual a 80% da largura da tela */
+  max-width: 600px; /* Largura máxima para manter o tamanho controlado */
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed; /* Fixa o container na tela */
+  top: 65%; /* Ajusta a distância do topo para 70% da altura da tela */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1002; /* Garante que o diálogo fique acima de outros elementos */
+  overflow: hidden; /* Garante que a rolagem é controlada pela mensagem e não pelo container */
+}
+
+.dialog-message {
+  margin-bottom: 20px;
+  text-align: center;
+  overflow-y: auto; /* Permite rolagem vertical se o texto ultrapassar o limite */
+  max-height: 110px; /* Define uma altura máxima para a área de texto */
+  width: 100%; /* Garante que o texto use toda a largura disponível */
+  padding: 5px; /* Adiciona algum preenchimento interno */
+  box-sizing: border-box; /* Inclui o padding e border no cálculo da largura e altura */
+}
+
+.dialog-buttons button {
+  margin: 5px 5px;
+  color: #37243e;
+  background-color: #ae90b3;
+  border: 1px solid #e1e0eb;
+  border-radius: 0.5rem;
+  padding: 10px 20px;
+}
+
+.dialog-buttons button:hover {
+  transform: scale(1.05);
+}
+
+#blur-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px); /* Efeito de blur */
+  z-index: 1001; /* Z-index menor que o diálogo para que fique atrás dele */
+  display: none; /* Inicialmente oculto */
+}
+
+/* Estilos para áreas de texto */
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #243e2580;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+  resize: vertical; /* Permite redimensionar verticalmente */
+  height: auto; /* Altura inicial */
+  max-height: 550px; /* Altura máxima */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical quando necessário */
+}
+
+/* Estilo quando a área de texto está em foco */
+textarea:focus {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  outline: none; /* Remove a borda de foco padrão */
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Sombra ao focar */
+}
+
+/* Estilos para a aba de informações essenciais */
+#essential-info {
+  top: 1.5vh;
+  right: 1rem; /* Centraliza horizontalmente */
+  transition: top 0.5s ease, opacity 0.5s ease;
+  position: fixed;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 998;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  color: #c9c9da;
+  background-color: #243e2580;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
+  max-width: 25vw;
+  width: 100%;
+}
+
+#essential-info #status-token{
+  display: none;
+}
+
+#essential-info #status-img {
+  height: auto;
+  width: 100%;
+  object-fit: cover; /* Corta e encaixa a imagem no quadrado */
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  display: block;
+}
+
+@media (max-height: 1000px) {
+  #essential-info #status-img{
+    aspect-ratio: 1 / 0.85; /* Garante que a imagem fique quadrada */
+  }
+  #essential-info label{
+    font-size: 10px;
+    margin: 0;
+    font-weight: bold;
+    padding: 0;
+  }
+  #essential-info span{
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  #essential-info .status-item{
+    margin: 5px;
+    padding: 0;
+  }
+}
+
+/* Container geral vertical */
+#essential-info.vertical {
+  top: 50vh;
+  left: 0.5vw;
+  transform: translateY(-50%);
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: 4vw;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  z-index: 999;
+  overflow: hidden;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  box-shadow: none;
+}
+
+/* Imagem do personagem */
+#essential-info.vertical #status-img {
+  height: 3.5vw;
+  width: 3.5vw;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  border: #ffffff solid 2px;
+}
+
+#essential-info.vertical #status-token {
+  display: none;
+}
+
+#essential-info.vertical #status-img img {
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  border:#ffffff solid 3px;
+}
+
+/* Esconde a seção de texto padrão */
+#essential-info.vertical .text-section {
+  display: none;
+}
+
+/* Item de status (cada vida/energia/escudo) */
+#essential-info.vertical .status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#essential-info.vertical .status-label label {
+  display: none;
+}
+
+/* Label vertical */
+#essential-info.vertical .status-label {
+  text-align: center;
+  margin-bottom: 8px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Barra de status vertical */
+.status-bar.vertical {
+  width: 14px;
+  height: 100px;
+  border: 1px solid white;
+  background-color: #444;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* Preenchimento da barra */
+.status-bar.vertical .status-bar-fill {
+  width: 100%;
+  height: 0%;
+  transition: height 0.3s ease;
+}
+
+.status-bar.vertical #status-bar-vida1 {
+  background-color: #40252591;
+}
+
+.status-bar.vertical #status-bar-energia1 {
+  background-color: #40254091;
+}
+
+.status-bar.vertical #status-bar-sanidade1 {
+  background-color: #40402591;
+}
+
+.status-bar.vertical #status-bar-defesa1 {
+  background-color: #25294091;
+}
+
+.status-bar #status-bar-vida1 {
+  background-color: #40252591;
+}
+
+.status-bar #status-bar-energia1 {
+  background-color: #40254091;
+}
+
+.status-bar #status-bar-sanidade1 {
+  background-color: #40402591;
+}
+
+.status-bar #status-bar-defesa1 {
+  background-color: #25294091;
+}
+
+.status-bar #status-bar-vida {
+  background-color: #40252591;
+}
+
+.status-bar #status-bar-energia {
+  background-color: #40254091;
+}
+
+.status-bar #status-bar-sanidade {
+  background-color: #40402591;
+}
+
+.status-bar #status-bar-defesa {
+  background-color: #25294091;
+}
+
+.teste-habilidade-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 0.5rem;
+  background-color: #25402991;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+  padding: 10px;
+  width: fit-content;
+}
+
+.teste-habilidade-container select,
+.teste-habilidade-container input {
+  padding: 5px;
+  font-size: 14px;
+  position: center;
+  padding-top: 10px;
+}
+
+/* Estilos para a aba de informações essenciais */
+#essential-info2 {
+  border-radius: 8px;
+  left: 1rem; /* Centraliza horizontalmente */
+  bottom: 1rem;
+  text-align: center;
+  position: fixed;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 998;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  color: #c9c9da;
+  box-shadow: 2px 2px 5px rgba(41, 35, 35, 0.3);
+  background-color: #243e2580;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
+  width: 25vw;
+}
+
+#essential-info2 textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #25402991;
+  color: #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  resize: vertical;
+  height: auto;
+  max-height: calc(54vh + 5vh);
+  min-height: calc(54vh + 5vh);
+  overflow-y: auto;
+}
+
+#essential-info2 textarea:focus {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+#status-img {
+  height: 100%; /* Ajusta a altura da imagem para 100% do contêiner pai */
+  width: 100%; /* Mantém a proporção da largura */
+}
+
+#essential-info.scrolled {
+  top: 50px; /* Ajuste a posição vertical conforme necessário */
+}
+
+#essential-info2.scrolled {
+  top: 50px; /* Ajuste a posição vertical conforme necessário */
+}
+
+#essential-info.hidden {
+  display: none;
+}
+
+#essential-info2.hidden {
+  display: none;
+}
+
+#pull-up-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  border:#39243e solid 2px;
+  height: 30px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.4);
+  z-index: 9999;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#black-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.518); /* preto semi-transparente */
+  backdrop-filter: blur(8px); /* aplica o desfoque */
+  -webkit-backdrop-filter: blur(8px); /* suporte para Safari */
+  z-index: 998;
+  display: none;
+  pointer-events: auto;
+}
+
+@media (max-width: 1023px) {
+  #essential-info,
+  #essential-info2 {
+    position: fixed;
+    left: 5vw !important;
+    box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.2);
+    padding: 16px;
+    z-index: 999;
+    display: none;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(100%) !important;
+    max-width: none; /* remover limite anterior */
+    transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
+    width: auto;
+  }
+
+  .abas-mostradas #black-overlay {
+    display: block !important;
+  }  
+
+  html, body {
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #essential-info2 textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.222);
+    color: #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    resize: vertical;
+    height: auto;
+    max-height: 45vh !important;
+    min-height: 0px !important;
+    overflow-y: auto;
+  }
+
+  /* Aba superior (posicionada com distâncias iguais à esquerda, direita e topo) */
+  #essential-info {
+    flex-direction: column !important;
+    align-items: center;
+    top: 6vh !important;
+    left: 6vw !important;
+    right: 6vw !important;
+    height: auto;
+    z-index: 1001;
+    margin: 0 !important;  
+  }
+
+  /* Aba inferior (mesma esquerda e direita, distância inferior igual ao topo do #essential-info) */
+  #essential-info2 {
+    position: fixed;
+    margin: 0 !important;
+    left: 6vw !important;
+    right: 6vw !important;
+    bottom: 2vh;
+    max-height: none; /* <<< importante para evitar conflito */
+    height: calc(var(--altura-visivel) - (var(--essential-info-height) + 8vh + 34px));
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(100%) !important;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  } 
+
+  .textarea-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  #anotacoes {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    padding: 12px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    outline: none;
+    overflow-y: auto; /* Scroll interno */
+    max-height: 75%;
+    height: 100%;
+  }
+
+  #status-img {
+    height: 50%;
+    width: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.222);
+    border-radius: 3vw;
+  }
+
+  #essential-info .top-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2px;
+  }
+
+  #essential-info img {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  #essential-info label {
+    display: flex;
+  }
+
+  #essential-info .text-section {
+    flex: 1;
+  }
+
+  #essential-info h2 {
+    margin: 0;
+    font-size: 2.1em;
+  }
+
+  #essential-info h4 {
+    margin: 4px 0 0;
+    font-size: 1.5em;
+    font-weight: normal;
+  }
+
+  .status-item {
+    margin-bottom: 10px;
+  }
+
+  .status-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7em;
+  }
+
+  .status-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .abas-mostradas #essential-info,
+  .abas-mostradas #essential-info2 {
+    display: block;
+    transform: translateY(0) !important;
+    opacity: 1;
+  }
+
+    
+  body.abas-mostradas #essential-info,
+  body.abas-mostradas #essential-info2 {
+    display: block;
+  }
+
+  body.teclado-aberto #essential-info {
+    display: none !important;
+  }
+  
+  body.teclado-aberto #essential-info2 {
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  body.teclado-aberto #essential-info2 textarea {
+    width: 100%;
+    min-height: 85% !important;
+    max-height: 85% !important;
+    resize: none;
+  }  
+}
+
+@media (max-height: 600px) {
+  #essential-info {
+    display: none !important; /* ok se você quer ocultar ele de verdade */
+  }
+
+  #essential-info2 {
+    position: fixed;
+    top: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    height: auto;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  #essential-info2 textarea {
+    width: 100%;
+    min-height: 85% !important;
+    max-height: 85% !important; 
+    resize: none; /* opcional: impede redimensionar manualmente */
+  }
+}
+
+
+.item-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+}
+
+#inventory-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  align-items: start;
+}
+
+/* Estilos para o modal */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 998;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  overflow: visible; /* Permitir que o modal extrapole */
+}
+
+.modal-content {
+  border: 1px solid #999; 
+  color: #c9c9da;
+  position: fixed; /* Alterado para fixed */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centraliza o modal */
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: #254027b6;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: all ease .2s;
+  width: 80%; /* Largura fixada */
+  max-width: 600px; /* Largura máxima */
+  text-align: center; /* Texto centralizado */
+  overflow: visible;
+}
+
+/* Container fixo no canto superior direito */
+#toggle-atualizar {
+  position: flex;
+  top: 10px;
+  right: 130px;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Estilos para o toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+/* Esconde o checkbox padrão */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Estilo do slider inspirado na checkbox */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #243e2580; /* Mesmo fundo da checkbox */
+  border: 1px solid rgba(255, 255, 255, 0.222); /* Mesma borda */
+  border-radius: 4px; /* Mesma borda arredondada */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra semelhante */
+  transition: 0.4s;
+}
+
+/* Círculo interno (knob) */
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 20px; /* Tamanho similar ao da checkbox */
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+/* Quando marcado, utiliza a cor da checkbox marcada */
+.switch input:checked + .slider {
+  background-color: #4CAF50;
+  border: 1px solid #4CAF50;
+}
+
+/* Move o knob para a direita quando marcado */
+.switch input:checked + .slider:before {
+  transform: translateX(26px); /* Ajuste: 50px (largura total) - 20px (knob) - 4px (margens) */
+}
+
+/* Efeito de foco, utilizando a mesma lógica da checkbox */
+.switch input:focus + .slider {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  outline: none;
+}
+
+/* Estilo para a label do toggle */
+.toggle-label {
+  font-family: sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.inventory-preview {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #243e2580; /* Pode usar o mesmo fundo da checkbox */
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 4px;
+}
+
+.inventory-preview-testes {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #243e2580; /* Pode usar o mesmo fundo da checkbox */
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 4px;
+}
+
+.slider-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.slider-container .inventory-item {
+  flex: 0 0 auto;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #dbdbeb7f;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #57316340;
+}
+
+.slider-container .inventory-item img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.slider-container .inventory-item p {
+  font-size: 12px;
+  margin: 0;
+}
+
+.slider-container .inventory-item.selected {
+  border: 2px solid #4CAF50;
+  background-color: #e6ffe6;
+}
+
+
+/* Custom scrollbar styles */
+.slider-container::-webkit-scrollbar {
+  height: 12px;
+}
+
+.slider-container::-webkit-scrollbar-track {
+  background: #aabaaa;
+  border-radius: 4px;
+}
+
+.slider-container::-webkit-scrollbar-thumb {
+  background: #7b9681;
+  border-radius: 4px;
+}
+
+.slider-container::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+#popup-alert {
+  position: fixed;
+  top: -100px;             /* Inicia fora da tela (acima) */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(59, 37, 64, 0.568); /* Opacidade ajustada para 80% */
+  border: 1px solid #999999;
+  border-radius: 0.5rem;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  transition: all ease 0.5s;
+  color: #c9c9da;
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  opacity: 0;
+  z-index: 1100;
+  transition: top 0.5s ease, opacity 0.5s ease;
+}
+
+/* Classe para mostrar o popup */
+#popup-alert.show {
+  top: 10px;               /* Desce até 20px do topo */
+  opacity: 1;
+}
+
+/* Classe para esconder o popup (fade out) */
+#popup-alert.hide {
+  opacity: 0;
+}
+
+/* Estilos gerais para o container principal */
+#Google {
+  max-width: 400px !important;
+  margin: 30px auto !important;
+  padding: 20px !important;
+  background-color: #f9f9f971 !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  font-family: Arial, sans-serif !important;
+  text-align: center !important;
+  align-items: flex !important;
+}
+
+/* Título da seção */
+/* Título da seção */
+#Google .title {
+  font-size: 28px; /* Aumentado para melhor visibilidade */
+  font-weight: 700; /* Mais grosso para destaque */
+  text-align: center;
+  margin-bottom: 20px;
+  color: white; /* Mudança para branco para contraste com fundo escuro */
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.252); /* Adiciona um leve brilho para destacar */
+  font-family: 'Google Sans', Arial, sans-serif !important; /* Fonte do Google Drive */
+}
+
+
+/* Botões de autenticação */
+#Google .auth-buttons {
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  display: flex !important;
+}
+
+#Google button {
+  font-size: 16px !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+}
+
+/* Botão de Sign In */
+#Google .signin {
+  background-color: #4285f4 !important;
+  color: #fff !important;
+}
+
+#Google .signin:hover {
+  background-color: #357ae8 !important;
+}
+
+/* Botão de Sign Out */
+#Google .signout {
+  background-color: #db4437 !important;
+  color: #fff !important;
+}
+
+#Google .signout:hover {
+  background-color: #c33d2d !important;
+} 
+
+.user-info {
+  display: none; /* Escondido por padrão */
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  color: #ffffff;
+}
+
+.user-icon {
+  width: 100px !important;
+  height: 100px !important;
+  margin-bottom: 15px !important;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover; /* Para garantir que a imagem preencha o círculo */
+}
+
+/* Container do botão de sincronização */
+#Google .sync-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Botão de sincronização */
+#Google .sync {
+  background-color: #0F9D58 !important;
+  color: #fff !important;
+  border: 1px solid #ffffff !important;
+  text-align: center !important;
+  padding: 10px 20px !important;
+  border-radius: 4px !important;
+  width: auto !important; /* Garante que o botão não fique expandido */
+  max-width: 90% !important; /* Evita que o botão ultrapasse a tela */
+  display: none;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#Google .sync:hover {
+  background-color: #0b7e42 !important;
+}
+
+
+/* Botão de sincronização */
+#Google .restore {
+  color: #fff !important;
+  justify-content: center !important;
+  text-align: center !important;
+  border: 1px solid #ffffff !important;
+}
+
+#Google .sync:hover {
+  background-color: #0b7e42 !important;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader {
+  border: 8px solid #f3f3f3; /* Cor de fundo do loader */
+  border-top: 8px solid #3498db; /* Cor principal do loader */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#zoom-controls {
+  position: fixed;
+  bottom: 1rem;
+  right: 0.5vw;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  margin: 0;
+}
+
+#zoom-controls button {
+  z-index: 50;
+  background-color: #254027b6;
+  backdrop-filter: blur(20px);
+  color: #fff;
+  width: 4vw;
+  border: #fff 3px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25vh;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.toggle-container {
+  position: fixed;
+  top: calc(1rem + env(safe-area-inset-top));
+  right: 0.5vw;
+  z-index: 50;
+  background-color: #254027b6;
+  backdrop-filter: blur(20px);
+  color: #fff;
+  width: 4vw;
+  border: #fff 3px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25vh;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#togglecontainer1{
+  position: static;
+  display: flex;
+  margin: 10px;
+  margin-bottom: 5px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 25px;
+  margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
+  margin-top: 10px;
+  z-index: 0;
+  flex-shrink: 0; /* ocupa apenas o necessário */
+}
+
+#togglecontainer1:hover {
+  background-color: #254029b8;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+  transform: scale(1.05); /* Aumenta o tamanho ao focar */
+  transition: background-color 0.3s ease;
+  transition: border 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: opacity 0.3s ease;
+  
+}
+
+#bottom-toggles{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-bot{
+  position: static;
+  background-color: #25402991;
+  display: flex;
+  margin: 10px;
+  margin-bottom: 5px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 25px;
+  margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
+  margin-top: 10px;
+  z-index: 0;
+  border: 1px solid #c6bdca6b;
+  border-radius: 4px;
+}
+
+.toggle-bot:hover {
+  background-color: #382540b8;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
+}
+
+@media (max-width: 1023px) {
+  .toggle-bot{
+    height: 35px;
+  }
+}
+
+#togglecontainer{
+  display: none;
+}
+
+.toggle-container:hover {
+  opacity: 1;
+}
+
+.toggle-container:active {
+  transform: scale(0.95);
+  background-color: #9876a6b8;
+}
+
+#toggle-bg-interaction {
+  position: fixed;
+  top: 4rem;
+  right: 0.5vw;
+  z-index: 50;
+  width: 4vw;
+  background-color: #254027b6;
+  backdrop-filter: blur(20px);
+  color: #fff;
+  border: #fff 3px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25vh;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#toggle-bg-interaction:hover {
+  opacity: 1;
+}
+
+#toggle-bg-interaction:active {
+  transform: scale(0.95);
+  background-color: #76a676b8;
+}
+
+#toggle-barreira-opacity {
+  position: fixed;
+  width: 4vw;
+  top: 7rem;
+  right: 0.5vw;
+  z-index: 50;
+  background-color: #254027b6;
+  backdrop-filter: blur(20px);
+  color: #fff;
+  border: #fff 3px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25vh;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* Alinhamento com flex */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#toggle-barreira-opacity:hover {
+  opacity: 1;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#toggle-barreira-opacity:active {
+  transform: scale(0.95);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #76a676b8;
+}
+
+#mapa-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  background-color: #1b1b1bb6;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#tabuleiro-wrapper {
+  position: absolute;
+  top: 3vh;
+  bottom: 3vh;
+  right: 5vw;
+  left: 5vw;
+  overflow: auto;
+  background-color: #313831;
+  box-shadow: 0 0 10px #000;
+  border: #344136 solid 10px;
+}
+
+#tabuleiro-wrapper:active {
+  cursor: grabbing;
+}
+
+#tabuleiro-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(64px * 50);
+  height: calc(64px * 50);
+  transform-origin: top left;
+}
+
+/* Imagem solta no fundo */
+#tabuleiro-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: #ffffff solid 2px;
+  z-index: 0 !important;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Apenas a grid */
+#tabuleiro {
+  position: relative;
+  z-index: 11;
+  display: grid;
+  grid-template-columns: repeat(50, 64px);
+  grid-template-rows: repeat(50, 64px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+#tabuleiro > div {
+  width: 64px;
+  height: 64px;
+  background-color: #2a2a2a00;
+  border: 1px solid #444444;
+  z-index: 11;
+}
+
+#token-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.token {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #000;
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  pointer-events: auto;
+  transition: 0.15s ease;
+  z-index: 15 !important;
+}
+
+.token-wrapper {
+  position: absolute;
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+  transform-origin: center;
+}
+
+#tabuleiro,
+#tabuleiro > div {
+  pointer-events: none;
+}
+
+.background-img {
+  position: absolute;
+  pointer-events: none; /* Evita interferir com tokens por enquanto */
+  z-index: 9 !important;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.background-img.selected::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0 !important;
+  background: inherit;
+  border-radius: inherit;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
+}
+
+.background-img.selected:has(.resize-handle) {
+  border: white solid 1px;
+}
+
+
+.token.selected::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit;
+  border-radius: inherit;
+  filter: drop-shadow(0 0 4px white) drop-shadow(0 0 8px white);
+  z-index: 3;
+}
+
+.token.selected:has(.resize-handle) {
+  border: white solid 1px;
+}
+
+.resize-handle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 2px solid black;
+  position: absolute;
+  z-index: 10;
+}
+
+.resize-handle.top-left {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.resize-handle.top-right {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-left {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-right {
+  bottom: -5px;
+  right: -5px;
+  cursor: nwse-resize;
+}
+
+.background.selected {
+  outline: 2px dashed #00aaff;
+  outline-offset: -2px;
+  z-index: 0;
+}
+
+.resize-handle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 2px solid #000000;
+  position: absolute;
+}
+
+.resize-handle.top-left { top: -4px; left: -4px; cursor: nwse-resize; }
+.resize-handle.top-right { top: -4px; right: -4px; cursor: nesw-resize; }
+.resize-handle.bottom-left { bottom: -4px; left: -4px; cursor: nesw-resize; }
+.resize-handle.bottom-right { bottom: -4px; right: -4px; cursor: nwse-resize; }
+
+.context-menu {
+  background-color: #243e2580;
+  backdrop-filter: blur(20px);
+  border: 1px solid #ccc;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+}
+.context-menu ul {
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+}
+.context-menu li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.context-menu li:hover {
+  background-color: #243e2580;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+
+
+
+
+
+.player-container {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 25vw;
+  z-index: 1000;
+  background-color: #243e2580;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  padding: 1rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  /* animação da altura */
+  max-height: 1000px; /* um valor que cubra a altura máxima esperada */
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.player-container.player-hidden {
+  max-height: 150px;
+  transition: max-height 0.5s ease;
+}
+
+@media (max-width: 1023px) {
+  .player-container {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+  }
+}
+
+.player-container.player-hidden {
+  max-height: 150px;
+  transition: max-height 0.5s;
+}
+
+#youtubeLink {
+  padding: 8px;
+  font-size: 0.9rem;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  color: white;
+  height: 4vh;
+}
+
+#loadVideo {
+  padding: 8px;
+  font-size: 0.9rem;
+  width: 20%;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  color: white;
+  margin: 0;
+  height: 4vh;
+
+}
+
+.link-and-button {
+  display: flex;
+  margin-bottom: -10px;
+  gap: 5px;
+  
+} 
+
+#loadVideo:hover {
+  background-color: #243e2580;
+}
+
+#youtubePlayer {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border : 1px solid #ffffff;
+  overflow: hidden;
+  background-color: #000;
+  transition: all ease 0.25s;
+}
+
+.togglevideo-button {
+  text-align: center;
+  cursor: pointer;
+  font-size: 1rem;
+  background-color: #254027b6;
+  border: #a590ad3f solid 2px;
+  border-radius: 8px;
+  width: 100%;
+  height: 5px;
+  color: white;
+  padding-bottom: 10px;
+  padding-top: 1px;
+  transition: transform 0.2s ease;
+}
+
+.player-hidden #youtubePlayer {
+  display: none;
+  transition: all ease 0.5s;
+}
+
+#controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#playPauseButton, #skipButton, #unskipButton {
+  background-color: #243e2580;
+  color: white;
+  border: none;
+  width: 100%;
+  margin : 0;
+  gap: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#playPauseButton:hover, #skipButton:hover, #unskipButton:hover {
+  background-color: #9390ad3f;
+}
+
+#volumeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+#volumeControl {
+  width: 100%;
+  border: #ffffff solid 1px;
+  appearance: none;
+  height: 3px;
+  max-height: 4px;
+  border-radius: 15px;
+  background-color: rgba(151, 147, 175, 0);
+}
+
+#volumeControl::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+#volumeControl::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #628b67;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#volumeControl::-webkit-slider-thumb:hover {
+  background: #ccc;
+}
+
+#volumeControl::-moz-range-thumb {
+  width: 4px;
+  height: 4px;
+  background: #243e25;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#volumeControl::-moz-range-thumb:hover {
+  background: #fbfbfb;
+}
+
+#volumeControl:focus {
+  background: #ffffffb4;
+}
+
+.queue-container {
+  margin-top: 0px;
+  display: block;
+  text-align: center;
+  padding: 1px;
+  background-color: #243e288a;
+  border:#90ad933f 3px solid;
+  border-radius: 8px;
+  color: white;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.queue-hidden{
+  display: none;
+}
+
+.queue-container ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.queue-container li {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.queue-container li.current {
+  font-weight: bold;
+  color: #fcd34d;
+}
+
+.current {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+
+/*-----------------*/
+/* BARRA DE FICHAS */
+/*----------------*/
+
+#barra-fichas {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #27243e88;
+  backdrop-filter: blur(5px);
+  border: #ccc solid 3px;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  align-items: center;
+  max-width: 80vw;
+  overflow-x: auto;
+  overflow-y: hidden; /* Garante que só tenha rolagem horizontal */
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.ficha-icone {
+  width: 48px;
+  height: 48px;
+  border-radius: 1rem;
+  border: 2px solid #ccc;
+  object-fit: cover;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.ficha-icone:hover {
+  transform: scale(1.1);
+}
+
+.divisor-vertical {
+  width: 2px;
+  height: 48px;
+  background-color: #ccc;
+  display: inline-block;
+  border-radius: 28%;
+  margin: 0 0.5rem;
+  flex-shrink: 0;
+}
+
+
+#barra-fichas::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+/* Container do campo de entrada e botão */
+#chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+/* Campo de entrada */
+#chat-input {
+  flex: 1;  /* O input ocupa todo o espaço disponível */
+  background-color: #243e2580;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 4px;
+  padding: 8px;
+  color: #ccc;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  height: 30px;
+}
+
+/* Botão de enviar */
+#chat-enviar {
+  background-color: #9690b390;
+  height: 30px;
+  width: 2px;
+  color: #25402991;
+  border: 1px solid #ebe0e0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.4s ease, transform 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Opcional: defina uma largura mínima se desejar */
+  min-width: 2px;
+  margin: 0;
+}
+
+#chat-enviar::after {
+  content: "";
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.648) 0%, transparent 60%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+}
+
+#chat-enviar:hover {
+  background-color: #9390b3;
+  transform: scale(1.05);
+}
+
+#chat-enviar:active {
+  transform: scale(0.95);
+}
+
+/* Ajuste dos outros elementos permanece igual */
+#chat-container {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  width: 25vw;
+  max-height: 20vh;
+  background-color: #25402991;
+  color: #c9c9da;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  padding: 1rem;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+  transition: max-height ease 0.25s;
+}
+
+#chat-container:hover {
+  position: fixed;
+  right: 1rem;
+  bottom: 2vh;
+  width: 25vw;
+  max-height: 40vh;
+  background-color: #25402991;
+  color: #c9c9da;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  padding: 1rem;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+  transition: all ease 0.25s;
+}
+
+#chat-container.map {
+  position: fixed;
+  right: 7vw;
+  bottom: 2vh;
+  width: 350px;
+  max-height: 10vh;
+  background-color: #25402991;
+  color: #c9c9da;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+  /* Degradê de opacidade: transparente (0%) no topo até opaco (100%) no fundo */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,1) 40%);
+}
+
+#chat-container.map:hover {
+  position: fixed;
+  right: 7vw;
+  bottom: 2vh;
+  width: 350px;
+  max-height: 40vh;
+  background-color: #25402991;
+  color: #c9c9da;
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+  /* Degradê de opacidade: transparente (0%) no topo até opaco (100%) no fundo */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,1) 40%);
+}
+
+#chat-mensagens {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex: 1;
+  scroll-behavior: smooth;
+  padding-right: 5px;
+  gap: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #444 #222;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 80%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 80%);
+}
+
+.chat-message {
+  max-width: 75%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  word-break: break-word;
+  display: inline-block;
+}
+
+/* Mensagens suas (lado direito) */
+.chat-message.eu {
+  align-self: flex-end;
+  background-color: #172f1a;
+  color: #caffd6;
+  text-align: right;
+}
+
+/* Mensagens de outras pessoas (lado esquerdo) */
+.chat-message.outro {
+  align-self: flex-start;
+  background-color: #1b2d1b;
+  color: #ccc;
+  text-align: left;
+}
+
+/* Mensagens do bot (centralizadas) */
+.chat-message.bot {
+  color: #ffffff;
+  background-color: #355138;
+  border: #8daa92 solid 2px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  align-self: center;
+  text-align: center;
+}
+
+
+#chat-mensagens::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-mensagens::-webkit-scrollbar-thumb {
+  background-color: #444444;
+  border-radius: 3px;
+}
+
+.chat-message {
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.chat-message strong {
+  color: #a0b3ff;
+}
+
+@media (max-width: 1023px) {
+  #chat-container {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-height: 60vh;
+  }
+
+  #chat-container.map {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    left: 1rem;
+    right: 1rem;
+    max-height: 60vh;
+  }
+
+  #chat-container.map:hover {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    left: 1rem;
+    right: 1rem;
+    max-height: 80vh;
+  }
+
+  #chat-container:hover {
+    display: none;
+    position: fixed;
+    height: auto;
+    width: auto;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-height: 80vh;
+  }
+}
+
+#token-layer {
+  touch-action: none;           /* evita gestos de scroll/pinch no iOS */
+  -webkit-tap-highlight-color: transparent;
+}
+.token, .background-img {
+  will-change: transform, width, height;
+}
+
+#tabuleiro-bg {
+  /* evita o menu nativo de seleção e callout no iOS */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
