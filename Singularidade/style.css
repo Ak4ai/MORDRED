@@ -128,7 +128,7 @@ input {
 }
 
 /* Ajusta a posição para dispositivos móveis ficar no centro */
-@media (max-width: 768px) {
+@media (max-width: 1034px) {
   #check-defesa {
     justify-content: center;
     right: 0;
@@ -2021,7 +2021,7 @@ textarea:focus {
   transition: max-height 0.5s ease;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .player-container {
     display: none;
     position: fixed;
@@ -2587,7 +2587,7 @@ fieldset{
 #iniciativa-container {
   position: fixed;
   top: 40vh;
-  right: -17rem;
+  right: -260px;
   max-height: 400px;
   width: 250px;
   overflow-y: auto;

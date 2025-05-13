@@ -2,6 +2,8 @@
 // Compatível com CSP e UMD local de rpg-dice-roller@4.6.0
 
 let DiceRoller;
+let chatEmHover = false;
+
 
 // Espera o bundle UMD popular window.rpgDiceRoller
 const esperarUMD = setInterval(() => {
@@ -98,10 +100,14 @@ function iniciarChat() {
     }
   });
 
-  mensagensRef.orderBy("timestamp").onSnapshot(snapshot => {
-    mensagensDiv.innerHTML = "";
+  mensagensRef.orderBy("timestamp", "desc").limit(20).onSnapshot(async snapshot => {
+    const mensagens = [];
     snapshot.forEach(doc => {
-      const msg = doc.data();
+      mensagens.unshift({ id: doc.id, ...doc.data() }); // Inverte a ordem para exibição correta
+    });
+
+    mensagensDiv.innerHTML = "";
+    mensagens.forEach(msg => {
       const mensagemEl = document.createElement("div");
       mensagemEl.classList.add("chat-message");
 
@@ -121,13 +127,12 @@ function iniciarChat() {
       mensagensDiv.appendChild(mensagemEl);
     });
 
-    // 🔽 Garante o scroll automático no final
-    mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
+    if (!chatEmHover) {
+      scrollChatParaFim();
+    }
   });
 
-  input.addEventListener("keypress", e => {
-    if (e.key === "Enter") enviarBtn.click();
-  });
+
 }
 
 // Fallback de segurança após 5 segundos
@@ -137,29 +142,21 @@ setTimeout(() => {
   }
 }, 5000);
 
-let mensagensDiv;
-
 document.addEventListener("DOMContentLoaded", () => {
   const mensagensDiv = document.getElementById("chat-mensagens");
   const chatContainer = document.getElementById("chat-container");
 
-  if (chatContainer) {
-    chatContainer.addEventListener("mouseleave", () => {
-      console.log('Mouse saiu do chatContainer');
-      
-      // Espera a animação concluir antes de rolar
-      setTimeout(() => {
-        console.log("scrollTop:", mensagensDiv.scrollTop);
-        console.log("scrollHeight:", mensagensDiv.scrollHeight);
-        console.log("clientHeight:", mensagensDiv.clientHeight);
+  if (chatContainer && mensagensDiv) {
+    chatContainer.addEventListener("mouseenter", () => {
+      chatEmHover = true;
+    });
 
-        if (mensagensDiv.scrollHeight > mensagensDiv.clientHeight) {
-          mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
-        }
-      }, 300);  // Ajuste o tempo de espera conforme necessário (300ms é um exemplo)
+    chatContainer.addEventListener("mouseleave", () => {
+      chatEmHover = false;
+      scrollChatParaFim(); // Executa scroll ao sair do hover
     });
   } else {
-    console.error("Elemento 'chat-container' não encontrado!");
+    console.error("Elemento 'chat-container' ou 'chat-mensagens' não encontrado!");
   }
 });
 
@@ -167,16 +164,45 @@ document.addEventListener("DOMContentLoaded", () => {
 function scrollChatParaFim() {
   const mensagensDiv = document.getElementById("chat-mensagens");
   if (mensagensDiv) {
-    // Espera a animação concluir antes de rolar
     setTimeout(() => {
-      console.log("scrollTop:", mensagensDiv.scrollTop);
-      console.log("scrollHeight:", mensagensDiv.scrollHeight);
-      console.log("clientHeight:", mensagensDiv.clientHeight);
-
-      if (mensagensDiv.scrollHeight > mensagensDiv.clientHeight) {
-        mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
-      }
-    }, 300);  // Ajuste o tempo de espera conforme necessário (300ms é um exemplo) // 
-    }
-  console.log("Scroll automático ativado.");
+      mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
+    }, 300);
+  }
 }
+
+async function limparMensagensAntigasSeNecessario() {
+  const hoje = new Date().toISOString().split("T")[0]; // Formata a data de hoje
+  const ultimaLimpeza = localStorage.getItem("ultimaLimpezaChat");
+
+  // Calculando a data da próxima limpeza
+  const proximaLimpeza = new Date(hoje); // Cria uma nova data com a data de hoje
+  proximaLimpeza.setDate(proximaLimpeza.getDate() + 1); // Define para o dia seguinte
+
+  const tempoFaltante = proximaLimpeza - new Date(); // Tempo faltante em milissegundos
+
+  // Exibe no console o tempo faltante até a próxima limpeza
+  console.log(`Próxima limpeza será em: ${proximaLimpeza.toLocaleString()}`);
+  console.log(`Tempo faltante para a próxima limpeza: ${Math.floor(tempoFaltante / 1000 / 60)} minutos`);
+
+  // Verifica se a limpeza já foi feita hoje
+  if (ultimaLimpeza !== hoje) {
+    console.log("Limpando mensagens antigas do chat...");
+    try {
+      const snapshot = await db.collection("chatMensagens").get(); // Obtem as mensagens
+      const batch = db.batch();
+
+      snapshot.forEach(doc => {
+        batch.delete(doc.ref); // Deleta cada documento
+      });
+
+      await batch.commit();
+      localStorage.setItem("ultimaLimpezaChat", hoje); // Atualiza a data da última limpeza
+      console.log("Mensagens do chat limpas com sucesso.");
+    } catch (err) {
+      console.error("Erro ao limpar mensagens antigas:", err);
+    }
+  }
+}
+
+// Chama a limpeza ao iniciar o chat
+limparMensagensAntigasSeNecessario();
