@@ -353,8 +353,16 @@ function criarToken({ x, y }) {
   modal.innerHTML = `
     <div class="modal-content">
       <h3>Criar Token</h3>
+
       <label>Imagem (URL):</label>
       <input type="text" id="token-img-url" placeholder="https://..." required />
+
+      <label>Ou envie uma imagem:</label>
+      <button type="button" id="open-postimages-token">Enviar imagem no Postimages</button>
+
+      <small id="upload-status-token" style="display:none; font-style: italic;">
+        Após o upload, copie a URL gerada e cole acima.
+      </small>
 
       <label>Tamanho (em células):</label>
       <input type="number" id="token-size" placeholder="1" min="1" />
@@ -367,18 +375,28 @@ function criarToken({ x, y }) {
   `;
   document.body.appendChild(modal);
 
-  // Cancelar
-  document.getElementById('cancelar-criacao').addEventListener('click', () => {
+  // Fechar modal
+  document.getElementById('cancelar-criacao').onclick = () => {
     document.body.removeChild(modal);
-  });
+  };
 
-  // Criar
+  // Abre Postimages em nova janela pequena
+  document.getElementById('open-postimages-token').onclick = () => {
+    window.open(
+      'https://postimages.org/upload',
+      'PostImages',
+      'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes'
+    );
+    document.getElementById('upload-status-token').style.display = 'block';
+  };
+
+  // Criar token
   document.getElementById('confirmar-criacao').addEventListener('click', () => {
-    const image = document.getElementById('token-img-url').value.trim();
+    const imageUrl = document.getElementById('token-img-url').value.trim();
     const sizeInCells = parseInt(document.getElementById('token-size').value) || 1;
 
-    if (!image) {
-      alert("Por favor, insira o link da imagem.");
+    if (!imageUrl) {
+      alert("Por favor, cole a URL direta da imagem no campo acima.");
       return;
     }
 
@@ -388,7 +406,7 @@ function criarToken({ x, y }) {
       x,
       y,
       size: pixelSize,
-      image,
+      image: imageUrl,
       timestamp: Date.now()
     };
 
@@ -396,6 +414,7 @@ function criarToken({ x, y }) {
     document.body.removeChild(modal);
   });
 }
+
 
 tokenLayer.addEventListener('mousedown', (e) => {
   if (e.target.classList.contains('token')) {
@@ -529,8 +548,16 @@ function criarBackground({ x, y }) {
   modal.innerHTML = `
     <div class="modal-content">
       <h3>Criar Background</h3>
+
       <label>Imagem (URL):</label>
-      <input type="text" id="bg-img-url" placeholder="https://..." required />
+      <input type="text" id="bg-img-url" placeholder="https://..." />
+
+      <label>Ou envie uma imagem:</label>
+      <button id="open-postimages">Enviar imagem no Postimages</button>
+      
+      <small id="upload-status" style="display:none; font-style: italic;">
+        Após o upload, copie a URL gerada e cole acima.
+      </small>
 
       <label>Largura (em células):</label>
       <input type="number" id="bg-width" placeholder="1" min="1" />
@@ -546,35 +573,52 @@ function criarBackground({ x, y }) {
   `;
   document.body.appendChild(modal);
 
-  document.getElementById('cancelar-bg').addEventListener('click', () => {
-    document.body.removeChild(modal);
-  });
+  // Fecha modal
+  document.getElementById('cancelar-bg').onclick = () => document.body.removeChild(modal);
 
+  // Abre Postimages em nova janela
+  document.getElementById('open-postimages').onclick = () => {
+    window.open('https://postimages.org/upload', '_blank', 'width=800,height=600');
+    const status = document.getElementById('upload-status');
+    status.style.display = 'block';
+  };
+
+  // Confirmação final: usa o que estiver no input de URL
   document.getElementById('confirmar-bg').addEventListener('click', () => {
-    const image = document.getElementById('bg-img-url').value.trim();
-    const widthInCells = parseInt(document.getElementById('bg-width').value) || 1;
-    const heightInCells = parseInt(document.getElementById('bg-height').value) || 1;
-
-    if (!image) {
-      alert("Por favor, insira o link da imagem.");
+    const imageUrl = document.getElementById('bg-img-url').value.trim();
+    if (!imageUrl) {
+      alert("Por favor, cole a URL Link Direto da imagem no campo acima.");
       return;
     }
 
-    const pixelWidth = widthInCells * cellSize;
+    const widthInCells = parseInt(document.getElementById('bg-width').value) || 1;
+    const heightInCells = parseInt(document.getElementById('bg-height').value) || 1;
+    const pixelWidth  = widthInCells * cellSize;
     const pixelHeight = heightInCells * cellSize;
 
-    const bgData = {
-      x,
-      y,
-      width: pixelWidth,
-      height: pixelHeight,
-      image,
-      timestamp: Date.now()
-    };
-
+    const bgData = { x, y, width: pixelWidth, height: pixelHeight, image: imageUrl, timestamp: Date.now() };
     db.collection('backgrounds-si').add(bgData).catch(console.error);
     document.body.removeChild(modal);
   });
+}
+
+
+async function uploadParaPostImages(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_session', ''); // Deixe vazio para upload anônimo
+  formData.append('numfiles', '1');
+  formData.append('gallery', '');
+  formData.append('upload_type', 'browse');
+
+  const response = await fetch('https://postimage.me/json', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) throw new Error("Falha ao fazer upload");
+  const result = await response.json();
+  return result.url;
 }
 
 
