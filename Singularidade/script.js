@@ -2451,6 +2451,11 @@ function enviarFeedback(topico, resultado, valores, formula) {
 
     const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}: ${resultado} (${valores.join(", ")})`;
 
+    // Se for rolagem de iniciativa, atualiza a lista localmente
+    if (topico.toLowerCase().includes("destreza")) {
+        atualizarListaIniciativa(nomepersonagem, resultado);
+    }
+
     // Envia a mensagem para o chat (sempre)
     mensagensRef.add({
         texto: textoChat,
@@ -3014,3 +3019,30 @@ essential.style.visibility = '';
 
 // 5) Exporta a altura para uma variável CSS
 document.documentElement.style.setProperty('--essential-info-height', `${height}px`);
+
+function atualizarListaIniciativa(nome, valor) {
+    const lista = document.getElementById("lista-iniciativas");
+    if (!lista) return;
+
+    const item = document.createElement("li");
+    item.innerHTML = `
+        <span>${nome} - ${valor}</span>
+        <span class="remove-btn" onclick="this.parentElement.remove()">🗑️</span>
+    `;
+
+    lista.appendChild(item);
+}
+
+
+function adicionarIniciativaManual() {
+    const nome = document.getElementById("nome-manual").value.trim();
+    const valor = document.getElementById("valor-manual").value.trim();
+    
+    if (!nome || !valor) return alert("Preencha nome e valor!");
+
+    atualizarListaIniciativa(nome, valor);
+
+    // Limpa os campos
+    document.getElementById("nome-manual").value = "";
+    document.getElementById("valor-manual").value = "";
+}
