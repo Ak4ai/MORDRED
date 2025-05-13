@@ -139,6 +139,15 @@ class Personagem {
       // Perícias: Crime
       this.furtividade = data.furtividade;
       this.prestidigitacao = data.prestidigitacao;
+      this.fraude = data.fraude;
+
+      // Perícias: Coordenação
+      this.performance = data.performance;
+      this.iniciativa = data.iniciativa;
+    
+      // Perícias: Resistência
+      this.constituicao = data.constituicao;
+      this.vontade = data.vontade;
   
       // Traços
       this.tracoRaiz = data.tracoRaiz;
@@ -224,7 +233,14 @@ class Personagem {
         lidarComAnimais: this.lidarComAnimais,
         // Crime
         furtividade: this.furtividade,
-        prestidigitacao: this.prestidigitacao
+        prestidigitacao: this.prestidigitacao,
+        fraude: this.fraude,
+        // Coordenação
+        performance: this.performance,
+        iniciativa: this.iniciativa,
+        // Resistência
+        constituicao: this.constituicao,
+        vontade: this.vontade
       };
     }
   
@@ -389,6 +405,13 @@ function atualizarInfoPersonagem(personagem) {
   
     setText('status-pericia-furtividade',          per.furtividade);
     setText('status-pericia-prestidigitacao',      per.prestidigitacao);
+    setText('status-pericia-fraude',               per.fraude);
+
+    setText('status-pericia-performance',          per.performance);
+    setText('status-pericia-iniciativa',           per.iniciativa);
+
+    setText('status-pericia-constituicao',        per.constituicao);
+    setText('status-pericia-vontade',             per.vontade);
   
     // Traços
     const tr = personagem.getTracos();
@@ -1441,7 +1464,26 @@ function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
             valorPericia = personagem.furtividade;
             break;
         case 'prestidigitacao':
-            valorPericia = personagem.prestidigitacao;
+            valorPericia = personagem.prestidigitação;
+            break;
+        case 'fraude':
+            valorPericia = personagem.fraude;
+            break;
+
+        // Coordenação
+        case 'performance':
+            valorPericia = personagem.performance;
+            break;
+        case 'iniciativa':
+            valorPericia = personagem.iniciativa;
+            break;
+
+        // Resistência
+        case 'constituicao':
+            valorPericia = personagem.constituicao;
+            break;
+        case 'vontade':
+            valorPericia = personagem.vontade;
             break;
 
         default:
@@ -1841,6 +1883,13 @@ async function salvarStatus() {
                 // Crime
                 furtividade: getNumberValue('furtividade'),
                 prestidigitacao: getNumberValue('prestidigitacao'),
+                fraude: getNumberValue('fraude'),
+                // Coordenação
+                performance: getNumberValue('performance'),
+                iniciativa: getNumberValue('iniciativa'),
+                // Resistência
+                constituicao: getNumberValue('constituicao'),
+                vontade: getNumberValue('vontade'),
 
                 // Traços
                 tracoRaiz: getStringValue('tracoRaiz'),
@@ -1922,6 +1971,13 @@ async function salvarStatus() {
                 // Crime
                 furtividade: getNumberValue('furtividade'),
                 prestidigitacao: getNumberValue('prestidigitacao'),
+                fraude: getNumberValue('fraude'),
+                // Coordenação
+                performance: getNumberValue('performance'),
+                iniciativa: getNumberValue('iniciativa'),
+                // Resistência
+                constituicao: getNumberValue('constituicao'),
+                vontade: getNumberValue('vontade'),
 
                 // Traços
                 tracoRaiz: getStringValue('tracoRaiz'),
@@ -2451,10 +2507,16 @@ function enviarFeedback(topico, resultado, valores, formula) {
 
     const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}: ${resultado} (${valores.join(", ")})`;
 
-    // Se for rolagem de iniciativa, atualiza a lista localmente
-    if (topico.toLowerCase().includes("destreza")) {
-        atualizarListaIniciativa(nomepersonagem, resultado);
+    // Se for rolagem de iniciativa, salva no Firestore
+    if (topico.toLowerCase().includes("iniciativa")) {
+        firebase.firestore().collection("iniciativas").add({
+            nome: nomepersonagem,
+            valor: parseInt(resultado)
+        }).catch((error) => {
+            console.error("Erro ao salvar iniciativa:", error);
+        });
     }
+
 
     // Envia a mensagem para o chat (sempre)
     mensagensRef.add({
@@ -3020,29 +3082,109 @@ essential.style.visibility = '';
 // 5) Exporta a altura para uma variável CSS
 document.documentElement.style.setProperty('--essential-info-height', `${height}px`);
 
-function atualizarListaIniciativa(nome, valor) {
+
+const iniciativasRef = firebase.firestore().collection("iniciativas");
+
+// Atualiza a UI com um item da Firestore
+function atualizarListaIniciativa(nome, valor, id = null) {
     const lista = document.getElementById("lista-iniciativas");
     if (!lista) return;
-
+  
     const item = document.createElement("li");
-    item.innerHTML = `
-        <span>${nome} - ${valor}</span>
-        <span class="remove-btn" onclick="this.parentElement.remove()">🗑️</span>
-    `;
-
+    item.setAttribute("data-id", id);
+  
+    const spanTexto = document.createElement("span");
+    spanTexto.textContent = `${nome} - ${valor}`;
+  
+    const btnRemover = document.createElement("span");
+    btnRemover.className = "remove-btn";
+    btnRemover.style.cursor = "pointer";
+    btnRemover.textContent = "🗑️";
+    // só mostramos o ícone se houver ID
+    if (!id) btnRemover.style.display = "none";
+  
+    item.appendChild(spanTexto);
+    item.appendChild(btnRemover);
     lista.appendChild(item);
 }
-
-
+  
+// Adiciona uma nova iniciativa à Firestore
 function adicionarIniciativaManual() {
-    const nome = document.getElementById("nome-manual").value.trim();
-    const valor = document.getElementById("valor-manual").value.trim();
-    
-    if (!nome || !valor) return alert("Preencha nome e valor!");
+  const nome = document.getElementById("nome-manual").value.trim();
+  const valor = document.getElementById("valor-manual").value.trim();
 
-    atualizarListaIniciativa(nome, valor);
+  if (!nome || !valor) return alert("Preencha nome e valor!");
 
-    // Limpa os campos
-    document.getElementById("nome-manual").value = "";
-    document.getElementById("valor-manual").value = "";
+  iniciativasRef.add({ nome, valor: parseInt(valor) })
+    .then(() => {
+      document.getElementById("nome-manual").value = "";
+      document.getElementById("valor-manual").value = "";
+    })
+    .catch((error) => {
+      console.error("Erro ao adicionar iniciativa:", error);
+    });
 }
+
+// Delegação de clique para remover
+window.addEventListener("DOMContentLoaded", () => {
+    const lista = document.getElementById("lista-iniciativas");
+    if (!lista) return console.error("Não achei #lista-iniciativas no DOM");
+  
+    lista.addEventListener("click", e => {
+      const target = e.target;
+      if (!target.classList.contains("remove-btn")) return;
+      
+      console.log("👀 clique em remove-btn detectado", target);
+  
+      // teste sem admincheck (só para debug)
+      // if (!window.admincheck) return console.warn("Sem permissão admin");
+  
+      const id = target.parentElement.getAttribute("data-id");
+      console.log("🆔 data-id do item:", id);
+      if (!id) return console.warn("ID inválido para remoção");
+  
+      removerIniciativa(id);
+    });
+  });
+  
+
+// Remove uma iniciativa do Firestore
+function removerIniciativa(id) {
+    iniciativasRef
+      .doc(id)
+      .delete()
+      .then(() => console.log(`Iniciativa ${id} removida`))
+      .catch((error) => console.error("Erro ao remover iniciativa:", error));
+}
+
+// Limpa todas as iniciativas (somente admin)
+function limparIniciativas() {
+  if (!window.admincheck) return;
+
+  iniciativasRef.get().then(snapshot => {
+    const batch = firebase.firestore().batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    return batch.commit();
+  }).catch((error) => {
+    console.error("Erro ao limpar iniciativas:", error);
+  });
+}
+
+// Renderiza automaticamente quando algo muda no Firestore
+iniciativasRef.onSnapshot(snapshot => {
+  const lista = document.getElementById("lista-iniciativas");
+  if (lista) lista.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const { nome, valor } = doc.data();
+    atualizarListaIniciativa(nome, valor, doc.id);
+  });
+});
+
+// Exibe botão de limpar se for admin
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.admincheck) {
+    const btnLimpar = document.getElementById("btn-limpar-iniciativas");
+    if (btnLimpar) btnLimpar.style.display = "flex";
+  }
+});

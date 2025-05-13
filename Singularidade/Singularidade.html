@@ -146,14 +146,23 @@
         </div>
     </div>
     <div id="iniciativa-container">
-      <h3>Iniciativas</h3>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h3 style="margin: 0;">Iniciativas</h3>
+        <button 
+          id="btn-limpar-iniciativas" 
+          onclick="limparIniciativas()" 
+          style="display: none; margin-left: 10px;"
+        >🧹</button>
+      </div>
+    
       <ul id="lista-iniciativas"></ul>
+    
       <div id="manual-entry">
         <input type="text" id="nome-manual" placeholder="Nome" />
         <input type="number" id="valor-manual" placeholder="Valor" />
         <button onclick="adicionarIniciativaManual()">➕</button>
       </div>
-    </div>    
+    </div>      
     <div id="pull-up-indicator"></div>
     <div id="black-overlay"></div>
     <div id="mapa-container">
@@ -523,7 +532,7 @@
                   <div class="status-column2">
                     <div class="status-item">
                       <label>Fraude:</label>
-                      <span>0</span>
+                      <span id="status-pericia-fraude">0</span>
                       <p>Falsificar documentos e aplicar golpes.</p>
                     </div>
                   </div>
@@ -531,22 +540,29 @@
                   <div class="status-column2">
                     <div class="status-item">
                       <label>Performance:</label>
-                      <span>0</span>
+                      <span id="status-pericia-performance">0</span>
                       <p>Atuação, música e apresentações.</p>
+                    </div>
+                  </div>
+                  <div class="status-column2">
+                    <div class="status-item">
+                      <label>Iniciativa:</label>
+                      <span id="status-pericia-iniciativa">0</span>
+                      <p>Capacidade de agir rapidamente em situações de combate.</p>
                     </div>
                   </div>
                   <div class="Labelpericia"><label>Resistência</label></div>
                   <div class="status-column2">
                     <div class="status-item">
                       <label>Constituição:</label>
-                      <span>0</span>
+                      <span id="status-pericia-constituicao">0</span>
                       <p>Resistência física e imunidade.</p>
                     </div>
                   </div>
                   <div class="status-column2">
                     <div class="status-item">
                       <label>Vontade:</label>
-                      <span>0</span>
+                      <span id="status-pericia-vontade">0</span>
                       <p>Força mental e resistência a influência externa.</p>
                     </div>
                   </div>
@@ -826,8 +842,28 @@
 
                     <label for="prestidigitacao">Prestidigitação:</label>
                     <input type="number" id="prestidigitacao" name="prestidigitacao" min="0">
-                </fieldset>
 
+                    <label for="fraude">Fraude:</label>
+                    <input type="number" id="fraude" name="fraude" min="0"><br>
+                </fieldset>
+                <!-- Perícias de Coordenação -->
+                <fieldset>
+                    <legend>Perícias: Coordenação</legend>
+                    <label for="performance">Performance:</label>
+                    <input type="number" id="performance" name="performance" min="0"><br>
+
+                    <label for="iniciativa">Iniciativa:</label>
+                    <input type="number" id="iniciativa" name="iniciativa" min="0"><br>
+                </fieldset>
+                <!-- Perícias de Resistência -->
+                <fieldset>
+                    <legend>Perícias: Resistência</legend>
+                    <label for="constituicao">Constituição:</label>
+                    <input type="number" id="constituicao" name="constituicao" min="0"><br>
+
+                    <label for="vontade">Vontade:</label>
+                    <input type="number" id="vontade" name="vontade" min="0"><br>
+                </fieldset>
                 <!-- Traços -->
                 <fieldset>
                     <legend>Traços</legend>
@@ -949,6 +985,15 @@
                         <!-- Crime -->
                         <option value="furtividade">Furtividade</option>
                         <option value="prestidigitacao">Prestidigitação</option>
+                        <option value="fraude">Fraude</option>
+
+                        <!-- Coordenação -->
+                        <option value="performance">Performance</option>
+                        <option value="iniciativa">Iniciativa</option>
+
+                        <!-- Resistência -->
+                        <option value="constituicao">Constituição</option>
+                        <option value="vontade">Vontade</option>
                     </select>                      
             
                     <input type="number" id="vantagensInput" placeholder="Vantagens">
@@ -1264,6 +1309,15 @@
                     <!-- Crime -->
                     <option value="furtividade">Furtividade</option>
                     <option value="prestidigitacao">Prestidigitação</option>
+                    <option value="fraude">Fraude</option>
+
+                    <!-- Coordenação -->
+                    <option value="performance">Performance</option>
+                    <option value="iniciativa">Iniciativa</option>
+
+                    <!-- Resistência -->
+                    <option value="constituicao">Constituição</option>
+                    <option value="vontade">Vontade</option>
                 </select><br><br>
         
                 <label for="vantagens">Vantagens:</label>
