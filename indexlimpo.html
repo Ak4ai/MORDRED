@@ -137,25 +137,128 @@
     #sunny{ font-size: 5vw; font-family: 'Cinzel', sans-serif; }
     #nexus{ font-size: 6vw; font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
     #cda  { font-size: 5vw; font-family: 'UnifrakturCook', sans-serif; }
+
+    .system-icon {
+      width: 4.5em;
+      height: 4.5em;
+      margin-right: 1em;
+      border-radius: 0.5em;
+      object-fit: cover;
+      -webkit-filter: drop-shadow(0 0 32px rgba(0, 0, 0, 0.233));
+      filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.378));
+    }
+
+    .carousel-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel {
+      display: flex;
+      overflow: hidden;
+      width: 80vw;
+      max-width: 600px;
+      position: relative;
+      height: 20vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      transition: transform 0.5s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.5;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      pointer-events: none;
+      -webkit-filter: drop-shadow(0 32px 32px rgba(0, 0, 0, 0.649));
+      filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.685));
+    }
+
+    .carousel-item.active {
+      opacity: 1;
+      position: relative;
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 2;
+      transform: translateX(0);
+    }
+
+    @media (max-width: 1040px) {
+      .carousel-item span {
+        text-align: center;
+        font-size: 10vw !important;
+      }
+    }
+
+    .carousel-arrow {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    /* ...existing code... */
+    #bg-fade {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 1;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    #bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(0,0,0,0);
+      pointer-events: none;
+      transition: background 0.3s;
+    }
+    /* ...existing code... */
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="systems">
-      <div id="sing"   class="system-btn"
-           onmouseover="changeBackground('singularidade')"
-           onclick="selectSystem('Singularidade')">Singularidade</div>
-      <div id="sunny"  class="system-btn"
-           onmouseover="changeBackground('sunnyata')"
-           onclick="selectSystem('Sunnyata')">Sunnyata</div>
-      <div id="nexus"  class="system-btn"
-           onmouseover="changeBackground('nexus')"
-           onclick="selectSystem('Nexus')">Nexus</div>
-      <div id="cda"    class="system-btn"
-           onmouseover="changeBackground('cthulhu')"
-           onclick="selectSystem('cthulhu')">Contos do Abismo</div>
+  <div id="bg-fade"></div>
+  <div id="bg-overlay"></div>
+    <!-- ... -->
+    <div class="carousel-container">
+      <button class="carousel-arrow left" onclick="moveCarousel(-1)">&#8592;</button>
+      <div class="carousel">
+        <div class="carousel-item" data-system="Singularidade" onmouseover="changeBackground('singularidade')" onclick="selectSystem('Singularidade')">
+          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <span id="sing">Singularidade</span>
+        </div>
+        <div class="carousel-item" data-system="Sunnyata" onmouseover="changeBackground('sunnyata')" onclick="selectSystem('Sunnyata')">
+          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <span id="sunny">Sunnyata</span>
+        </div>
+        <div class="carousel-item" data-system="Nexus" onmouseover="changeBackground('nexus')" onclick="selectSystem('Nexus')">
+          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <span id="nexus">Nexus</span>
+        </div>
+        <div class="carousel-item" data-system="cthulhu" onmouseover="changeBackground('cthulhu')" onclick="selectSystem('cthulhu')">
+          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <span id="cda">Contos do Abismo</span>
+        </div>
+      </div>
+      <button class="carousel-arrow right" onclick="moveCarousel(1)">&#8594;</button>
     </div>
+    <!-- ... -->
   </div>
 
   <script>
@@ -173,14 +276,97 @@
       localStorage.setItem('sistemaEscolhido', systemId);
       window.location.href = `${systemId}/${systemId}.html`;
     }
-    function changeBackground(system) {
-      let bg = '';
-      if (system==='singularidade') bg = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?auto=webp")';
-      if (system==='sunnyata')      bg = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")';
-      if (system==='nexus')         bg = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")';
-      if (system==='cthulhu')       bg = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg")';
-      document.body.style.backgroundImage = bg;
+    // ...existing code...
+    // Pré-carregue as imagens de fundo
+    const bgImages = {
+      singularidade: "158905.jpg",
+      sunnyata:      "v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg",
+      nexus:         "26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg",
+      cthulhu:       "https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg"
+    };
+    Object.values(bgImages).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+    // ...existing code...
+
+    // Carousel logic
+    const items = document.querySelectorAll('.carousel-item');
+    let current = 0;
+    // Atualiza o fundo conforme o item ativo do carousel
+    function setBackgroundByIndex(idx) {
+      const bgDiv = document.getElementById('bg-fade');
+      const itemsArr = Array.from(items);
+      const item = itemsArr[idx];
+      if (!item) return;
+      const system = (item.getAttribute('data-system') || '').toLowerCase();
+      const url = bgImages[system];
+      if (!url) return;
+      bgDiv.style.opacity = 0;
+      setTimeout(() => {
+        bgDiv.style.backgroundImage = `url("${url}")`;
+        bgDiv.style.opacity = 1;
+      }, 200);
     }
+
+    // Escurece o fundo ao passar o mouse sobre um item
+    items.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        document.getElementById('bg-overlay').style.background = 'rgba(0,0,0,0.55)';
+      });
+      item.addEventListener('mouseleave', () => {
+        document.getElementById('bg-overlay').style.background = 'rgba(0,0,0,0)';
+      });
+    });
+
+    // Atualize o fundo sempre que o carousel mudar
+    function updateCarousel() {
+      items.forEach((item, idx) => {
+        item.classList.toggle('active', idx === current);
+        item.style.transform = `translateX(${(idx - current) * 100}%)`;
+        item.style.zIndex = idx === current ? 2 : 1;
+        item.style.opacity = idx === current ? 1 : 0.5;
+        item.style.pointerEvents = idx === current ? 'auto' : 'none';
+      });
+      setBackgroundByIndex(current);
+    }
+
+    function moveCarousel(dir) {
+      current = (current + dir + items.length) % items.length;
+      updateCarousel();
+    }
+    window.addEventListener('DOMContentLoaded', updateCarousel);
+
+    // Swipe para mobile
+    let startX = 0;
+    let isSwiping = false;
+
+    const carousel = document.querySelector('.carousel');
+
+    carousel.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        startX = e.touches[0].clientX;
+        isSwiping = true;
+      }
+    });
+
+    carousel.addEventListener('touchmove', function(e) {
+      // Opcional: pode adicionar efeito visual de arrasto aqui
+    });
+
+    carousel.addEventListener('touchend', function(e) {
+      if (!isSwiping) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 40) { // Sensibilidade do swipe
+        if (diff < 0) {
+          moveCarousel(1); // Swipe para a esquerda, próximo item
+        } else {
+          moveCarousel(-1); // Swipe para a direita, item anterior
+        }
+      }
+      isSwiping = false;
+    });
 
     // ============================
     // ALTURA DINÂMICA PARA iOS PWA
