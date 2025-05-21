@@ -307,6 +307,10 @@
 
                 <!-- Coluna 1 -->
                 <div class="status-column2">
+                  <div class="status-item" style="display: none;">
+                    <label>Null:</label>
+                    <span id="status-pericia-null">0</span>
+                  </div>
                   <div class="status-item">
                     <label>Reflexo:</label>
                     <span id="status-pericia-reflexo">0</span>
@@ -680,6 +684,7 @@
                     </select>
             
                     <select id="periciaSelect">
+                      <option value="null">Null</option>
                       <option value="reflexo">Reflexo</option>
                       <option value="medicina">Medicina</option>
                       <option value="manifestacao">Manifestação</option>
@@ -941,7 +946,7 @@
                 <input type="text" id="ajuste-vida" />
                 <button onclick="ajustarVida(1)">Adicionar Vida</button>
                 <button onclick="ajustarVida(-1)">Reduzir Vida</button>
-                <h2>Ajuste Sanidade:</h2>
+                <!-- <h2>Ajuste Sanidade:</h2>
                 <input type="text" id="ajuste-sanidade" />
                 <button onclick="ajustarSanidade(1)">Adicionar Sanidade</button>
                 <button onclick="ajustarSanidade(-1)">Reduzir Sanidade</button>
@@ -949,9 +954,9 @@
                 <input type="text" id="ajuste-defesa" />
                 <button onclick="ajustarDefesa(1)">Adicionar Defesa</button>
                 <button onclick="ajustarDefesa(-1)">Reduzir Defesa</button>
-                <!-- Outros elementos da interface, se houver -->
+                Outros elementos da interface, se houver
                 <h2>Sair:</h2>
-                <button onclick="sairAjustes()">Sair dos Ajustes</button>
+                <button onclick="sairAjustes()">Sair dos Ajustes</button> -->
             </div>
             <div id="testes" class="subcontent">
                 <!-- Pré-visualização do Inventário -->
@@ -972,6 +977,7 @@
         
                 <label for="pericia">Perícia:</label>
                 <select id="periciaSelect1">
+                  <option value="null">Null</option>
                   <option value="reflexo">Reflexo</option>
                   <option value="medicina">Medicina</option>
                   <option value="manifestacao">Manifestação</option>

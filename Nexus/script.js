@@ -96,6 +96,7 @@ class Personagem {
         this.atbr3 = data.atbr3;
   
         // Perícias: Físicas / Combate
+        this.null = null;
         this.reflexo = data.reflexo;
         this.luta = data.luta;
         this.pontaria = data.pontaria;
@@ -164,6 +165,7 @@ class Personagem {
     // Todas as perícias
     getPericias() {
     return {
+      null: this.null,
       reflexo: this.reflexo,
       medicina: this.medicina,
       manifestacao: this.manifestacao,
@@ -290,6 +292,7 @@ function atualizarInfoPersonagem(personagem) {
 
     // Perícias
     const per = personagem.getPericias();
+    setText('status-pericia-null',                 per.null)
     setText('status-pericia-reflexo',              per.reflexo);
     setText('status-pericia-medicina',             per.medicina);
     setText('status-pericia-manifestacao',         per.manifestacao);
@@ -787,7 +790,7 @@ function rolarDadosSimples(expressao) {
     if (/^-?\d+$/.test(expressao)) {
         const totalDano = parseInt(expressao, 10);
         if (typeof mostrarMensagem === 'function') {
-            mostrarMensagem(`Dano: ${totalDano}`);
+            mostrarPopup(`Ajuste: ${totalDano}`);
         }
         return totalDano;
     }
@@ -1132,97 +1135,46 @@ function ajustarVida(multiplicador) {
   
 
 function rolarDadosCalculo(atributo, pericia, vantagem, modificador) {
+    // Garante que os valores sejam números e não negativos
+    atributo = Math.max(0, Number(atributo));
+    pericia = Math.max(0, Number(pericia));
+    vantagem = Math.max(0, Number(vantagem));
     modificador = Number(modificador);
-    // Garante que atributo e perícia não sejam negativos
-    atributo = Math.max(0, atributo);
-    pericia = Math.max(0, pericia);
-    
-    // Garante que vantagem não seja negativa
-    vantagem = Math.max(0, vantagem);
-    // Total de rolagens de d20 = 1 (normal) + vantagem (adicionais)
-    const totalRolls = 1 + vantagem;
 
-    // Rola o d20 totalRolls vezes e escolhe o maior resultado
+    // Calcula o total de d20 a serem rolados: vantagem + (atributo + 1)
+    const totalRolls = vantagem + (atributo + 1);
+
+    // Rola os d20 e pega o maior resultado
     let d20Rolls = [];
     for (let i = 0; i < totalRolls; i++) {
-        const roll = Math.floor(Math.random() * 20) + 1;
-        d20Rolls.push(roll);
+        d20Rolls.push(Math.floor(Math.random() * 20) + 1);
     }
     const d20 = Math.max(...d20Rolls);
 
-    // Rola os dados de perícia, se houver pontos
-    let periciaDiceType, periciaRolls = [], periciaTotal = 0;
-    if (pericia > 0) {
-        // Se perícia for 3 ou mais, utiliza d12; caso contrário, d10
-        periciaDiceType = pericia >= 3 ? 12 : 10;
-        for (let i = 0; i < pericia; i++) {
-            const roll = Math.floor(Math.random() * periciaDiceType) + 1;
-            periciaRolls.push(roll);
-            periciaTotal += roll;
-        }
-    }
+    // Modificador final: modificador + pericia + atributo
+    const modificadorFinal = modificador + pericia + atributo;
 
-    // Rola os dados de atributo, se houver pontos
-    let atributoRolls = [], atributoTotal = 0;
-    if (atributo > 0) {
-        for (let i = 0; i < atributo; i++) {
-            const roll = Math.floor(Math.random() * 6) + 1;
-            atributoRolls.push(roll);
-            atributoTotal += roll;
-        }
-    }
-
-    // Calcula o resultado final somando:
-    // d20 (com vantagem) + total dos dados de perícia + total dos dados de atributo + modificador fixo
-    const resultadoFinal = d20 + periciaTotal + atributoTotal + modificador;
-
-    // Monta um array para a string de rolagem com os dados detalhados:
-    // Se houver vantagem (totalRolls > 1), indica quantos d20 foram rolados e exibe todos os valores
+    // Monta a mensagem detalhada
     let rolagemArr = [];
-    if (totalRolls > 1) {
-        rolagemArr.push(`${totalRolls}d20 (max): ${d20Rolls.join(",")}`);
-    } else {
-        rolagemArr.push(`1d20: ${d20}`);
-    }
-    if (pericia > 0) {
-        rolagemArr.push(`${pericia}d${periciaDiceType}: ${periciaRolls.join(",")}`);
-    }
-    if (atributo > 0) {
-        rolagemArr.push(`${atributo}d6: ${atributoRolls.join(",")}`);
-    }
+    rolagemArr.push(`${totalRolls}d20kh: ${d20Rolls.join(", ")} (maior: ${d20})`);
 
-    // Monta a fórmula utilizada para o cálculo
-    let formulaStr = `d20`;
-    if (pericia > 0) {
-        formulaStr += `+${pericia}d${periciaDiceType}`;
-    }
-    if (atributo > 0) {
-        formulaStr += `+${atributo}d6`;
-    }
-    if (modificador !== 0) {
-        formulaStr += (modificador > 0 ? `+${modificador}` : modificador);
-    }
+    // Monta partes do modificador apenas se forem diferentes de 0
+    let partes = [];
+    if (modificador !== 0) partes.push(`${modificador} (modificador)`);
+    if (pericia !== 0) partes.push(`${pericia} (pericia)`);
+    if (atributo !== 0) partes.push(`${atributo} (atributo)`);
+    let modMsg = partes.length > 0 ? `Modificador final: ${partes.join(" + ")} = ${modificadorFinal}` : `Modificador final: 0`;
 
-    // Monta a mensagem final com o resultado detalhado
-    let mensagemFinal = `Resultado rolado: ${rolagemArr.join(" | ")} \n Resultado Final: ${resultadoFinal}`;
+    rolagemArr.push(modMsg);
 
-    // Exibe as mensagens (se necessário)
-    mostrarMensagem(`D20 rolado com vantagem (${totalRolls} roladas): ${d20Rolls.join(",")} -> escolhendo ${d20}`);
-    if (pericia > 0) {
-        mostrarMensagem(`Dados de perícia (${pericia} x d${periciaDiceType}): ${periciaRolls.join(",")}`);
-    }
-    if (atributo > 0) {
-        mostrarMensagem(`Dados de atributo (${atributo} x d6): ${atributoRolls.join(",")}`);
-    }
+    let mensagemFinal = `Resultado rolado: ${rolagemArr.join(" | ")}\nResultado Final: ${d20} + ${modificadorFinal} = ${d20 + modificadorFinal}`;
+
     mostrarMensagem(mensagemFinal);
 
-    // Armazena globalmente as informações, se necessário
+    // Chama enviarFeedback se necessário
     window.rolagem = rolagemArr;
-    window.formula = formulaStr;
-
-    // Chama enviarFeedback com os parâmetros:
-    // enviarFeedback(topico, resultadoFinal, rolagem, formula)
-    enviarFeedback(window.topico, resultadoFinal, rolagemArr, formulaStr);
+    window.formula = `${totalRolls}d20kh+${modificadorFinal}`;
+    enviarFeedback(window.topico, d20 + modificadorFinal, rolagemArr, window.formula);
 
     return mensagemFinal;
 }
@@ -1251,6 +1203,9 @@ function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
 
     // Seleciona a perícia
     switch (pericia) {
+        case 'null':
+            valorPericia = personagem.null;
+            break;
         case 'reflexo':
             valorPericia = personagem.reflexo;
             break;
@@ -2273,8 +2228,11 @@ function enviarFeedback(topico, resultado, valores, formula) {
     const imagemURL = window.imgpersonagem || "";
     const mensagensRef = db.collection("chatMensagens");
 
-    const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}: ${resultado} (${valores.join(", ")})`;
-
+    // ...existing code...
+    const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}:
+    Valores: [${valores.join(", ")}]
+    ➔ Soma final: ${resultado}`;
+    // ...existing code...
     // Se for rolagem de iniciativa, salva no Firestore
     if (topico.toLowerCase().includes("iniciativa")) {
         firebase.firestore().collection("iniciativas").add({
@@ -2867,7 +2825,7 @@ document.documentElement.style.setProperty('--essential-info-height', `${height}
 }
 
 // Exemplo de uso:
-updateAttributeNames(['ATBR1', 'ATBR2', 'ATBR3']);
+updateAttributeNames(['atributoEspecial1', 'atributoEspecial2', 'atributoEspecial3']);
 
 
 const iniciativasRef = firebase.firestore().collection("iniciativas");
