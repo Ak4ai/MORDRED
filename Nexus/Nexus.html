@@ -36,6 +36,7 @@
           'self' 
           https://cdnjs.cloudflare.com;
         connect-src 
+          'self' 
           https://www.googleapis.com 
           https://accounts.google.com 
           https://oauth2.googleapis.com 
@@ -44,7 +45,10 @@
           https://apis.google.com 
           https://www.google.com 
           https://firestore.googleapis.com 
-          https://www.youtube.com;
+          https://www.youtube.com 
+          https://postimages.org 
+          https://postimage.me;
+    
         img-src 
           'self' 
           https://i.pinimg.com 
@@ -53,6 +57,11 @@
           https://media.discordapp.net 
           https://i.ytimg.com 
           https://via.placeholder.com 
+          https://preview.redd.it 
+          https://external-preview.redd.it 
+          https://redditmedia.com 
+          https://i.imgur.com 
+          https://i.postimg.cc 
           data:;
         frame-src 
           https://accounts.google.com 
@@ -129,6 +138,24 @@
         <div class="dialog-message" id="dialog-message"></div>
         <div class="dialog-buttons">
             <button id="dialog-ok-button">OK</button>
+        </div>
+    </div>
+    <div id="iniciativa-container">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h3 style="margin: 0;">Iniciativas</h3>
+        <button 
+          id="btn-limpar-iniciativas" 
+          onclick="limparIniciativas()" 
+          style="display: none; margin-left: 10px;"
+        >🧹</button>
+      </div>
+    
+      <ul id="lista-iniciativas"></ul>
+    
+      <div id="manual-entry">
+        <input type="text" id="nome-manual" placeholder="Nome" />
+        <input type="number" id="valor-manual" placeholder="Valor" />
+        <button onclick="adicionarIniciativaManual()">➕</button>
         </div>
     </div>
     <div id="pull-up-indicator"></div>
@@ -256,20 +283,23 @@
                 <div class="status-column3">
                   <h2>Atributos</h2>
                   <div class="atributos-grid">
-                      <div class="atributo-item">
-                          <label for="atbr1"></label>
-                          <span id="status-atbr1"></span>
-                      </div>
-                      <div class="atributo-item">
-                          <label for="atbr2"></label>
-                          <span id="status-atbr2"></span>
-                      </div>
-                      <div class="atributo-item">
-                          <label for="atbr3"></label>
-                          <span id="status-atbr3"></span>
-                      </div>
-                  </div>
-              </div>
+                    <div class="atributo-item" style="display: none;">
+                      <label for="atbrnull">Nulo:</label>
+                      <span id="status-atbrnull">0</span>
+                    </div>
+                    <div class="atributo-item">
+                      <label for="atbr1"></label>
+                      <span id="status-atbr1"></span>
+                    </div>
+                    <div class="atributo-item">
+                      <label for="atbr2"></label>
+                      <span id="status-atbr2"></span>
+                    </div>
+                    <div class="atributo-item">
+                      <label for="atbr3"></label>
+                      <span id="status-atbr3"></span>
+                    </div>
+                  </div>    </div>
             </div>
             <div class="status-pericias">
               <h2 class="collapsible" onclick="togglePericias()">Perícias</h2>
@@ -471,7 +501,21 @@
                     <label for="token">Token do Personagem:</label>
                     <input type="text" id="token" name="token" required>
                 </fieldset>
-
+                <br>
+                <div id="upload">
+                  <label for="uploadImage">Upload Imagem:</label>
+                  <button 
+                    type="button" 
+                    id="uploadImage"
+                    onclick="window.open(
+                      'https://postimages.org/upload',
+                      'PostImages',
+                      'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes'
+                    )"
+                  >
+                    Ir para PostImages
+                  </button>
+                </div>
                 <!-- Atributos -->
                 <fieldset>
                     <legend>Atributos</legend>
@@ -628,6 +672,7 @@
                     </div>
             
                     <select id="atributoSelect">
+                        <option value="atbrnull">Null</option>
                         <option value="atbr1"></option>
                         <option value="atbr2"></option>
                         <option value="atbr3"></option>
@@ -762,8 +807,29 @@
             <label for="item-name">Nome:</label>
             <input type="text" id="item-name" placeholder="Nome do item">
             
+            <fieldset>
+              
+              <legend>Icon</legend>
+              <div id="uploadmodal">
+                <label for="uploadImage">Upload Imagem:</label>
+                <button 
+                  type="button" 
+                  id="uploadImage"
+                  onclick="window.open(
+                    'https://postimages.org/upload',
+                    'PostImages',
+                    'width=800,height=600,top=100,left=100,resizable=yes,scrollbars=yes'
+                  )"
+                >
+                  Ir para PostImages
+                </button>
+              </div>
+
+            
             <label for="item-icon">Ícone (URL ou caminho):</label>
             <input type="text" id="item-icon" placeholder="Caminho do ícone">
+            </fieldset>
+            <br>
             
             <label for="item-damage">Dano:</label>
             <input type="text" id="item-damage" placeholder="Dano">
@@ -897,6 +963,7 @@
                 </div>
                 <label for="atributo">Atributo:</label>
                 <select id="atributoSelect1">
+                        <option value="atbrnull">Null</option>
                         <option value="atbr1"></option>
                         <option value="atbr2"></option>
                         <option value="atbr3"></option>

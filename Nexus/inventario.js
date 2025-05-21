@@ -24,10 +24,10 @@ let selectedAttackItem = null;
 
   // Função que monta a chave do inventário a partir do nome do personagem
   function getInventoryKey() {
-    return window.nomepersonagem + '-inventário302X';
+    return window.nomepersonagem + '-inventarioNexus';
   }
 
-  // A função loadInventory utiliza a chave composta por window.nomepersonagem + '-inventário302X.txt'
+  // A função loadInventory utiliza a chave composta por window.nomepersonagem + '-inventarioNexus.txt'
   async function loadInventory() {
     const inventoryKey = getInventoryKey();
     let inventory = [];

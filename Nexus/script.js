@@ -90,6 +90,7 @@ class Personagem {
         this.energiaMax = data.energiaMax;
     
         // Atributos
+        this.atbrnull = null;
         this.atbr1 = data.atbr1;
         this.atbr2 = data.atbr2;
         this.atbr3 = data.atbr3;
@@ -153,6 +154,7 @@ class Personagem {
     // Atributos
     getAtributos() {
       return {
+        atbrnull: this.atbrnull,
         atbr1: this.atbr1,
         atbr2: this.atbr2,
         atbr3: this.atbr3
@@ -284,8 +286,8 @@ function atualizarInfoPersonagem(personagem) {
     setText('status-atbr1',           attrs.atbr1);
     setText('status-atbr2',           attrs.atbr2);          // ou, melhor ainda, renomeie para 'status-forca'
     setText('status-atbr3',           attrs.atbr3);
+    setText('status-atbrnull',       attrs.atbrnull);
 
-  
     // Perícias
     const per = personagem.getPericias();
     setText('status-pericia-reflexo',              per.reflexo);
@@ -1231,6 +1233,9 @@ function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
 
     // Seleciona o atributo
     switch (atributo) {
+        case 'atbrnull':
+            valorAtributo = personagem.atbrnull;
+            break;
         case 'atbr1':
             valorAtributo = personagem.atbr1;
             break;
@@ -2270,6 +2275,17 @@ function enviarFeedback(topico, resultado, valores, formula) {
 
     const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}: ${resultado} (${valores.join(", ")})`;
 
+    // Se for rolagem de iniciativa, salva no Firestore
+    if (topico.toLowerCase().includes("iniciativa")) {
+        firebase.firestore().collection("iniciativas").add({
+            nome: nomepersonagem,
+            valor: parseInt(resultado)
+        }).catch((error) => {
+            console.error("Erro ao salvar iniciativa:", error);
+        });
+    }
+
+
     // Envia a mensagem para o chat (sempre)
     mensagensRef.add({
         texto: textoChat,
@@ -2552,6 +2568,7 @@ if (fichaCheckada) {
     
     img.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('text/plain', nome);
+      console.log('MyAppLog: Nome do personagem:', nome);
       e.dataTransfer.setData('image', dados.token || 'https://media.discordapp.net/attachments/1164311440224702526/1361559378695688232/dfy9prk-fd124c1f-81f6-4ecb-935e-e994799c6b5f.png?ex=67ff327c&is=67fde0fc&hm=316bace3c2ec013775631ccb7ae51781072936e089449bfbc696bac56fa28fc0&=&format=webp&quality=lossless&width=433&height=648');
       document.getElementById('tabuleiro').style.pointerEvents = 'auto';
     });
@@ -2851,3 +2868,110 @@ document.documentElement.style.setProperty('--essential-info-height', `${height}
 
 // Exemplo de uso:
 updateAttributeNames(['ATBR1', 'ATBR2', 'ATBR3']);
+
+
+const iniciativasRef = firebase.firestore().collection("iniciativas");
+
+// Atualiza a UI com um item da Firestore
+function atualizarListaIniciativa(nome, valor, id = null) {
+    const lista = document.getElementById("lista-iniciativas");
+    if (!lista) return;
+  
+    const item = document.createElement("li");
+    item.setAttribute("data-id", id);
+  
+    const spanTexto = document.createElement("span");
+    spanTexto.textContent = `${nome} - ${valor}`;
+  
+    const btnRemover = document.createElement("span");
+    btnRemover.className = "remove-btn";
+    btnRemover.style.cursor = "pointer";
+    btnRemover.textContent = "🗑️";
+    // só mostramos o ícone se houver ID
+    if (!id) btnRemover.style.display = "none";
+  
+    item.appendChild(spanTexto);
+    item.appendChild(btnRemover);
+    lista.appendChild(item);
+}
+  
+// Adiciona uma nova iniciativa à Firestore
+function adicionarIniciativaManual() {
+  const nome = document.getElementById("nome-manual").value.trim();
+  const valor = document.getElementById("valor-manual").value.trim();
+
+  if (!nome || !valor) return alert("Preencha nome e valor!");
+
+  iniciativasRef.add({ nome, valor: parseInt(valor) })
+    .then(() => {
+      document.getElementById("nome-manual").value = "";
+      document.getElementById("valor-manual").value = "";
+    })
+    .catch((error) => {
+      console.error("Erro ao adicionar iniciativa:", error);
+    });
+}
+
+// Delegação de clique para remover
+window.addEventListener("DOMContentLoaded", () => {
+    const lista = document.getElementById("lista-iniciativas");
+    if (!lista) return console.error("Não achei #lista-iniciativas no DOM");
+  
+    lista.addEventListener("click", e => {
+      const target = e.target;
+      if (!target.classList.contains("remove-btn")) return;
+      
+      console.log("👀 clique em remove-btn detectado", target);
+  
+      // teste sem admincheck (só para debug)
+      // if (!window.admincheck) return console.warn("Sem permissão admin");
+  
+      const id = target.parentElement.getAttribute("data-id");
+      console.log("🆔 data-id do item:", id);
+      if (!id) return console.warn("ID inválido para remoção");
+  
+      removerIniciativa(id);
+    });
+  });
+  
+
+// Remove uma iniciativa do Firestore
+function removerIniciativa(id) {
+    iniciativasRef
+      .doc(id)
+      .delete()
+      .then(() => console.log(`Iniciativa ${id} removida`))
+      .catch((error) => console.error("Erro ao remover iniciativa:", error));
+}
+
+// Limpa todas as iniciativas (somente admin)
+function limparIniciativas() {
+  if (!window.admincheck) return;
+
+  iniciativasRef.get().then(snapshot => {
+    const batch = firebase.firestore().batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    return batch.commit();
+  }).catch((error) => {
+    console.error("Erro ao limpar iniciativas:", error);
+  });
+}
+
+// Renderiza automaticamente quando algo muda no Firestore
+iniciativasRef.onSnapshot(snapshot => {
+  const lista = document.getElementById("lista-iniciativas");
+  if (lista) lista.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const { nome, valor } = doc.data();
+    atualizarListaIniciativa(nome, valor, doc.id);
+  });
+});
+
+// Exibe botão de limpar se for admin
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.admincheck) {
+    const btnLimpar = document.getElementById("btn-limpar-iniciativas");
+    if (btnLimpar) btnLimpar.style.display = "flex";
+  }
+});

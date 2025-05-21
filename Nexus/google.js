@@ -182,36 +182,36 @@ function handleSignoutClick() {
 
 // Função para sincronizar o localStorage com o Google Drive
 syncButton.onclick = () => synchronizeWithDrive();
-// Função para encontrar ou criar a pasta "MORDRED302XDADOS" no Google Drive
+// Função para encontrar ou criar a pasta "MORDREDNEXUS" no Google Drive
 function findOrCreateFolder(callback) {
   // Query para buscar pela pasta com o nome e mimeType de pasta
-  const query = "name='MORDRED302XDADOS' and mimeType='application/vnd.google-apps.folder' and trashed=false";
+  const query = "name='MORDREDNEXUS' and mimeType='application/vnd.google-apps.folder' and trashed=false";
   gapi.client.drive.files.list({
       'q': query,
       'fields': "files(id, name)"
   }).then(function(response) {
       const files = response.result.files;
       if (files && files.length > 0) {
-          console.log('Pasta MORDRED302XDADOS encontrada.');
+          console.log('Pasta MORDREDNEXUS encontrada.');
           callback(files[0].id);
       } else {
-          console.log('Pasta MORDRED302XDADOS não encontrada. Criando nova pasta...');
+          console.log('Pasta MORDREDNEXUS não encontrada. Criando nova pasta...');
           const folderMetadata = {
-              'name': 'MORDRED302XDADOS',
+              'name': 'MORDREDNEXUS',
               'mimeType': 'application/vnd.google-apps.folder'
           };
           gapi.client.drive.files.create({
               resource: folderMetadata,
               fields: 'id'
           }).then(function(response) {
-              console.log('Pasta MORDRED302XDADOS criada.');
+              console.log('Pasta MORDREDNEXUS criada.');
               callback(response.result.id);
           });
       }
   });
 }
 
-// Função para encontrar um arquivo específico na pasta "MORDRED302XDADOS"
+// Função para encontrar um arquivo específico na pasta "MORDREDNEXUS"
 function findFileInFolder(fileName, folderId, callback) {
   const query = "name='" + fileName + ".json' and '" + folderId + "' in parents and trashed=false";
   gapi.client.drive.files.list({
@@ -330,7 +330,7 @@ function synchronizeWithDrive() {
     // Chaves que **não** devem ser sincronizadas
     const EXCLUDED_KEYS = [ACCESS_TOKEN_KEY, 'user_icon', 'user_name', 'last_sync'];
 
-    // Garante que a pasta MORDRED302XDADOS exista
+    // Garante que a pasta MORDREDNEXUS exista
     findOrCreateFolder(function(folderId) {
         let totalArquivos = 0;
         let arquivosProcessados = 0;
@@ -428,7 +428,7 @@ function restoreUserInfo() {
 restoreButton.onclick = () => downloadFilesFromDrive();
 
 function downloadFilesFromDrive() {
-    // Localiza ou cria a pasta "MORDRED302XDADOS"
+    // Localiza ou cria a pasta "MORDREDNEXUS"
     findOrCreateFolder(function(folderId) {
         // Lista arquivos JSON presentes na pasta
         gapi.client.drive.files.list({
@@ -471,7 +471,7 @@ function downloadFilesFromDrive() {
                 });
             });
         }).catch(error => {
-            console.error("Erro ao listar arquivos na pasta MORDRED302XDADOS:", error);
+            console.error("Erro ao listar arquivos na pasta MORDREDNEXUS:", error);
             mostrarMensagem('Erro ao listar arquivos do Drive. Por favor, faça sign out, sign in novamente e, se o problema persistir, use o botão "Apagar dados e recarregar".');
         });
     });
