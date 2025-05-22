@@ -605,9 +605,9 @@ button:active {
 
 .dialog-buttons button {
   margin: 5px 5px;
-  color: #37243e;
-  background-color: #ae90b3;
-  border: 1px solid #e1e0eb;
+  color: #243e25;
+  background-color: #91b390;
+  border: 1px solid #e1ebe0;
   border-radius: 0.5rem;
   padding: 10px 20px;
 }
@@ -1349,7 +1349,7 @@ textarea:focus {
   border: 1px solid #dbdbeb7f;
   border-radius: 4px;
   padding: 5px;
-  background-color: #57316340;
+  background-color: #41514082;
 }
 
 .slider-container .inventory-item img {
@@ -1393,7 +1393,7 @@ textarea:focus {
   top: -100px;             /* Inicia fora da tela (acima) */
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(59, 37, 64, 0.568); /* Opacidade ajustada para 80% */
+  background-color: rgba(37, 64, 37, 0.568); /* Opacidade ajustada para 80% */
   border: 1px solid #999999;
   border-radius: 0.5rem;
   -webkit-backdrop-filter: blur(20px);
@@ -1674,12 +1674,12 @@ textarea:focus {
   margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
   margin-top: 10px;
   z-index: 0;
-  border: 1px solid #c6bdca6b;
+  border: 1px solid #bdcabd6b;
   border-radius: 4px;
 }
 
 .toggle-bot:hover {
-  background-color: #382540b8;
+  background-color: #254029b8;
   border: 3px solid #ccc;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
 }
@@ -2391,7 +2391,7 @@ fieldset{
 #chat-container:hover {
   position: fixed;
   right: 1rem;
-  bottom: 2vh;
+  bottom: 1rem;
   width: 25vw;
   max-height: 40vh;
   background-color: #25402991;

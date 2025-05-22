@@ -322,7 +322,7 @@ let selectedAttackItem = null;
     // Usa o inventário já carregado na variável global currentInventory
     let inventory = currentInventory.length ? currentInventory : [];
     const name = inputName.value.trim();
-    const icon = inputIcon.value.trim();
+    const icon = inputIcon.value.trim() || 'https://i.postimg.cc/Tw0QVdCN/image.png'; // imagem padrão
     const damage = inputDamage.value.trim(); // Agora, damage é uma string como "1d20"
     const description = inputDescription.value.trim();
     const peso = parseFloat(inputpeso.value);

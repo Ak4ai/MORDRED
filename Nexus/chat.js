@@ -45,34 +45,34 @@ function iniciarChat() {
     return cor;
   }
 
-  async function tratarRolagem(texto) {
-    const match = texto.match(/^\/roll\s+(.+)/i) || texto.match(/^(\d+d\d+.*)/i);
-    if (!match) return null;
-  
-    let expr = match[1].trim();
-  
-    // Verifica se a expressão termina com 'k' e adiciona 1
-    if (/^(\d+d\d+)k$/i.test(expr)) {
-      expr += "1";
-    }
-  
-    try {
-      const roller = new DiceRoller();
-      const result = roller.roll(expr);
-  
-      console.log("Resultado da rolagem:", result);
-      
-      if (result.output) {
-        return `${nomeUsuario} rolou ${expr}: ${result.output}`;
-      } else {
-        console.warn('Não foi possível obter a saída corretamente');
-        return `Erro ao processar a rolagem.`;
+  // ...existing code...
+    async function tratarRolagem(texto) {
+      const match = texto.match(/^\/roll\s+(.+)/i) || texto.match(/^(\d+d\d+.*)/i);
+      if (!match) return null;
+    
+      let expr = match[1].trim();
+    
+      // Corrige casos como 3d20k+10 para 3d20k1+10
+      expr = expr.replace(/(\d+d\d+)k(?=[^0-9]|$)/gi, '$1k1');
+    
+      try {
+        const roller = new DiceRoller();
+        const result = roller.roll(expr);
+    
+        console.log("Resultado da rolagem:", result);
+        
+        if (result.output) {
+          return `${nomeUsuario} rolou ${expr}: ${result.output}`;
+        } else {
+          console.warn('Não foi possível obter a saída corretamente');
+          return `Erro ao processar a rolagem.`;
+        }
+      } catch (e) {
+        console.warn('Erro ao processar rolagem:', e);
+        return `Expressão inválida: ${expr}`;
       }
-    } catch (e) {
-      console.warn('Erro ao processar rolagem:', e);
-      return `Expressão inválida: ${expr}`;
     }
-  }
+  // ...existing code...
   
 
   enviarBtn.addEventListener("click", async () => {
@@ -97,6 +97,13 @@ function iniciarChat() {
       input.value = "";
     } catch (err) {
       console.error("Erro ao enviar mensagem:", err);
+    }
+  });
+
+  input.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      enviarBtn.click();
     }
   });
 

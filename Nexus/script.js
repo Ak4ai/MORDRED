@@ -558,7 +558,7 @@ function openSubtab(tab, subtab) {
 
 
 function limparHabilidades() {
-    const escolhaHabilidadesDiv = document.getElementById('escolha-habilidadesNexus');
+    const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades');
     const existingButtons = Array.from(escolhaHabilidadesDiv.getElementsByTagName('button'));
 
     // Imprime os IDs dos botões que serão removidos
@@ -585,7 +585,7 @@ function exibirHabilidades(habilidadesData) {
         // Limpa as habilidades carregadas anteriormente
         limparHabilidades();
 
-        const escolhaHabilidadesDiv = document.getElementById('escolha-habilidadesNexus');
+        const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades');
 
         habilidadesData.habilidades.forEach(habilidade => {
             const button = document.createElement('button');
@@ -1390,7 +1390,7 @@ async function executarAtaque() {
     let modificador = parseInt(document.getElementById('modificador-ataque').value) || 0;
     
     // Rola o teste de ataque
-    let resultadoAtaque = acao('força', 'luta', numeroVantagens, modificador);
+    let resultadoAtaque = acao('null', 'luta', numeroVantagens, modificador);
     
     // Monta a mensagem do teste de ataque
     let mensagem = `Resultado do Ataque: ${resultadoAtaque}`;
@@ -1421,7 +1421,7 @@ async function executarTiro() {
     let modificador = parseInt(document.getElementById('modificador-tiro').value) || 0;
     
     // Rola o teste de tiro
-    let resultadoTiro = acao('agilidade', 'pontaria', numeroVantagens, modificador);
+    let resultadoTiro = acao('null', 'pontaria', numeroVantagens, modificador);
     
     // Monta a mensagem do teste de tiro
     let mensagem = `Resultado do Tiro: ${resultadoTiro}`;
@@ -1447,11 +1447,11 @@ async function executarTiro() {
 function executarDefesa() {
     window.topico = 'Defesa';
 
-    // Obtém os valores de vantagens e modificador, considerando 0 se forem inválidos
-    //let numeroVantagens = parseInt(document.getElementById('vantagens-sanidade').value) || 0;
-    //let modificador = parseInt(document.getElementById('modificador-sanidade').value) || 0;
+    //Obtém os valores de vantagens e modificador, considerando 0 se forem inválidos
+    let numeroVantagens = parseInt(document.getElementById('vantagens-defesa').value) || 0;
+    let modificador = parseInt(document.getElementById('modificador-defesa').value) || 0;
     
-    let resultadoAcao = acao('fortitude', 'vigor', numeroVantagens, modificador); // Exemplo de retorno:
+    let resultadoAcao = acao('null', 'fortitude', numeroVantagens, modificador); // Exemplo de retorno:
 
     // Extrair o valor numérico do resultado
     let match = resultadoAcao.match(/Resultado Final:\s*(\d+)/);
@@ -1494,7 +1494,7 @@ function executarEsquiva() {
     let numeroVantagens = parseInt(document.getElementById('vantagens-esquiva').value) || 0;
     let modificador = parseInt(document.getElementById('modificador-esquiva').value) || 0;
     
-    let resultado = acao('agilidade', 'destreza', numeroVantagens, modificador);
+    let resultado = acao('null', 'reflexo', numeroVantagens, modificador);
 
     let mensagem = (`Resultado da Esquiva: ${resultado}`);
 
@@ -1520,7 +1520,7 @@ function executarContraAtaque() {
     let numeroVantagens = parseInt(document.getElementById('vantagens-contraataque').value) || 0;
     let modificador = parseInt(document.getElementById('modificador-contraataque').value) || 0;
     
-    let resultado = acao('força', 'luta', numeroVantagens, modificador);
+    let resultado = acao('null', 'luta', numeroVantagens, modificador);
 
     let mensagem = (`Resultado do Contra-ataque: ${resultado}`);
 
@@ -2825,8 +2825,69 @@ document.documentElement.style.setProperty('--essential-info-height', `${height}
 }
 
 // Exemplo de uso:
-updateAttributeNames(['atributoEspecial1', 'atributoEspecial2', 'atributoEspecial3']);
+async function carregarNomesAtributosDoFirestore() {
+    try {
+        // Ajuste o caminho conforme sua estrutura no Firestore
+        const docRef = firebase.firestore().collection('config').doc('atributos');
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const data = doc.data();
+            if (Array.isArray(data.nomes) && data.nomes.length >= 3) {
+                updateAttributeNames(data.nomes);
+            } else {
+                console.warn('Campo "nomes" não encontrado ou inválido no documento de atributos.');
+            }
+        } else {
+            console.warn('Documento de atributos não encontrado no Firestore.');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar nomes dos atributos do Firestore:', error);
+    }
+}
 
+// Chame essa função ao iniciar a aplicação
+carregarNomesAtributosDoFirestore();
+
+// ...existing code...
+
+// Função para setar nomes dos atributos no Firestore e atualizar interface
+async function setarNomesAtributos() {
+    const nome1 = document.getElementById('atributo-nome-1').value.trim();
+    const nome2 = document.getElementById('atributo-nome-2').value.trim();
+    const nome3 = document.getElementById('atributo-nome-3').value.trim();
+    const statusSpan = document.getElementById('status-set-nomes');
+    statusSpan.textContent = '';
+
+    if (!nome1 || !nome2 || !nome3) {
+        statusSpan.textContent = 'Preencha todos os nomes!';
+        statusSpan.style.color = 'red';
+        return;
+    }
+
+    try {
+        await firebase.firestore().collection('config').doc('atributos').set({
+            nomes: [nome1, nome2, nome3]
+        });
+        statusSpan.textContent = 'Nomes salvos!';
+        statusSpan.style.color = 'green';
+        // Atualiza interface imediatamente
+        updateAttributeNames([nome1, nome2, nome3]);
+    } catch (e) {
+        statusSpan.textContent = 'Erro ao salvar!';
+        statusSpan.style.color = 'red';
+        console.error(e);
+    }
+}
+
+// Exibe o bloco apenas para admin
+window.addEventListener("DOMContentLoaded", () => {
+    const bloco = document.getElementById('set-nomes-atributos');
+    if (window.admincheck && bloco) {
+        bloco.style.display = 'block';
+    } else if (bloco) {
+        bloco.style.display = 'none';
+    }
+});
 
 const iniciativasRef = firebase.firestore().collection("iniciativas");
 

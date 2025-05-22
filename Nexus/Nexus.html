@@ -765,6 +765,14 @@
                 <button type="button" onclick="ativarAdmin()">Ativar Admin</button>
                 <button type="button" onclick="desativarAdmin()">Desativar Admin</button>
                 <p id="adminStatus" style="color: green;"></p>
+                <div id="set-nomes-atributos" style="display:none; margin-top:20px; border:1px solid #aaa; padding:10px;">
+                  <h3>Setar Nomes dos Atributos</h3>
+                  <input type="text" id="atributo-nome-1" placeholder="Nome do Atributo 1">
+                  <input type="text" id="atributo-nome-2" placeholder="Nome do Atributo 2">
+                  <input type="text" id="atributo-nome-3" placeholder="Nome do Atributo 3">
+                  <button type="button" onclick="setarNomesAtributos()">Salvar Nomes</button>
+                  <span id="status-set-nomes" style="margin-left:10px;"></span>
+                </div>
             </div>  
             <div id="Google" class="subcontent">
                 <div class="title">Backup To Google Drive</div>
