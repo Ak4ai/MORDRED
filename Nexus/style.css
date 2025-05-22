@@ -2230,7 +2230,7 @@ textarea:focus {
   display: none;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #27243e88;
+  background: #253e2488;
   backdrop-filter: blur(5px);
   border: #ccc solid 3px;
   border-radius: 1rem;
