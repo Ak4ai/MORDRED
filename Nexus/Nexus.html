@@ -237,6 +237,15 @@
             <div class="status-bar-fill" id="status-bar-energia1" style="width: 0%;"></div>
           </div>
         </div>
+        <div class="status-item">
+          <div class="status-label">
+            <label>Sanidade:</label>
+            <span id="status-sanidade1">0 / 100</span>
+          </div>
+          <div class="status-bar">
+            <div class="status-bar-fill" id="status-bar-sanidade1" style="width: 0%;"></div>
+          </div>
+        </div>
     </div>         
     <div id="essential-info2" class="hidden">
         <h3>Anotações:</h3>
@@ -277,6 +286,15 @@
                       </div>
                       <div class="status-bar">
                           <div class="status-bar-fill" id="status-bar-energia" style="width: 0%;"></div>
+                      </div>
+                  </div>
+                  <div class="status-item">
+                      <div class="status-label">
+                          <label>Sanidade:</label>
+                          <span id="status-sanidade">0 / 100</span>
+                      </div>
+                      <div class="status-bar">
+                          <div class="status-bar-fill" id="status-bar-sanidade" style="width: 0%;"></div>
                       </div>
                   </div>
                 </div>
@@ -534,6 +552,12 @@
 
                     <label for="energiaMax">Energia Max:</label>
                     <input type="number" id="energiaMax" name="energiaMax" min="0"><br>
+
+                    <label for="sanidade">Sanidade:</label>
+                    <input type="number" id="sanidade" name="sanidade" min="0"><br>
+
+                    <label for="sanidadeMax">Sanidade Max:</label>
+                    <input type="number" id="sanidadeMax" name="sanidadeMax" min="0">
                 </fieldset>
 
                 <!-- Atributos Base -->
@@ -954,11 +978,11 @@
                 <input type="text" id="ajuste-vida" />
                 <button onclick="ajustarVida(1)">Adicionar Vida</button>
                 <button onclick="ajustarVida(-1)">Reduzir Vida</button>
-                <!-- <h2>Ajuste Sanidade:</h2>
+                <h2>Ajuste Sanidade:</h2>
                 <input type="text" id="ajuste-sanidade" />
                 <button onclick="ajustarSanidade(1)">Adicionar Sanidade</button>
                 <button onclick="ajustarSanidade(-1)">Reduzir Sanidade</button>
-                <h2>Ajuste Defesa:</h2>
+                <!-- <h2>Ajuste Defesa:</h2>
                 <input type="text" id="ajuste-defesa" />
                 <button onclick="ajustarDefesa(1)">Adicionar Defesa</button>
                 <button onclick="ajustarDefesa(-1)">Reduzir Defesa</button>

@@ -67,7 +67,8 @@ Array.from(toggleButtons).forEach(btn => {
     // IDs das barras de preenchimento
     const barras = [
       { barraId: 'status-bar-vida1', valor: personagem.vida, max: personagem.vidaMax },
-      { barraId: 'status-bar-energia1', valor: personagem.energia, max: personagem.energiaMax }
+      { barraId: 'status-bar-energia1', valor: personagem.energia, max: personagem.energiaMax },
+      { barraId: 'status-bar-sanidade1', valor: personagem.sanidade, max: personagem.sanidadeMax },
     ];
 
     barras.forEach(({ barraId, valor, max }) => {

@@ -88,6 +88,8 @@ class Personagem {
         this.vidaMax = data.vidaMax;
         this.energia = data.energia;
         this.energiaMax = data.energiaMax;
+        this.sanidade = data.sanidade;
+        this.sanidadeMax = data.sanidadeMax;
     
         // Atributos
         this.atbrnull = null;
@@ -151,6 +153,12 @@ class Personagem {
     getEnergiaMax() {
       return this.energiaMax;
     }
+    getSanidade() {
+        return this.sanidade;
+    }
+    getSanidadeMax() {
+        return this.sanidadeMax;
+    }
   
     // Atributos
     getAtributos() {
@@ -213,10 +221,13 @@ class Personagem {
     adicionarVida(valor) {
       this.vida += valor;
     }
+    reduzirSanidade(valor) {
+        this.sanidade -= valor;
+    }
   
     // Status geral formatado
     obterStatus() {
-      return `Vida: ${this.vida}/${this.vidaMax} | Energia: ${this.energia}/${this.energiaMax}`;
+      return `Vida: ${this.vida}/${this.vidaMax} | Energia: ${this.energia}/${this.energiaMax} | Sanidade: ${this.sanidade}/${this.sanidadeMax}`;
     }
 }
   
@@ -275,12 +286,16 @@ function atualizarInfoPersonagem(personagem) {
     setText('status-vida',      personagem.vida);
     setText('status-energia1',     personagem.energia);
     setText('status-energia',      personagem.energia);
-  
+    setText('status-sanidade1',     personagem.sanidade);
+    setText('status-sanidade',      personagem.sanidade);
+
     // Barras
     atualizarBarra('status-bar-vida1',     personagem.vida,     personagem.vidaMax);
     atualizarBarra('status-bar-vida',      personagem.vida,     personagem.vidaMax);
     atualizarBarra('status-bar-energia1',     personagem.energia,     personagem.energiaMax);
     atualizarBarra('status-bar-energia',      personagem.energia,     personagem.energiaMax);
+    atualizarBarra('status-bar-sanidade1',     personagem.sanidade,     personagem.sanidadeMax);
+    atualizarBarra('status-bar-sanidade',      personagem.sanidade,     personagem.sanidadeMax);
 
     // Atributos base
     const attrs = personagem.getAtributos();
@@ -806,7 +821,7 @@ function rolarDadosSimples(expressao) {
     let percentual = 0;
     let negativo = false;
     let atributo = null;
-    const matchPercentual = expressao.match(/^(-)?(\d+)%\s*(vidamax|energiamax)$/);
+    const matchPercentual = expressao.match(/^(-)?(\d+)%\s*(vidamax|energiamax|sanidademax)$/);
 
     if (matchPercentual) {
         negativo = !!matchPercentual[1];
@@ -822,6 +837,9 @@ function rolarDadosSimples(expressao) {
             case 'energiamax':
                 valorMaximo = personagem.energiaMax;
                 break;
+            case 'sanidademax':
+                valorMaximo = personagem.sanidadeMax;
+                break;
         }
 
         // Calcular o ajuste percentual
@@ -835,6 +853,9 @@ function rolarDadosSimples(expressao) {
                 break;
             case 'energiamax':
                 personagem.adicionarEnergia(ajuste);
+                break;
+            case 'sanidademax':
+                personagem.adicionarSanidade(ajuste);
                 break;
         }
 
@@ -937,7 +958,13 @@ function atualizarEnergia(custo, cooldown) {
     mostrarMensagem(`Energia restante após gastar ${custo} de energia. Numero de circulos: ${cooldown}`);
     atualizarInfoPersonagem(personagem);
 }
-
+function atualizarSanidade(custo) {
+    personagem.sanidade -= custo;
+    document.getElementById('status-sanidade').textContent = `Sanidade: ${personagem.sanidade}`;
+    // Envia um evento para o processo principal para exibir um diálogo
+    mostrarMensagem(`Sanidade restante após gastar ${custo} de sanidade.`);
+    atualizarInfoPersonagem(personagem);
+}
 
 function usarHabilidade() {
     // Obtem o nome da habilidade ativa na aba "Habilidades"
@@ -1054,7 +1081,7 @@ function ajustarEnergia(multiplicador) {
       expressao = '-' + expressao;
     }
     // Se houver '%' e nenhum atributo definido, anexa "energiamax"
-    if (expressao.includes('%') && !/(vidamax|energiamax)/i.test(expressao)) {
+    if (expressao.includes('%') && !/(vidamax|energiamax|sanidademax)/i.test(expressao)) {
         expressao += 'energiamax';
     }
     
@@ -1077,33 +1104,33 @@ function ajustarEnergia(multiplicador) {
     atualizarInfoPersonagem(personagem);
 }
   
-//function ajustarSanidade(multiplicador) {
-//    let expressao = document.getElementById('ajuste-sanidade').value.trim();
-//    if (multiplicador === -1 && !expressao.startsWith('-')) {
-//      expressao = '-' + expressao;
-//    }
+function ajustarSanidade(multiplicador) {
+    let expressao = document.getElementById('ajuste-sanidade').value.trim();
+    if (multiplicador === -1 && !expressao.startsWith('-')) {
+      expressao = '-' + expressao;
+    }
     // Se houver '%' e nenhum atributo definido, anexa "sanidademax"
-//    if (expressao.includes('%') && !/(vidamax|energiamax|sanidademax)/i.test(expressao)) {
-//        expressao += 'sanidademax';
-//    }
+    if (expressao.includes('%') && !/(vidamax|energiamax|sanidademax)/i.test(expressao)) {
+        expressao += 'sanidademax';
+    }
     
-//    let valorAjuste = rolarDadosSimples(expressao);
-//    if (isNaN(valorAjuste)) {
-//      mostrarMensagem("Digite um valor válido para o ajuste de sanidade");
-//      return;
-//    }
+    let valorAjuste = rolarDadosSimples(expressao);
+    if (isNaN(valorAjuste)) {
+      mostrarMensagem("Digite um valor válido para o ajuste de sanidade");
+      return;
+    }
     
-//    if (multiplicador === 1) {
-//      personagem.adicionarSanidade(valorAjuste);
-//    } else if (multiplicador === -1) {
-//      personagem.reduzirSanidade(Math.abs(valorAjuste));
-//    } else {
-//      mostrarMensagem("Operação inválida para ajuste de sanidade");
-//      return;
-//    }
+    if (multiplicador === 1) {
+      personagem.adicionarSanidade(valorAjuste);
+    } else if (multiplicador === -1) {
+      personagem.reduzirSanidade(Math.abs(valorAjuste));
+    } else {
+      mostrarMensagem("Operação inválida para ajuste de sanidade");
+      return;
+    }
     
-//    atualizarInfoPersonagem(personagem);
-//}
+    atualizarInfoPersonagem(personagem);
+}
   
 function ajustarVida(multiplicador) {
     let expressao = document.getElementById('ajuste-vida').value.trim();
@@ -1111,7 +1138,7 @@ function ajustarVida(multiplicador) {
       expressao = '-' + expressao;
     }
     // Se houver '%' e nenhum atributo definido, anexa "vidamax"
-    if (expressao.includes('%') && !/(vidamax|energiamax)/i.test(expressao)) {
+    if (expressao.includes('%') && !/(vidamax|energiamax|sanidademax)/i.test(expressao)) {
         expressao += 'vidamax';
     }
     
@@ -1619,6 +1646,8 @@ async function salvarStatus() {
                 vidaMax: getNumberValue('vidaMax'),
                 energia: getNumberValue('energia'),
                 energiaMax: getNumberValue('energiaMax'),
+                sanidade: getNumberValue('sanidade'),
+                sanidadeMax: getNumberValue('sanidadeMax'),
 
                 // Atributos base
                 atbr1: getNumberValue('atbr1'),
@@ -1678,6 +1707,8 @@ async function salvarStatus() {
                 vidaMax: getNumberValue('vidaMax'),
                 energia: getNumberValue('energia'),
                 energiaMax: getNumberValue('energiaMax'),
+                sanidade: getNumberValue('sanidade'),
+                sanidadeMax: getNumberValue('sanidadeMax'),
 
                 // Atributos base
                 atbr1: getNumberValue('atbr1'),
