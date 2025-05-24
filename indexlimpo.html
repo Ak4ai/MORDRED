@@ -133,10 +133,10 @@
       }
     }
 
-    #sing {font-family: 'Orbitron', sans-serif; }
-    #sunny{font-family: 'Cinzel', sans-serif; }
-    #nexus{font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
-    #cda  {font-family: 'UnifrakturCook', sans-serif; }
+    #sing {font-family: 'Orbitron', sans-serif; font-size: 100px;}
+    #sunny{font-family: 'Cinzel', sans-serif; font-size: 100px; }
+    #nexus{font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4); font-size: 100px;}
+    #cda  {font-family: 'UnifrakturCook', sans-serif; font-size: 100px; }
 
     .system-icon {
       width: 4.5em;
@@ -201,14 +201,14 @@
     @media (max-width: 1040px) {
       .carousel-item span {
         text-align: center;
-        font-size: 10vw;
-      }
+        font-size: 10vw !important;
     }
 
     span#nexus {
       font-size: 16vw !important;
       font-family: 'Rajdhani', sans-serif;
       text-shadow: 0 0 4px rgba(0,0,0,0.4);
+    }
     }
 
     .carousel-arrow {
@@ -284,10 +284,11 @@
 
     // funções originais
     function selectSystem(systemId) {
+      if (systemId.toLowerCase() !== 'cthulhu') {
       localStorage.setItem('sistemaEscolhido', systemId);
+      }
       window.location.href = `${systemId}/${systemId}.html`;
     }
-    // ...existing code...
     // Pré-carregue as imagens de fundo
     const bgImages = {
       singularidade: "158905.jpg",
