@@ -133,16 +133,14 @@
       }
     }
 
-    #sing { font-size: 5vw; font-family: 'Orbitron', sans-serif; }
-    #sunny{ font-size: 5vw; font-family: 'Cinzel', sans-serif; }
-    #nexus{ font-size: 6vw; font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
-    #cda  { font-size: 5vw; font-family: 'UnifrakturCook', sans-serif; }
+    #sing {font-family: 'Orbitron', sans-serif; }
+    #sunny{font-family: 'Cinzel', sans-serif; }
+    #nexus{font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
+    #cda  {font-family: 'UnifrakturCook', sans-serif; }
 
     .system-icon {
       width: 4.5em;
       height: 4.5em;
-      margin-right: 1em;
-      border-radius: 0.5em;
       object-fit: cover;
       -webkit-filter: drop-shadow(0 0 32px rgba(0, 0, 0, 0.233));
       filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.378));
@@ -167,9 +165,8 @@
       display: flex;
       overflow: hidden;
       width: 80vw;
-      max-width: 600px;
       position: relative;
-      height: 20vh;
+      height: 100vh;
       align-items: center;
       justify-content: center;
     }
@@ -204,8 +201,14 @@
     @media (max-width: 1040px) {
       .carousel-item span {
         text-align: center;
-        font-size: 10vw !important;
+        font-size: 10vw;
       }
+    }
+
+    span#nexus {
+      font-size: 16vw !important;
+      font-family: 'Rajdhani', sans-serif;
+      text-shadow: 0 0 4px rgba(0,0,0,0.4);
     }
 
     .carousel-arrow {

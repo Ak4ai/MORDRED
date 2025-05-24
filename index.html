@@ -133,36 +133,40 @@
       }
     }
 
-    #sing { font-size: 5vw; font-family: 'Orbitron', sans-serif; }
-    #sunny{ font-size: 5vw; font-family: 'Cinzel', sans-serif; }
-    #nexus{ font-size: 6vw; font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
-    #cda  { font-size: 5vw; font-family: 'UnifrakturCook', sans-serif; }
+    #sing {font-family: 'Orbitron', sans-serif; }
+    #sunny{font-family: 'Cinzel', sans-serif; }
+    #nexus{font-family: 'Rajdhani', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,0.4);}
+    #cda  {font-family: 'UnifrakturCook', sans-serif; }
 
     .system-icon {
       width: 4.5em;
       height: 4.5em;
-      margin-right: 1em;
-      border-radius: 0.5em;
       object-fit: cover;
       -webkit-filter: drop-shadow(0 0 32px rgba(0, 0, 0, 0.233));
       filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.378));
     }
 
     .carousel-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      max-width: 100vw;
+      height: 30vh;
+      min-height: 220px;
+      z-index: 10;
     }
 
     .carousel {
       display: flex;
       overflow: hidden;
       width: 80vw;
-      max-width: 600px;
       position: relative;
-      height: 20vh;
+      height: 100vh;
       align-items: center;
       justify-content: center;
     }
@@ -191,13 +195,20 @@
       cursor: pointer;
       z-index: 2;
       transform: translateX(0);
+      height: 100%; /* Corrigido de 100vh para 100% */
     }
 
     @media (max-width: 1040px) {
       .carousel-item span {
         text-align: center;
-        font-size: 10vw !important;
+        font-size: 10vw;
       }
+    }
+
+    span#nexus {
+      font-size: 16vw !important;
+      font-family: 'Rajdhani', sans-serif;
+      text-shadow: 0 0 4px rgba(0,0,0,0.4);
     }
 
     .carousel-arrow {
@@ -240,19 +251,19 @@
       <button class="carousel-arrow left" onclick="moveCarousel(-1)">&#8592;</button>
       <div class="carousel">
         <div class="carousel-item" data-system="Singularidade" onmouseover="changeBackground('singularidade')" onclick="selectSystem('Singularidade')">
-          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <img src="Singularidade\android-icon-192x192.png" alt="Ícone" class="system-icon">
           <span id="sing">Singularidade</span>
         </div>
         <div class="carousel-item" data-system="Sunnyata" onmouseover="changeBackground('sunnyata')" onclick="selectSystem('Sunnyata')">
-          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <img src="Sunnyata\android-icon-192x192.png" alt="Ícone" class="system-icon">
           <span id="sunny">Sunnyata</span>
         </div>
         <div class="carousel-item" data-system="Nexus" onmouseover="changeBackground('nexus')" onclick="selectSystem('Nexus')">
-          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <img src="Nexus\android-icon-192x192.png" alt="Ícone" class="system-icon">
           <span id="nexus">Nexus</span>
         </div>
         <div class="carousel-item" data-system="cthulhu" onmouseover="changeBackground('cthulhu')" onclick="selectSystem('cthulhu')">
-          <img src="android-icon-192x192.png" alt="Ícone" class="system-icon">
+          <img src="Cthulhu\android-icon-192x192.png" alt="Ícone" class="system-icon">
           <span id="cda">Contos do Abismo</span>
         </div>
       </div>
@@ -271,21 +282,13 @@
       );
     }
 
-    // funções originais
+    // funções originais 
     function selectSystem(systemId) {
-      localStorage.setItem('sistemaEscolhido', systemId);
+      if (systemId.toLowerCase() !== 'cthulhu') {
+        localStorage.setItem('sistemaEscolhido', systemId);
+      }
       window.location.href = `${systemId}/${systemId}.html`;
-    }
-    function changeBackground(system) {
-      let bg = '';
-      if (system==='singularidade') bg = 'url("https://preview.redd.it/lotm-im-looking-for-fanart-to-use-as-wallpaper-v0-r0mufi6x6eod1.jpeg?auto=webp")';
-      if (system==='sunnyata')      bg = 'url("https://pic3.zhimg.com/v2-f89ead0b7e5294b362d4d16ba06ec4c2_r.jpg")';
-      if (system==='nexus')         bg = 'url("https://wallpapercat.com/w/full/7/0/6/26427-3840x2160-desktop-4k-black-hole-wallpaper-image.jpg")';
-      if (system==='cthulhu')       bg = 'url("https://cdnb.artstation.com/p/assets/images/images/012/698/621/large/richard-wright-cthulhu-shitstorm.jpg")';
-      document.body.style.backgroundImage = bg;
-    }
-
-    // ...existing code...
+    } 
     // Pré-carregue as imagens de fundo
     const bgImages = {
       singularidade: "158905.jpg",
