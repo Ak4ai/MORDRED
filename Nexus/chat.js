@@ -178,36 +178,30 @@ function scrollChatParaFim() {
 }
 
 async function limparMensagensAntigasSeNecessario() {
-  const hoje = new Date().toISOString().split("T")[0]; // Formata a data de hoje
-  const ultimaLimpeza = localStorage.getItem("ultimaLimpezaChat");
+  const hoje = new Date().toISOString().split("T")[0];
+  const controleRef = db.collection("controle").doc("limpezaChat");
 
-  // Calculando a data da próxima limpeza
-  const proximaLimpeza = new Date(hoje); // Cria uma nova data com a data de hoje
-  proximaLimpeza.setDate(proximaLimpeza.getDate() + 1); // Define para o dia seguinte
+  try {
+    const doc = await controleRef.get();
+    const ultimaLimpeza = doc.exists ? doc.data().ultimaLimpeza : null;
 
-  const tempoFaltante = proximaLimpeza - new Date(); // Tempo faltante em milissegundos
-
-  // Exibe no console o tempo faltante até a próxima limpeza
-  console.log(`Próxima limpeza será em: ${proximaLimpeza.toLocaleString()}`);
-  console.log(`Tempo faltante para a próxima limpeza: ${Math.floor(tempoFaltante / 1000 / 60)} minutos`);
-
-  // Verifica se a limpeza já foi feita hoje
-  if (ultimaLimpeza !== hoje) {
-    console.log("Limpando mensagens antigas do chat...");
-    try {
-      const snapshot = await db.collection("chatMensagens").get(); // Obtem as mensagens
+    if (ultimaLimpeza !== hoje) {
+      console.log("Limpando mensagens antigas do chat...");
+      const snapshot = await db.collection("chatMensagens").get();
       const batch = db.batch();
 
       snapshot.forEach(doc => {
-        batch.delete(doc.ref); // Deleta cada documento
+        batch.delete(doc.ref);
       });
 
       await batch.commit();
-      localStorage.setItem("ultimaLimpezaChat", hoje); // Atualiza a data da última limpeza
+      await controleRef.set({ ultimaLimpeza: hoje });
       console.log("Mensagens do chat limpas com sucesso.");
-    } catch (err) {
-      console.error("Erro ao limpar mensagens antigas:", err);
+    } else {
+      console.log("A limpeza já foi feita hoje.");
     }
+  } catch (err) {
+    console.error("Erro ao limpar mensagens antigas:", err);
   }
 }
 
