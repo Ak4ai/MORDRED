@@ -276,6 +276,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  // Adiciona botão para limpar a fila na interface (adicione no HTML se quiser um botão visual)
+  // <button id="clearQueueButton"><i class="fa-solid fa-trash"></i> Limpar Fila</button>
+
+  // Evento para limpar a fila do player para todos os usuários
+  document.getElementById('clearQueueButton').addEventListener('click', async () => {
+    videoQueue.length = 0;
+    currentQueueIndex = -1;
+    await videoDocRef.set({
+      videoId: null,
+      currentTime: 0,
+      lastUpdated: Date.now(),
+      paused: true,
+      queue: [],
+      currentQueueIndex: -1
+    });
+    updateVideoQueueDisplay();
+    if (player) {
+      player.stopVideo();
+    }
+  });
 });
 
 // Função para extrair o ID do vídeo do link do YouTube

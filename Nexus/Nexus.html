@@ -203,10 +203,15 @@
             <button id="unskipButton"><i class="fa-solid fa-backward-step"></i></button>
             <button id="skipButton"><i class="fa-solid fa-forward-step"></i></button>
         </div>
-        <div id="videoQueueDisplay" class="queue-container">
+      <div id="videoQueueDisplay" class="queue-container">
+          <div style="position: relative;">
             <h4>Fila de Vídeos:</h4>
-            <ul id="videoQueueList"></ul>
-        </div>          
+            <button id="clearQueueButton" style="position: absolute; z-index: 2;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <ul id="videoQueueList"></ul>
+      </div>
         <div id="volumeContainer">
             <input type="range" id="volumeControl" min="0" max="100" step="1" value="0" />
         </div>

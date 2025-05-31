@@ -2759,3 +2759,24 @@ fieldset{
   margin: 0;
   font-size: 16px;
 }
+
+/* Adicione ao seu style.css */
+#clearQueueButton {
+  position: absolute;
+  top: -17px;
+  right: 0rem;
+  z-index: 1002;
+  background-color: #243e288;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#clearQueueButton:hover {
+  background: #ff3b3b;
+}
+#videoQueueDisplay > div {
+  position: relative;
+}
