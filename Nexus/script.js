@@ -940,6 +940,29 @@ function rolarDadosSimples(expressao) {
     return totalDano;
 }
 
+function salvarStatusAtualLocalStorage() {
+    if (!window.nomepersonagem) {
+        console.warn("Nome do personagem não definido.");
+        return;
+    }
+    const chave = `${window.nomepersonagem}-personagemNexus`;
+    const data = localStorage.getItem(chave);
+    if (!data) {
+        console.warn("Dados do personagem não encontrados no localStorage.");
+        return;
+    }
+    try {
+        const personagemData = JSON.parse(data);
+        personagemData.vida = personagem.vida; // Atualiza a vida atual
+        personagemData.energia = personagem.energia; // Atualiza energia atual
+        personagemData.sanidade = personagem.sanidade; // Atualiza sanidade atual
+        localStorage.setItem(chave, JSON.stringify(personagemData, null, 2));
+        // Opcional: mostrar mensagem
+        // mostrarMensagem("Status atual salvo!");
+    } catch (e) {
+        console.error("Erro ao salvar status atual:", e);
+    }
+}
 
 function atualizarVida(custo) {
     personagem.vida -= custo;
@@ -947,6 +970,7 @@ function atualizarVida(custo) {
     
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Vida restante após gastar ${custo} de vida.`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 
@@ -956,6 +980,7 @@ function atualizarEnergia(custo, cooldown) {
     
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Energia restante após gastar ${custo} de energia. Numero de circulos: ${cooldown}`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 function atualizarSanidade(custo) {
@@ -963,6 +988,7 @@ function atualizarSanidade(custo) {
     document.getElementById('status-sanidade').textContent = `Sanidade: ${personagem.sanidade}`;
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Sanidade restante após gastar ${custo} de sanidade.`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 
@@ -1100,6 +1126,7 @@ function ajustarEnergia(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de energia");
       return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     
     atualizarInfoPersonagem(personagem);
 }
@@ -1128,6 +1155,7 @@ function ajustarSanidade(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de sanidade");
       return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     
     atualizarInfoPersonagem(personagem);
 }
@@ -1156,7 +1184,7 @@ function ajustarVida(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de vida");
       return;
     }
-    
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
   
