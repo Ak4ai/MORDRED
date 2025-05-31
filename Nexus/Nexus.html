@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
         <link rel="icon" type="image/png" href="android-icon-192x192.png">
@@ -144,11 +144,19 @@
     <div id="iniciativa-container">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h3 style="margin: 0;">Iniciativas</h3>
-        <button 
-          id="btn-limpar-iniciativas" 
-          onclick="limparIniciativas()" 
-          style="display: none; margin-left: 10px;"
-        >🧹</button>
+        <div>
+          <button 
+            id="btn-organizar-iniciativas" 
+            onclick="organizarIniciativas()" 
+            style="margin-left: 10px;"
+            title="Organizar Iniciativas"
+          >🔝</button>
+          <button 
+            id="btn-limpar-iniciativas" 
+            onclick="limparIniciativas()" 
+            style="display: none; margin-left: 10px;"
+          >🧹</button>
+        </div>
       </div>
     
       <ul id="lista-iniciativas"></ul>

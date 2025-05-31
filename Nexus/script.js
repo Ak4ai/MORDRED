@@ -2944,6 +2944,43 @@ function atualizarListaIniciativa(nome, valor, id = null) {
     item.appendChild(btnRemover);
     lista.appendChild(item);
 }
+
+// ...existing code...
+
+async function organizarIniciativas() {
+  if (!window.admincheck) {
+    alert("Apenas administradores podem organizar a lista.");
+    return;
+  }
+  try {
+    const snapshot = await iniciativasRef.get();
+    const iniciativas = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      iniciativas.push({ id: doc.id, ...data });
+    });
+
+    // Ordena por valor (decrescente)
+    iniciativas.sort((a, b) => b.valor - a.valor);
+
+    // Limpa todas as iniciativas
+    const batch = firebase.firestore().batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+
+    // Reinsere as iniciativas ordenadas
+    const addPromises = iniciativas.map(item =>
+      iniciativasRef.add({ nome: item.nome, valor: item.valor })
+    );
+    await Promise.all(addPromises);
+
+    alert("Lista de iniciativas organizada!");
+  } catch (error) {
+    console.error("Erro ao organizar iniciativas:", error);
+    alert("Erro ao organizar iniciativas.");
+  }
+}
+// ...existing code...
   
 // Adiciona uma nova iniciativa à Firestore
 function adicionarIniciativaManual() {
