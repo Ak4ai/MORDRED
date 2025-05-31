@@ -2624,10 +2624,12 @@ fieldset{
 
 #iniciativa-container > div:nth-child(1) > div {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-end;
     width: 100%;
-    align-content: center;
+    height: 90%;
+    align-content: flex-start;
+    margin-bottom: 1px;
 }
 
 #btn-organizar-iniciativas {

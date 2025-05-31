@@ -3049,9 +3049,19 @@ iniciativasRef.onSnapshot(snapshot => {
   const lista = document.getElementById("lista-iniciativas");
   if (lista) lista.innerHTML = "";
 
+  // Coleta todas as iniciativas em um array
+  const iniciativas = [];
   snapshot.forEach(doc => {
     const { nome, valor } = doc.data();
-    atualizarListaIniciativa(nome, valor, doc.id);
+    iniciativas.push({ nome, valor, id: doc.id });
+  });
+
+  // Ordena por valor (decrescente)
+  iniciativas.sort((a, b) => b.valor - a.valor);
+
+  // Renderiza ordenado
+  iniciativas.forEach(item => {
+    atualizarListaIniciativa(item.nome, item.valor, item.id);
   });
 });
 
