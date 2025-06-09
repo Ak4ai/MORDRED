@@ -2774,6 +2774,7 @@ fieldset{
   cursor: pointer;
   transition: background 0.2s;
 }
+
 #clearQueueButton:hover {
   background: #ff3b3b;
 }
