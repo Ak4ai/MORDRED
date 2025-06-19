@@ -65,6 +65,7 @@
           https://redditmedia.com 
           https://i.imgur.com 
           https://i.postimg.cc 
+          https://static.wikia.nocookie.net
           data:;
     
         frame-src 
@@ -148,11 +149,19 @@
     <div id="iniciativa-container">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <h3 style="margin: 0;">Iniciativas</h3>
+        <div>
+          <button 
+            id="btn-organizar-iniciativas" 
+            onclick="organizarIniciativas()" 
+            style="margin-left: 10px;"
+            title="Organizar Iniciativas"
+          >🔝</button>
         <button 
           id="btn-limpar-iniciativas" 
           onclick="limparIniciativas()" 
           style="display: none; margin-left: 10px;"
         >🧹</button>
+        </div>
       </div>
     
       <ul id="lista-iniciativas"></ul>
@@ -201,7 +210,12 @@
             <button id="skipButton"><i class="fa-solid fa-forward-step"></i></button>
         </div>
         <div id="videoQueueDisplay" class="queue-container">
+          <div style="position: relative;">
             <h4>Fila de Vídeos:</h4>
+            <button id="clearQueueButton" style="position: absolute; z-index: 2;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
             <ul id="videoQueueList"></ul>
         </div>          
         <div id="volumeContainer">

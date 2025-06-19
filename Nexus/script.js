@@ -1891,7 +1891,6 @@ async function carregarStatusPorNome(nome) {
     }
 
     carregarFichasNaBarra(); // Atualiza a barra após carregar
-    toggleButton1.click();
 }
 
 

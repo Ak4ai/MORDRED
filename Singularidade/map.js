@@ -49,13 +49,14 @@ Array.from(toggleButtons).forEach(btn => {
 
     toggleZoom.style.display = hidden ? 'flex' : 'none';
 
-    if (window.totalFichas < 2) {
+    if (window.totalFichas < 1) {
       barrafichas.style.display = 'none';
     }
 
     if (!isMobile) {
       anotacoes.style.display = hidden ? 'none' : 'block';
       playerContainer.style.display = hidden ? 'none' : 'flex';
+      console.log('Anotações e container do jogador visíveis:', !hidden);
     }
 
     // Tornar vertical apenas em dispositivos não móveis

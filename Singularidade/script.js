@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         atualizarInfoPersonagem(personagem);
 
         // Supomos que a chave de habilidades segue o mesmo padrão, substituindo "personagem" por "habilidades"
-        const chaveHabilidades = chavePersonagemSelecionado.replace('personagem', 'habilidades');
+        const chaveHabilidades = chavePersonagemSelecionado.replace('302Xpersonagem', 'habilidades302X');
 
         // Carrega os dados das habilidades
         const habilidadesData = await carregarDados(chaveHabilidades);
@@ -661,7 +661,11 @@ function openSubtab(tab, subtab) {
 
 
 function limparHabilidades() {
-    const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades302X');
+    const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades');
+    if (!escolhaHabilidadesDiv) {
+        console.warn('Elemento "escolha-habilidades" não encontrado ao tentar limpar habilidades.');
+        return;
+    }
     const existingButtons = Array.from(escolhaHabilidadesDiv.getElementsByTagName('button'));
 
     // Imprime os IDs dos botões que serão removidos
@@ -688,7 +692,7 @@ function exibirHabilidades(habilidadesData) {
         // Limpa as habilidades carregadas anteriormente
         limparHabilidades();
 
-        const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades302X');
+        const escolhaHabilidadesDiv = document.getElementById('escolha-habilidades');
 
         habilidadesData.habilidades.forEach(habilidade => {
             const button = document.createElement('button');
@@ -893,7 +897,7 @@ function rolarDadosSimples(expressao) {
     if (/^-?\d+$/.test(expressao)) {
         const totalDano = parseInt(expressao, 10);
         if (typeof mostrarMensagem === 'function') {
-            mostrarMensagem(`Dano: ${totalDano}`);
+            mostrarPopup(`Ajuste: ${totalDano}`);
         }
         return totalDano;
     }
@@ -1028,6 +1032,29 @@ function rolarDadosSimples(expressao) {
     return totalDano;
 }
 
+function salvarStatusAtualLocalStorage() {
+    if (!window.nomepersonagem) {
+        console.warn("Nome do personagem não definido.");
+        return;
+    }
+    const chave = `${window.nomepersonagem}-302XPersonagem`;
+    const data = localStorage.getItem(chave);
+    if (!data) {
+        console.warn("Dados do personagem não encontrados no localStorage.");
+        return;
+    }
+    try {
+        const personagemData = JSON.parse(data);
+        personagemData.vida = personagem.vida; // Atualiza a vida atual
+        personagemData.energia = personagem.energia; // Atualiza energia atual
+        personagemData.sanidade = personagem.sanidade; // Atualiza sanidade atual
+        localStorage.setItem(chave, JSON.stringify(personagemData, null, 2));
+        // Opcional: mostrar mensagem
+        // mostrarMensagem("Status atual salvo!");
+    } catch (e) {
+        console.error("Erro ao salvar status atual:", e);
+    }
+}
 
 function atualizarVida(custo) {
     personagem.vida -= custo;
@@ -1252,100 +1279,48 @@ function ajustarVida(multiplicador) {
 }
   
 
-function rolarDadosCalculo(atributo, pericia, vantagem, modificador) {
-    modificador = Number(modificador);
-    // Garante que atributo e perícia não sejam negativos
-    atributo = Math.max(0, atributo);
-    pericia = Math.max(0, pericia);
-    
-    // Garante que vantagem não seja negativa
-    vantagem = Math.max(0, vantagem);
-    // Total de rolagens de d20 = 1 (normal) + vantagem (adicionais)
-    const totalRolls = 1 + vantagem;
+function rolarDadosCalculo(atributo, pericia, vantagemGlobal = 0, modificadorGlobal = 0) {
+    atributo = Number(atributo) || 0;
+    pericia = Number(pericia) || 0;
+    vantagemGlobal = Number(vantagemGlobal) || 0;
+    modificadorGlobal = Number(modificadorGlobal) || 0;
 
-    // Rola o d20 totalRolls vezes e escolhe o maior resultado
-    let d20Rolls = [];
-    for (let i = 0; i < totalRolls; i++) {
-        const roll = Math.floor(Math.random() * 20) + 1;
-        d20Rolls.push(roll);
-    }
-    const d20 = Math.max(...d20Rolls);
+    let numD20 = 1;
+    let rolagensD20 = [];
 
-    // Rola os dados de perícia, se houver pontos
-    let periciaDiceType, periciaRolls = [], periciaTotal = 0;
-    if (pericia > 0) {
-        // Se perícia for 3 ou mais, utiliza d12; caso contrário, d10
-        periciaDiceType = pericia >= 3 ? 12 : 10;
-        for (let i = 0; i < pericia; i++) {
-            const roll = Math.floor(Math.random() * periciaDiceType) + 1;
-            periciaRolls.push(roll);
-            periciaTotal += roll;
-        }
+    if (pericia <= 0) {
+        numD20 = 2 + vantagemGlobal;
+    } else if (pericia === 1) {
+        numD20 = 1 + vantagemGlobal;
+    } else if (pericia >= 2) {
+        numD20 = 2 + vantagemGlobal;
     }
 
-    // Rola os dados de atributo, se houver pontos
-    let atributoRolls = [], atributoTotal = 0;
-    if (atributo > 0) {
-        for (let i = 0; i < atributo; i++) {
-            const roll = Math.floor(Math.random() * 6) + 1;
-            atributoRolls.push(roll);
-            atributoTotal += roll;
-        }
+    for (let i = 0; i < numD20; i++) {
+        rolagensD20.push(Math.floor(Math.random() * 20) + 1);
     }
+    const d20 = Math.max(...rolagensD20);
 
-    // Calcula o resultado final somando:
-    // d20 (com vantagem) + total dos dados de perícia + total dos dados de atributo + modificador fixo
-    const resultadoFinal = d20 + periciaTotal + atributoTotal + modificador;
+    // Soma atributo e perícia
+    const somaAtributoPericia = atributo + pericia;
+    const resultadoFinal = d20 + somaAtributoPericia + modificadorGlobal;
 
-    // Monta um array para a string de rolagem com os dados detalhados:
-    // Se houver vantagem (totalRolls > 1), indica quantos d20 foram rolados e exibe todos os valores
-    let rolagemArr = [];
-    if (totalRolls > 1) {
-        rolagemArr.push(`${totalRolls}d20 (max): ${d20Rolls.join(",")}`);
-    } else {
-        rolagemArr.push(`1d20: ${d20}`);
-    }
-    if (pericia > 0) {
-        rolagemArr.push(`${pericia}d${periciaDiceType}: ${periciaRolls.join(",")}`);
-    }
-    if (atributo > 0) {
-        rolagemArr.push(`${atributo}d6: ${atributoRolls.join(",")}`);
-    }
+    // Mensagem detalhada
+    let mensagem = `Rolagem: ${rolagensD20.join(", ")} (maior: ${d20})\n`;
+    mensagem += `Atributo (${atributo}) + Perícia (${pericia}) = ${somaAtributoPericia}\n`;
+    mensagem += `Soma final: ${d20} + ${somaAtributoPericia} + modificador global (${modificadorGlobal}) = ${resultadoFinal}`;
 
-    // Monta a fórmula utilizada para o cálculo
-    let formulaStr = `d20`;
-    if (pericia > 0) {
-        formulaStr += `+${pericia}d${periciaDiceType}`;
-    }
-    if (atributo > 0) {
-        formulaStr += `+${atributo}d6`;
-    }
-    if (modificador !== 0) {
-        formulaStr += (modificador > 0 ? `+${modificador}` : modificador);
-    }
+    mostrarMensagem(mensagem);
 
-    // Monta a mensagem final com o resultado detalhado
-    let mensagemFinal = `Resultado rolado: ${rolagemArr.join(" | ")} \n Resultado Final: ${resultadoFinal}`;
+    // Inclui os valores de atributo e perícia na fórmula do feedback
+    enviarFeedback(
+        window.topico,
+        resultadoFinal,
+        rolagensD20,
+        `d20${numD20 > 1 ? " (vantagem)" : ""} (${rolagensD20.join(", ")}) + atributo (${atributo}) + perícia (${pericia}) + modGlobal (${modificadorGlobal})`
+    );
 
-    // Exibe as mensagens (se necessário)
-    mostrarMensagem(`D20 rolado com vantagem (${totalRolls} roladas): ${d20Rolls.join(",")} -> escolhendo ${d20}`);
-    if (pericia > 0) {
-        mostrarMensagem(`Dados de perícia (${pericia} x d${periciaDiceType}): ${periciaRolls.join(",")}`);
-    }
-    if (atributo > 0) {
-        mostrarMensagem(`Dados de atributo (${atributo} x d6): ${atributoRolls.join(",")}`);
-    }
-    mostrarMensagem(mensagemFinal);
-
-    // Armazena globalmente as informações, se necessário
-    window.rolagem = rolagemArr;
-    window.formula = formulaStr;
-
-    // Chama enviarFeedback com os parâmetros:
-    // enviarFeedback(topico, resultadoFinal, rolagem, formula)
-    enviarFeedback(window.topico, resultadoFinal, rolagemArr, formulaStr);
-
-    return mensagemFinal;
+    return mensagem;
 }
 
 function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
@@ -1354,7 +1329,7 @@ function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
 
     // Seleciona o atributo
     switch (atributo) {
-        case 'forca':
+        case 'força':
             valorAtributo = personagem.forca;
             break;
         case 'vigor':
@@ -1491,6 +1466,7 @@ function acao(atributo, pericia, numeroVantagens, modificador, habilidade) {
     }
 
     // Retorna o resultado do teste
+    console.log(`Rolando dados para: Atributo = ${atributo} (${valorAtributo}), Perícia = ${pericia} (${valorPericia}), Vantagens = ${numeroVantagens}, Modificador = ${modificador}`);
     return rolarDadosCalculo(valorAtributo, valorPericia, numeroVantagens, modificador);
 }
 
@@ -2078,6 +2054,10 @@ async function carregarStatus() {
 }
 
 async function carregarStatusPorNome(nome) {
+    // Emula o clique no botão .toggle-container antes de qualquer coisa
+    const toggleBtn = document.querySelector('.toggle-container');
+    if (toggleBtn) toggleBtn.click();
+
     if (!nome) {
         alert('Nome inválido do personagem.');
         return;
@@ -2109,7 +2089,6 @@ async function carregarStatusPorNome(nome) {
     }
 
     carregarFichasNaBarra(); // Atualiza a barra após carregar
-    toggleButton1.click();
 }
 
 
@@ -2505,8 +2484,11 @@ function enviarFeedback(topico, resultado, valores, formula) {
     const imagemURL = window.imgpersonagem || "";
     const mensagensRef = db.collection("chatMensagens");
 
-    const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}: ${resultado} (${valores.join(", ")})`;
-
+    // ...existing code...
+    const textoChat = `🎲 [${topico}] ${nomepersonagem} rolou ${formula}:
+    Valores: [${valores.join(", ")}]
+    ➔ Soma final: ${resultado}`;
+    // ...existing code...
     // Se for rolagem de iniciativa, salva no Firestore
     if (topico.toLowerCase().includes("iniciativa")) {
         firebase.firestore().collection("iniciativas").add({
@@ -2749,7 +2731,7 @@ document.addEventListener('click', function (event) {
   
     window.totalFichas = (fichaCheckada ? 1 : 0) + outrasFichas.length;
   
-    if (totalFichas < 2) {
+    if (totalFichas < 1) {
       barra.style.display = 'none';
       return;
     }
@@ -2877,6 +2859,7 @@ function isMobileDevice() {
 function toggleVisibility(container, button, outsideListener) {
   const isHidden = getComputedStyle(container).display === "none";
   container.style.display = isHidden ? "flex" : "none";
+  console.log(`Container ${container.id} agora está ${isHidden ? "visível" : "oculto"}.`);
 
   if (isMobileDevice()) {
     blackoverlay.style.display = isHidden ? "block" : "none";
@@ -2902,6 +2885,7 @@ function outsideClickListenerPlayer(event) {
     blackoverlay.style.display     = "none";
     document.removeEventListener("click", outsideClickListenerPlayer);
     document.removeEventListener("touchstart", outsideClickListenerPlayer);
+    console.log("Player fechado por clique fora.");
   }
 }
 
@@ -3107,6 +3091,43 @@ function atualizarListaIniciativa(nome, valor, id = null) {
     item.appendChild(btnRemover);
     lista.appendChild(item);
 }
+
+// ...existing code...
+
+async function organizarIniciativas() {
+  if (!window.admincheck) {
+    alert("Apenas administradores podem organizar a lista.");
+    return;
+  }
+  try {
+    const snapshot = await iniciativasRef.get();
+    const iniciativas = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      iniciativas.push({ id: doc.id, ...data });
+    });
+
+    // Ordena por valor (decrescente)
+    iniciativas.sort((a, b) => b.valor - a.valor);
+
+    // Limpa todas as iniciativas
+    const batch = firebase.firestore().batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+
+    // Reinsere as iniciativas ordenadas
+    const addPromises = iniciativas.map(item =>
+      iniciativasRef.add({ nome: item.nome, valor: item.valor })
+    );
+    await Promise.all(addPromises);
+
+    alert("Lista de iniciativas organizada!");
+  } catch (error) {
+    console.error("Erro ao organizar iniciativas:", error);
+    alert("Erro ao organizar iniciativas.");
+  }
+}
+// ...existing code...
   
 // Adiciona uma nova iniciativa à Firestore
 function adicionarIniciativaManual() {
@@ -3175,9 +3196,19 @@ iniciativasRef.onSnapshot(snapshot => {
   const lista = document.getElementById("lista-iniciativas");
   if (lista) lista.innerHTML = "";
 
+  // Coleta todas as iniciativas em um array
+  const iniciativas = [];
   snapshot.forEach(doc => {
     const { nome, valor } = doc.data();
-    atualizarListaIniciativa(nome, valor, doc.id);
+    iniciativas.push({ nome, valor, id: doc.id });
+  });
+
+  // Ordena por valor (decrescente)
+  iniciativas.sort((a, b) => b.valor - a.valor);
+
+  // Renderiza ordenado
+  iniciativas.forEach(item => {
+    atualizarListaIniciativa(item.nome, item.valor, item.id);
   });
 });
 

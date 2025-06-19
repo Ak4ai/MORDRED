@@ -186,7 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
   queueContainer.classList.add("queue-hidden");
   
 
-  // Atualiza o tempo atual a cada 5 segundos
+  // --- SINCRONIZAÇÃO ANTIGA (backup) ---
+  /*
+  // Atualiza o tempo atual a cada 2 segundos (ALTO USO FIRESTORE)
   setInterval(() => {
     if (player && player.getPlayerState() === YT.PlayerState.PLAYING && !isSeeking) {
       videoDocRef.update({
@@ -196,6 +198,21 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }, 2000);
+  */
+  // --- FIM DA SINCRONIZAÇÃO ANTIGA ---
+
+  // --- NOVA SINCRONIZAÇÃO ECONÔMICA ---
+  // Atualiza o tempo no Firestore a cada 15 minutos (900000 ms)
+  setInterval(() => {
+    if (player && player.getPlayerState() === YT.PlayerState.PLAYING && !isSeeking) {
+      videoDocRef.update({
+        currentTime: player.getCurrentTime(),
+        lastUpdated: Date.now(),
+        paused: isPaused
+      });
+    }
+  }, 900000); // 15 minutos
+  // --- FIM DA NOVA SINCRONIZAÇÃO ---
 
   // Botão Play/Pause
   document.getElementById('playPauseButton').addEventListener('click', async () => {
@@ -208,7 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     await videoDocRef.update({
       paused: isPaused,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
+      currentTime: player.getCurrentTime()
     });
   });
 
@@ -259,6 +277,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Adiciona botão para limpar a fila na interface (adicione no HTML se quiser um botão visual)
+  // <button id="clearQueueButton"><i class="fa-solid fa-trash"></i> Limpar Fila</button>
+
+  // Evento para limpar a fila do player para todos os usuários
+  document.getElementById('clearQueueButton').addEventListener('click', async () => {
+    videoQueue.length = 0;
+    currentQueueIndex = -1;
+    await videoDocRef.set({
+      videoId: null,
+      currentTime: 0,
+      lastUpdated: Date.now(),
+      paused: true,
+      queue: [],
+      currentQueueIndex: -1
+    });
+    updateVideoQueueDisplay();
+    if (player) {
+      player.stopVideo();
+    }
+  });
 });
 
 // Função para extrair o ID do vídeo do link do YouTube
