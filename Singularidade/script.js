@@ -1052,6 +1052,7 @@ function salvarStatusAtualLocalStorage() {
         localStorage.setItem(chave, JSON.stringify(personagemData, null, 2));
         // Opcional: mostrar mensagem
         // mostrarMensagem("Status atual salvo!");
+        console.log("Status atual salvo com sucesso no localStorage.");
     } catch (e) {
         console.error("Erro ao salvar status atual:", e);
     }
