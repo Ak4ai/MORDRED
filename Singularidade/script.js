@@ -1037,7 +1037,7 @@ function salvarStatusAtualLocalStorage() {
         console.warn("Nome do personagem não definido.");
         return;
     }
-    const chave = `${window.nomepersonagem}-302XPersonagem`;
+    const chave = `${window.nomepersonagem}-302Xpersonagem`;
     const data = localStorage.getItem(chave);
     if (!data) {
         console.warn("Dados do personagem não encontrados no localStorage.");
