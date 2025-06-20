@@ -2624,6 +2624,35 @@ fieldset{
   padding-right: 30px !important;
 }
 
+#iniciativa-container > div:nth-child(1) > div {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 100%;
+    height: 90%;
+    align-content: flex-start;
+    margin-bottom: 1px;
+}
+
+#btn-organizar-iniciativas {
+    flex: 0 0 5%;
+    background-color: #90b39200;
+    height: 30px;
+    padding: 10px 15px;
+    color: #ffffff91;
+    border: 0px solid #ebe0e0;
+    border-bottom: 3px solid #ffffff33;
+    border-radius: 0rem;
+    cursor: pointer;
+    transition: background-color 0.4s ease, transform 0.4s ease;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 16px;
+}
+
 #iniciativa-container h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;

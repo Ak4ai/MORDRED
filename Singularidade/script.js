@@ -1249,6 +1249,34 @@ function ajustarSanidade(multiplicador) {
     
     atualizarInfoPersonagem(personagem);
 }
+
+function ajustarDefesa(multiplicador) {
+    let expressao = document.getElementById('ajuste-defesa').value.trim();
+    if (multiplicador === -1 && !expressao.startsWith('-')) {
+        expressao = '-' + expressao;
+    }
+    // Se houver '%' e nenhum atributo definido, anexa "defesamax"
+    if (expressao.includes('%') && !/(vidamax|etermax|sanidademax|defesamax)/i.test(expressao)) {
+        expressao += 'defesamax';
+    }
+
+    let valorAjuste = rolarDadosSimples(expressao);
+    if (isNaN(valorAjuste)) {
+        mostrarMensagem("Digite um valor válido para o ajuste de defesa");
+        return;
+    }
+
+    if (multiplicador === 1) {
+        personagem.adicionarDefesa(valorAjuste);
+    } else if (multiplicador === -1) {
+        personagem.reduzirDefesa(Math.abs(valorAjuste));
+    } else {
+        mostrarMensagem("Operação inválida para ajuste de defesa");
+        return;
+    }
+
+    atualizarInfoPersonagem(personagem);
+}
   
 function ajustarVida(multiplicador) {
     let expressao = document.getElementById('ajuste-vida').value.trim();
@@ -1628,7 +1656,7 @@ async function executarTiro() {
     let modificador = parseInt(document.getElementById('modificador-tiro').value) || 0;
     
     // Rola o teste de tiro
-    let resultadoTiro = acao('agilidade', 'pontaria', numeroVantagens, modificador);
+    let resultadoTiro = acao('destreza', 'pontaria', numeroVantagens, modificador);
     
     // Monta a mensagem do teste de tiro
     let mensagem = `Resultado do Tiro: ${resultadoTiro}`;
@@ -1658,7 +1686,7 @@ function executarDefesa() {
     let numeroVantagens = parseInt(document.getElementById('vantagens-sanidade').value) || 0;
     let modificador = parseInt(document.getElementById('modificador-sanidade').value) || 0;
     
-    let resultadoAcao = acao('fortitude', 'vigor', numeroVantagens, modificador); // Exemplo de retorno:
+    let resultadoAcao = acao('vigor', 'constituicao', numeroVantagens, modificador); // Exemplo de retorno:
 
     // Extrair o valor numérico do resultado
     let match = resultadoAcao.match(/Resultado Final:\s*(\d+)/);
@@ -1701,7 +1729,7 @@ function executarEsquiva() {
     let numeroVantagens = parseInt(document.getElementById('vantagens-esquiva').value) || 0;
     let modificador = parseInt(document.getElementById('modificador-esquiva').value) || 0;
     
-    let resultado = acao('agilidade', 'destreza', numeroVantagens, modificador);
+    let resultado = acao('destreza', 'acrobacia', numeroVantagens, modificador);
 
     let mensagem = (`Resultado da Esquiva: ${resultado}`);
 
