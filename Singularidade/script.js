@@ -1046,8 +1046,9 @@ function salvarStatusAtualLocalStorage() {
     try {
         const personagemData = JSON.parse(data);
         personagemData.vida = personagem.vida; // Atualiza a vida atual
-        personagemData.energia = personagem.energia; // Atualiza energia atual
+        personagemData.eter = personagem.eter; // Atualiza energia atual
         personagemData.sanidade = personagem.sanidade; // Atualiza sanidade atual
+        personagemData.defesa = personagem.defesa; // Atualiza defesa atual
         localStorage.setItem(chave, JSON.stringify(personagemData, null, 2));
         // Opcional: mostrar mensagem
         // mostrarMensagem("Status atual salvo!");
@@ -1062,6 +1063,7 @@ function atualizarVida(custo) {
     
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Vida restante após gastar ${custo} de vida.`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 
@@ -1071,6 +1073,7 @@ function atualizarDefesa(custo, cooldown) {
     
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Defesa restante após gastar ${custo} de defesa. Numero de circulos: ${cooldown}`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 
@@ -1080,6 +1083,7 @@ function atualizarEter(custo, cooldown) {
     
     // Envia um evento para o processo principal para exibir um diálogo
     mostrarMensagem(`Eter restante após gastar ${custo} de eter. Numero de circulos: ${cooldown}`);
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     atualizarInfoPersonagem(personagem);
 }
 
@@ -1218,6 +1222,7 @@ function ajustarEter(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de eter");
       return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     
     atualizarInfoPersonagem(personagem);
 }
@@ -1246,6 +1251,7 @@ function ajustarSanidade(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de sanidade");
       return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     
     atualizarInfoPersonagem(personagem);
 }
@@ -1274,6 +1280,7 @@ function ajustarDefesa(multiplicador) {
         mostrarMensagem("Operação inválida para ajuste de defesa");
         return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
 
     atualizarInfoPersonagem(personagem);
 }
@@ -1302,6 +1309,7 @@ function ajustarVida(multiplicador) {
       mostrarMensagem("Operação inválida para ajuste de vida");
       return;
     }
+    salvarStatusAtualLocalStorage(); // <-- Adicione aqui
     
     atualizarInfoPersonagem(personagem);
 }
