@@ -2871,6 +2871,37 @@ if (event.persisted) {
 // Executa em redimensionamentos
 window.addEventListener('resize', aplicarAlturaComDelay);
 
+// Controla visibilidade do player-container e chat-container com base no tamanho da tela
+function controlarVisibilidadeResponsiva() {
+  const playerContainer = document.querySelector('.player-container');
+  const chatContainer = document.getElementById('chat-container');
+  const isMobile = window.innerWidth <= 1023;
+  
+  if (playerContainer) {
+    if (isMobile) {
+      // Em mobile, esconde sempre ao redimensionar
+      playerContainer.style.display = 'none';
+    } else {
+      // Em desktop, sempre mostra
+      playerContainer.style.display = 'flex';
+    }
+  }
+  
+  if (chatContainer) {
+    if (isMobile) {
+      // Em mobile, esconde sempre ao redimensionar
+      chatContainer.style.display = 'none';
+    } else {
+      // Em desktop, sempre mostra
+      chatContainer.style.display = 'flex';
+    }
+  }
+}
+
+// Executa ao carregar e ao redimensionar
+window.addEventListener('resize', controlarVisibilidadeResponsiva);
+window.addEventListener('DOMContentLoaded', controlarVisibilidadeResponsiva);
+
 (function() {
     const ua       = navigator.userAgent;
     const platform = navigator.platform;

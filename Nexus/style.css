@@ -2021,7 +2021,6 @@ textarea:focus {
 
 @media (max-width: 1023px) {
   .player-container {
-    display: none;
     position: fixed;
     height: auto;
     width: auto;
