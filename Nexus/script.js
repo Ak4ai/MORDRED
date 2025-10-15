@@ -421,6 +421,11 @@ function openTab(tabName) {
   const tabs = document.querySelectorAll('.tab');
   const contents = document.querySelectorAll('.content');
 
+    const essentialInfo = document.getElementById('essential-info');
+    const anotacoes = document.getElementById('essential-info2');
+    const playerContainer = document.querySelector('.player-container');
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+
   // Marca aba ativa
   tabs.forEach(tab => {
     tab.classList.toggle('active', tab.innerText.toLowerCase() === tabName);
@@ -456,6 +461,28 @@ function openTab(tabName) {
     clearInterval(infoIntervalId);
     infoIntervalId = null;
   }
+
+    // Ensure essential-info layout matches tab visibility (same effect as the map toggle buttons)
+    try {
+        // When showing any of the main tabs, mark body as having tabs shown
+        const mainTabs = ['info', 'skills', 'actions', 'inventory', 'config'];
+            if (mainTabs.includes(tabName)) {
+                document.body.classList.add('abas-mostradas');
+                // make sure essential info is visible but don't force the 'vertical' map layout
+                if (!isMobile) {
+                    essentialInfo.classList.remove('hidden');
+                    anotacoes.classList.remove('hidden');
+                    playerContainer.style.display = 'flex';
+                } else {
+                    essentialInfo.classList.remove('hidden');
+                    anotacoes.classList.remove('hidden');
+                }
+            } else {
+                document.body.classList.remove('abas-mostradas');
+            }
+    } catch (err) {
+        console.warn('openTab: layout sync failed', err);
+    }
 }
 
 
@@ -1857,6 +1884,14 @@ async function carregarStatus() {
     }
 
     carregarFichasNaBarra();
+
+    // After loading a sheet, exit map mode and open the Info tab so the user sees the ficha
+    try {
+        if (typeof window.exitMapMode === 'function') window.exitMapMode();
+        openTab('info');
+    } catch (err) {
+        console.warn('Could not switch UI after loading sheet:', err);
+    }
 }
 
 async function carregarStatusPorNome(nome) {
@@ -1891,6 +1926,14 @@ async function carregarStatusPorNome(nome) {
     }
 
     carregarFichasNaBarra(); // Atualiza a barra após carregar
+
+    // After loading by name, exit map mode and open the Info tab
+    try {
+        if (typeof window.exitMapMode === 'function') window.exitMapMode();
+        openTab('info');
+    } catch (err) {
+        console.warn('Could not switch UI after loading sheet by name:', err);
+    }
 }
 
 
@@ -2501,9 +2544,17 @@ document.addEventListener('click', function (event) {
   
   const indicador = document.getElementById('pull-up-indicator');
   
-  // Define a imagem do personagem ou usa a imagem padrão
-  const imagemPersonagem = window.imgpersonagem || 'https://i.pinimg.com/736x/cb/b1/ef/cbb1ef1ee0bf43d633393d7203a4d497.jpg';
-  indicador.style.backgroundImage = `url('${imagemPersonagem}')`;
+    // Define a imagem do personagem ou usa a imagem padrão (preload + encode)
+    try {
+        const imagemPersonagem = encodeURI(String(window.imgpersonagem || 'https://i.pinimg.com/736x/cb/b1/ef/cbb1ef1ee0bf43d633393d7203a4d497.jpg'));
+        const preloadIndicador = new Image();
+        preloadIndicador.onload = () => { indicador.style.backgroundImage = `url('${imagemPersonagem}')`; };
+        preloadIndicador.onerror = () => { console.warn('Falha ao carregar imagem do indicador:', window.imgpersonagem); indicador.style.backgroundImage = `url('https://via.placeholder.com/64?text=I')`; };
+        preloadIndicador.src = imagemPersonagem;
+    } catch (e) {
+        console.warn('Erro ao aplicar imagem do indicador:', e, window.imgpersonagem);
+        indicador.style.backgroundImage = `url('https://via.placeholder.com/64?text=I')`;
+    }
   
   function atualizarIconeIndicador() {
       const indicador = document.getElementById('pull-up-indicator');
@@ -2545,9 +2596,19 @@ document.addEventListener('click', function (event) {
 // Adiciona ficha marcada com check: 1
   
 if (fichaCheckada) {
-    const nome = fichaCheckada.chave.replace('-personagemNexus', '');
-    const img = document.createElement('img');
-    img.src = fichaCheckada.dados.img;
+        const nome = fichaCheckada.chave.replace('-personagemNexus', '');
+        const img = document.createElement('img');
+        // Preload and encode ficha image
+        try {
+            const src = encodeURI(String(fichaCheckada.dados.img || ''));
+            const preloadImg = new Image();
+            preloadImg.onload = () => { img.src = src; };
+            preloadImg.onerror = () => { console.warn('Falha ao carregar imagem da ficha:', fichaCheckada.dados.img); img.src = 'https://via.placeholder.com/128?text=Img'; };
+            preloadImg.src = src;
+        } catch (e) {
+            console.warn('Erro ao aplicar imagem da ficha:', e, fichaCheckada.dados.img);
+            img.src = 'https://via.placeholder.com/128?text=Img';
+        }
     img.alt = nome;
     img.className = 'ficha-icone';
     
@@ -2573,9 +2634,19 @@ if (fichaCheckada) {
   // Adiciona as outras fichas da mesma forma
   for (let i = 0; i < outrasFichas.length; i++) {
     const { chave, dados } = outrasFichas[i];
-    const nome = chave.replace('-personagemNexus', '');
-    const img = document.createElement('img');
-    img.src = dados.img || 'https://media.discordapp.net/attachments/1164311440224702526/1361559378695688232/dfy9prk-fd124c1f-81f6-4ecb-935e-e994799c6b5f.png?ex=67ff327c&is=67fde0fc&hm=316bace3c2ec013775631ccb7ae51781072936e089449bfbc696bac56fa28fc0&=&format=webp&quality=lossless&width=433&height=648';
+        const nome = chave.replace('-personagemNexus', '');
+        const img = document.createElement('img');
+        try {
+            const defaultSrc = 'https://media.discordapp.net/attachments/1164311440224702526/1361559378695688232/dfy9prk-fd124c1f-81f6-4ecb-935e-e994799c6b5f.png?ex=67ff327c&is=67fde0fc&hm=316bace3c2ec013775631ccb7ae51781072936e089449bfbc696bac56fa28fc0&=&format=webp&quality=lossless&width=433&height=648';
+            const src = encodeURI(String(dados.img || defaultSrc));
+            const preloadImg = new Image();
+            preloadImg.onload = () => { img.src = src; };
+            preloadImg.onerror = () => { console.warn('Falha ao carregar imagem da ficha:', dados.img); img.src = 'https://via.placeholder.com/128?text=Img'; };
+            preloadImg.src = src;
+        } catch (e) {
+            console.warn('Erro ao aplicar imagem da ficha:', e, dados.img);
+            img.src = 'https://via.placeholder.com/128?text=Img';
+        }
     img.alt = nome;
     img.className = 'ficha-icone';
     

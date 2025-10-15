@@ -97,6 +97,52 @@ Array.from(toggleButtons).forEach(btn => {
   });
 });
 
+// Programmatic exit from map mode: shows main UI and tabs.
+function exitMapMode() {
+  try {
+    hidden = false;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+
+    // Show main container, hide the compact ficha-bar that appears in map mode
+    container.style.display = 'flex';
+    barrafichas.style.display = 'none';
+
+    // Hide controls that are only visible in map mode
+    toggleButton.style.display = 'none';
+    toggleZoom.style.display = 'none';
+
+    if (window.admincheck) {
+      toggleBgBtn.style.display = 'none';
+      toggleOpcBtn.style.display = 'none';
+    }
+
+    if (!isMobile) {
+      anotacoes.style.display = 'block';
+      playerContainer.style.display = 'flex';
+      // ensure layout classes are in the non-map state
+      essentialInfo.classList.remove('vertical');
+      chat.classList.remove('map');
+
+      // Also ensure each status bar container is not in vertical mode so bars become horizontal
+      try {
+        const statusBars = document.querySelectorAll('.status-bar');
+        statusBars.forEach(sb => sb.classList.remove('vertical'));
+      } catch (err) {
+        console.warn('exitMapMode: failed to reset status-bar orientation', err);
+      }
+    }
+
+    // Update toggle icon to the non-map icon
+    toggleButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+  } catch (err) {
+    // defensive: if elements are missing, don't crash
+    console.warn('exitMapMode failed:', err);
+  }
+}
+
+// expose to other scripts
+window.exitMapMode = exitMapMode;
+
 
 // -------------------- //
 // FUNCIONALIDADES MAPA //
