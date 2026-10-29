@@ -40,7 +40,9 @@
       https://accounts.google.com 
       https://oauth2.googleapis.com 
       ws://127.0.0.1:5501 
-      https://backmordred.vercel.app 
+      https://backmordred.vercel.app
+      https://163-176-79-94.sslip.io
+      wss://163-176-79-94.sslip.io 
       https://apis.google.com 
       https://www.google.com 
       https://firestore.googleapis.com 
@@ -64,37 +66,12 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Firebase App -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // e continue seu código aqui
-    </script>
-    <!-- Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import {
-          getFirestore, doc, setDoc, updateDoc, onSnapshot
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";        </script>
-    <!-- Firebase Archive -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    
+    <!-- Banco de dados próprio (VM Oracle) no lugar do Firebase/Firestore -->
+    <script src="../mordred-db.js?v=1.0.0"></script>
     <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBTqNSXSGTD0uA7GtjdF-6oQsETq61YgUs",
-        authDomain: "mordred-f7ea1.firebaseapp.com",
-        projectId: "mordred-f7ea1",
-        storageBucket: "mordred-f7ea1.firebasestorage.app",
-        messagingSenderId: "248130349710",
-        appId: "1:248130349710:web:b2b3b0af3528627de7f7df",
-        measurementId: "G-GC5Z4S28R2"
-      };
-    
-      const app = firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
-      const videoDocRef = db.collection("sync").doc("videoStatus"); // Compatível com compat
-      console.log("Firebase (compat) carregado com sucesso!");
-      
+      const videoDocRef = db.collection("sync").doc("videoStatus");
+      console.log("mordred-db carregado com sucesso!");
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <!-- Math.js -->
