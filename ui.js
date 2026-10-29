@@ -48,13 +48,11 @@
 
     const topo = criarEl('div', { id: 'cab-topo' });
     const cab = criarEl('div', { id: 'cab-painel' });
-    const id = criarEl('div', { className: 'cab-id' });
     const avatar = criarEl('span', { className: 'cab-avatar', textContent: '?' }, { 'aria-hidden': 'true' });
     const nome = criarEl('span', { className: 'cab-nome', textContent: 'Personagem' });
     const engrenagem = criarEl('button', { type: 'button', className: 'cab-engrenagem' },
       { 'aria-label': 'Configurações', title: 'Configurações' });
     engrenagem.innerHTML = '<i class="fa-solid fa-gear" aria-hidden="true"></i>';
-    id.append(avatar, nome, engrenagem);
 
     const stats = criarEl('div', { className: 'cab-stats' });
     ajustes.querySelectorAll('input[id^="ajuste-"]').forEach((campo) => {
@@ -65,13 +63,12 @@
         ? titulo.textContent.replace(/^\s*Ajuste\s+/i, '').replace(/:\s*$/, '').trim()
         : chave.charAt(0).toUpperCase() + chave.slice(1);
 
-      const chip = criarEl('div', { className: 'cab-stat' });
+      const chip = criarEl('div', { className: 'cab-stat', title: rotulo });
       chip.dataset.stat = chave; // a cor vem do ui.css (--stat-*)
 
       const topoChip = criarEl('div', { className: 'cab-stat-topo' });
       topoChip.innerHTML = `<i class="fa-solid fa-${ICONES[chave] || 'circle'}" aria-hidden="true"></i>`
-        + `<span class="cab-stat-rotulo"></span><b class="cab-stat-valor">–</b>`;
-      topoChip.querySelector('.cab-stat-rotulo').textContent = rotulo;
+        + `<b class="cab-stat-valor">–</b>`;
 
       // os dois botões que vêm logo depois do campo (reduzir e adicionar): lidos ANTES de mover o campo
       let el = campo.nextElementSibling;
@@ -86,8 +83,6 @@
       campo.placeholder = '1';
       if (!campo.value) campo.value = '1';
       campo.setAttribute('aria-label', `Quantidade de ${rotulo.toLowerCase()} a ajustar`);
-      ajuste.append(campo);
-
       botoes.forEach((b) => {
         const reduz = /\(\s*-1\s*\)/.test(b.getAttribute('onclick') || '');
         const nomeOriginal = b.textContent.trim();
@@ -99,8 +94,9 @@
         b.setAttribute('aria-label', nomeOriginal);
       });
       // sempre na ordem − , +
-      botoes.sort((a, b) => (a.dataset.sinal === '-' ? -1 : 1) - (b.dataset.sinal === '-' ? -1 : 1))
-        .forEach((b) => ajuste.append(b));
+      const menos = botoes.find((b) => b.dataset.sinal === '-');
+      const mais = botoes.find((b) => b.dataset.sinal === '+');
+      ajuste.append(...[menos, campo, mais].filter(Boolean));
 
       chip.append(topoChip, ajuste);
       stats.append(chip);
@@ -143,7 +139,7 @@
       new MutationObserver(sincNome).observe(fonteNome, { childList: true, characterData: true, subtree: true });
     }
 
-    cab.append(id, stats);
+    cab.append(avatar, nome, stats, engrenagem);
     abas.parentNode.insertBefore(topo, abas);
     topo.append(cab, abas);
 
@@ -174,6 +170,25 @@
     }).observe(config, { attributes: true, attributeFilter: ['class'] });
   }
 
+  // Mostra a última rolagem (mensagem do DiceBot no chat) logo abaixo dos cartões de ação.
+  function montarUltimoResultado() {
+    const grade = document.querySelector('#acoes .acoes-grid');
+    const chat = document.getElementById('chat-mensagens');
+    if (!(grade && chat)) return;
+    const faixa = criarEl('div', { className: 'ultimo-resultado' });
+    faixa.innerHTML = '<span>Último resultado</span><span class="ur-texto"></span>';
+    const texto = faixa.querySelector('.ur-texto');
+    grade.after(faixa);
+    const atualizar = () => {
+      const bots = chat.querySelectorAll('.chat-message.bot');
+      const ultima = bots[bots.length - 1];
+      texto.textContent = ultima ? ultima.textContent.trim() : 'nenhuma rolagem ainda';
+      texto.title = texto.textContent;
+    };
+    atualizar();
+    new MutationObserver(atualizar).observe(chat, { childList: true });
+  }
+
   function criarEl(tag, props = {}, attrs = {}) {
     const el = Object.assign(document.createElement(tag), props);
     Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
@@ -181,6 +196,7 @@
   }
 
   montarCabecalho();
+  montarUltimoResultado();
 
   // ---------- montagem das colunas ----------
   const player = document.querySelector('.player-container');

@@ -262,22 +262,31 @@ body.layout-colunas #col-dir {
   --stat-defesa: #9bbf6a;    /* escudo, defesa */
 }
 
+/* sem molduras dentro de molduras: o painel é um só */
+.container .content, .container .subcontent { border: none; padding: 0.25rem 0; }
+#info > h1 { display: none; }
+
 /* topo fixo: cabeçalho + abas continuam à vista enquanto o conteúdo rola */
 #cab-topo {
   position: sticky;
   top: 0;
   z-index: 3;
-  margin: 0 -0.25rem 0.75rem;
-  padding: 0.5rem 0.25rem 0.25rem;
+  margin: 0 -0.25rem 0.6rem;
+  padding: 0.5rem 0.25rem 0.5rem;
   background: var(--painel-bg-forte);
   -webkit-backdrop-filter: blur(var(--blur));
   backdrop-filter: blur(var(--blur));
   border-bottom: 1px solid var(--borda);
 }
 
-#cab-painel { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; }
-
-.cab-id { display: flex; align-items: center; gap: 0.6rem; }
+/* avatar · nome ······· status · engrenagem  (tudo numa linha; quebra se faltar espaço) */
+#cab-painel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.6rem;
+  margin-bottom: 0.6rem;
+}
 
 .cab-avatar {
   flex: none;
@@ -294,23 +303,33 @@ body.layout-colunas #col-dir {
 }
 
 .cab-nome {
-  flex: 1;
+  order: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  margin-right: auto;
   font-size: 1.05rem;
   font-weight: 600;
-  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.cab-stats {
+  order: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
 .cab-engrenagem {
+  order: 3;
   flex: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   color: var(--texto-suave);
   background: transparent;
@@ -320,21 +339,16 @@ body.layout-colunas #col-dir {
   transition: color var(--transicao), background-color var(--transicao);
 }
 .cab-engrenagem:hover, .cab-engrenagem.ativa { color: var(--texto); background: var(--painel-bg-suave); }
-.cab-engrenagem.ativa i { transform: rotate(60deg); }
 .cab-engrenagem i { transition: transform var(--transicao); }
+.cab-engrenagem.ativa i { transform: rotate(60deg); }
 
-.cab-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(10.5rem, 100%), 1fr));
-  gap: 0.4rem;
-}
-
+/* pílula de status: ícone · valor · − qtd + */
 .cab-stat {
   --cor-stat: var(--destaque);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.3rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.15rem 0.35rem 0.15rem 0.5rem;
   background: var(--painel-bg-suave);
   border: 1px solid var(--borda);
   border-radius: var(--raio);
@@ -344,66 +358,115 @@ body.layout-colunas #col-dir {
 .cab-stat[data-stat="sanidade"] { --cor-stat: var(--stat-mente); }
 .cab-stat[data-stat="escudo"], .cab-stat[data-stat="defesa"] { --cor-stat: var(--stat-defesa); }
 
-.cab-stat-topo { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+.cab-stat-topo { display: flex; align-items: center; gap: 0.35rem; }
 .cab-stat-topo i { color: var(--cor-stat); font-size: 0.95rem; }
-.cab-stat-rotulo { flex: 1; text-align: left; color: var(--texto-suave); }
-.cab-stat-valor { font-size: 1.15rem; color: var(--texto); font-variant-numeric: tabular-nums; }
+.cab-stat-valor { min-width: 1.5rem; font-size: 1rem; font-weight: 600; color: var(--texto); font-variant-numeric: tabular-nums; }
 
-.cab-stat-ajuste { display: flex; gap: 0.3rem; }
-
-.cab-stat .cab-stat-campo {
-  flex: 1;
-  min-width: 0;
-  width: auto;
-  margin: 0;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
+.cab-stat-ajuste { display: flex; align-items: center; gap: 0.1rem; }
 
 .cab-stat .cab-stat-btn {
   flex: none;
-  width: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin: 0;
   padding: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1;
-  color: var(--texto);
-  background: var(--painel-bg);
-  border: 1px solid var(--borda);
-  border-radius: 6px;
+  color: var(--texto-suave);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color var(--transicao), border-color var(--transicao);
+  transition: color var(--transicao), background-color var(--transicao);
 }
-.cab-stat .cab-stat-btn:hover { background: var(--painel-bg-forte); border-color: var(--cor-stat); }
-.cab-stat .cab-stat-btn:active { transform: scale(0.95); }
+.cab-stat .cab-stat-btn:hover { color: var(--texto); background: var(--painel-bg); }
+.cab-stat .cab-stat-btn:active { transform: scale(0.92); }
 
-/* abas: 4 iguais, sem o "pulo" do hover antigo */
-#cab-topo .tabs { margin: 0; gap: 0.25rem; background: transparent; }
+.cab-stat .cab-stat-campo {
+  flex: none;
+  width: 2.2rem;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  text-align: center;
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* abas: 4 iguais */
+#cab-topo .tabs { margin: 0; gap: 0.3rem; background: transparent; }
 #cab-topo .tab {
   flex: 1 1 0;
   min-width: 0;
   max-width: none;
   margin: 0;
-  padding: 0.55rem 0.3rem;
+  padding: 0.5rem 0.3rem;
+  border-radius: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 #cab-topo .tab:hover { transform: none; border-width: 1px; }
 
-/* subabas (Ações | Teste rápido, Habilidades | Escolha, seções da Config) */
-.subtabs { flex-wrap: wrap; gap: 0.25rem; }
-.subtab { flex: 1 1 auto; max-width: none; margin: 0; white-space: nowrap; }
-.subtab:hover { transform: none; border-width: 1px; }
+/* subabas: controle segmentado (Ações | Teste rápido, Habilidades | Escolha) */
+#actions > .subtabs, #skills > .subtabs {
+  flex-wrap: nowrap;
+  width: fit-content;
+  gap: 0;
+  margin: 0 0 0.6rem;
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  overflow: hidden;
+}
+#actions > .subtabs .subtab, #skills > .subtabs .subtab {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.35rem 0.9rem;
+  color: var(--texto-suave);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  transform: none;
+}
+#actions > .subtabs .subtab.active, #skills > .subtabs .subtab.active { color: var(--texto); background: var(--painel-bg-forte); }
 
-/* Combate: escolha da arma + cartões de ação */
-.arma-escolha { margin-bottom: 0.75rem; text-align: left; }
-.arma-escolha h3 { margin: 0 0 0.4rem; font-size: 0.85rem; font-weight: 500; color: var(--texto-suave); }
+/* Config usa os mesmos botões, mas pode quebrar linha (5 seções) */
+#config > .subtabs { flex-wrap: wrap; gap: 0.25rem; }
+#config > .subtabs .subtab { flex: 1 1 auto; max-width: none; margin: 0; white-space: nowrap; }
+#config > .subtabs .subtab:hover { transform: none; border-width: 1px; }
 
+/* Combate: linha "Arma" */
+.arma-escolha .inventory-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.6rem;
+  padding: 0.35rem 0.6rem;
+  text-align: left;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+}
+.arma-escolha h3 { flex: none; margin: 0; font-size: 0.85rem; font-weight: 500; color: var(--texto-suave); }
+.arma-escolha .slider-container { flex: 1; min-width: 0; min-height: 1.9rem; align-items: center; gap: 0.4rem; padding: 0; }
+.arma-escolha .slider-container:not(:has(.inventory-item))::before { content: "Nenhum item no inventário"; font-size: 0.85rem; color: var(--texto-suave); }
+.arma-escolha .slider-container .inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: auto;
+  padding: 0.15rem 0.5rem;
+}
+.arma-escolha .slider-container .inventory-item img { width: 1.6rem; height: 1.6rem; margin: 0; object-fit: cover; }
+
+/* Combate: cartões de ação */
 .acoes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
   gap: 0.6rem;
 }
 
@@ -412,7 +475,7 @@ body.layout-colunas #col-dir {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.7rem;
+  padding: 0.6rem 0.7rem;
   text-align: left;
   background: var(--painel-bg-suave);
   border: 1px solid var(--borda);
@@ -422,19 +485,42 @@ body.layout-colunas #col-dir {
 /* se o último cartão sobrar sozinho numa linha de 3, ele ocupa o resto */
 .acao-card:last-child:nth-child(3n + 2) { grid-column: span 2; }
 .acao-card:hover, .acao-card:focus-within { border-color: rgba(255, 255, 255, 0.4); }
-.acao-card h3 { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 1rem; }
+.acao-card h3 { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 0.95rem; }
 .acao-card h3 i { width: 1.2rem; text-align: center; color: var(--destaque); }
 
-.acao-campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
-.acao-card .campo { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
-.acao-card label { font-size: 0.75rem; color: var(--texto-suave); }
-.acao-card input[type="number"] { width: 100%; margin: 0; padding: 0.3rem 0.4rem; font-size: 0.95rem; text-align: center; }
-.acao-card .acao-extra { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--texto); }
+.acao-linha { display: flex; align-items: center; gap: 0.35rem; }
+
+.acao-card label.mini {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding-left: 0.4rem;
+  background: var(--painel-bg);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+}
+.acao-card label.mini span { font-size: 0.7rem; font-weight: 700; color: var(--texto-suave); }
+.acao-card label.mini input {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.3rem 0.2rem;
+  font-size: 0.9rem;
+  text-align: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.acao-card .acao-extra { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--texto); }
 .acao-card .acao-extra input { width: auto; margin: 0; }
 
 .acao-card .btn-rolar {
-  margin-top: auto;
-  padding: 0.45rem 0;
+  flex: 1.2 1 0;
+  margin: 0;
+  padding: 0.35rem 0;
   color: var(--texto);
   background: var(--painel-bg-forte);
   border: 1px solid var(--borda);
@@ -443,7 +529,20 @@ body.layout-colunas #col-dir {
   transition: background-color var(--transicao), border-color var(--transicao);
 }
 .acao-card .btn-rolar:hover { background: #494463; border-color: rgba(255, 255, 255, 0.55); }
-.acao-card .btn-rolar:active { transform: scale(0.98); }
+.acao-card .btn-rolar:active { transform: scale(0.97); }
+
+/* última rolagem (vem do chat) */
+.ultimo-resultado {
+  text-align: left;
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  padding-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  border-top: 1px solid var(--borda);
+}
+.ultimo-resultado .ur-texto { flex: 1; text-align: left; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto); }
 
 /* Config: aberta pela engrenagem, com botão de voltar */
 .cfg-voltar {
@@ -461,21 +560,14 @@ body.layout-colunas #col-dir {
 }
 .cfg-voltar:hover { background: var(--painel-bg-suave); }
 
-/* a faixa antiga "Status do Personagem" perde a ênfase: o status agora fica no cabeçalho */
-#info > h1 { margin: 0.25rem 0 0.75rem; font-size: 1.3rem; }
-
-/* Mobile: status em uma linha por item e menos aninhamento de bordas/margens */
+/* Mobile: nome + engrenagem na 1ª linha, status na 2ª; cartões em 1 coluna */
 @media (max-width: 1023px) {
   .container { padding-left: 12px; padding-right: 12px; }
-  .content, .subcontent { padding: 0.6rem; }
-  .content { border: none; }
-
-  .cab-stats { grid-template-columns: minmax(0, 1fr); gap: 0.3rem; }
+  .cab-stats { order: 4; flex: 1 1 100%; justify-content: flex-start; }
+  .cab-stat { flex: 1 1 7.5rem; justify-content: space-between; gap: 0.2rem; padding: 0.15rem 0.25rem 0.15rem 0.4rem; }
+  .cab-stat-valor { min-width: 1.2rem; }
+  .cab-stat .cab-stat-btn { width: 1.3rem; }
+  .cab-stat .cab-stat-campo { width: 1.9rem; }
   .acoes-grid { grid-template-columns: minmax(0, 1fr); }
   .acao-card:last-child:nth-child(3n + 2) { grid-column: auto; }
-  .subcontent { border: none; padding: 0.4rem 0; }
-  .cab-stat { flex-direction: row; align-items: center; gap: 0.5rem; padding: 0.3rem 0.5rem; }
-  .cab-stat-topo { flex: 0 0 7.5rem; }
-  .cab-stat-ajuste { flex: 1; min-width: 0; }
-  #cab-topo { margin-bottom: 0.5rem; }
 }
