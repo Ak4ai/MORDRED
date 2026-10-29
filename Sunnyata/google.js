@@ -59,6 +59,62 @@ let gisInited = false;
 // Chave para armazenar o token no localStorage
 const ACCESS_TOKEN_KEY = 'drive_access_token';
 
+// O token do Google (GIS) dura cerca de 1 hora. Guardamos quando ele vence para não tratar
+// um token morto como "logado" (o Sync e o Restaurar falhavam sem aviso depois disso).
+const TOKEN_EXPIRES_KEY = 'drive_token_expires_at';
+
+function salvarToken(resp) {
+    localStorage.setItem(ACCESS_TOKEN_KEY, resp.access_token);
+    const ms = (Number(resp.expires_in) || 3600) * 1000;
+    localStorage.setItem(TOKEN_EXPIRES_KEY, String(Date.now() + ms - 60000)); // 1 min de folga
+    gapi.client.setToken({ access_token: resp.access_token });
+    removerAvisoSessao();
+}
+
+function tokenExpirado() {
+    if (!localStorage.getItem(ACCESS_TOKEN_KEY)) return true;
+    const vence = Number(localStorage.getItem(TOKEN_EXPIRES_KEY));
+    return !vence || Date.now() >= vence; // sem data de validade guardada = sessão antiga, vale como vencida
+}
+
+// Volta a interface para "deslogado" e apaga o token vencido
+function limparSessao() {
+    if (window.gapi && gapi.client) gapi.client.setToken('');
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(TOKEN_EXPIRES_KEY);
+    signinButton.style.display = 'block';
+    signoutButton.style.display = 'none';
+    syncButton.style.display = 'none';
+    restoreButton.style.display = 'none';
+    const info = document.querySelector('.user-info');
+    if (info) info.style.display = 'none';
+}
+
+function avisarSessaoExpirada() {
+    if (document.querySelector('.sessao-aviso')) return;
+    const aviso = document.createElement('p');
+    aviso.className = 'sessao-aviso';
+    aviso.textContent = 'Sua sessão do Google expirou. Clique em Sign In para entrar de novo.';
+    const botoes = document.querySelector('#Google .auth-buttons');
+    if (botoes) botoes.after(aviso);
+}
+
+function removerAvisoSessao() {
+    document.querySelectorAll('.sessao-aviso').forEach((el) => el.remove());
+}
+
+// Roda uma ação que usa o Drive. Se o token venceu, renova antes (sem refazer todo o consentimento).
+// Precisa ser chamado direto de um clique, senão o navegador bloqueia a janela do Google.
+function garantirToken(acao) {
+    if (!tokenExpirado()) { acao(); return; }
+    tokenClient.callback = (resp) => {
+        if (resp.error !== undefined) { limparSessao(); avisarSessaoExpirada(); return; }
+        salvarToken(resp);
+        acao();
+    };
+    tokenClient.requestAccessToken({ prompt: '' });
+}
+
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
@@ -89,8 +145,9 @@ function maybeEnableButtons() {
     
     if (gapiInited && gisInited) {
         const savedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        if (savedToken) {
+        if (savedToken && !tokenExpirado()) {
             gapi.client.setToken({ access_token: savedToken });
+            removerAvisoSessao();
             signinButton.style.display = 'none';
             signoutButton.style.display = 'block';
             syncButton.style.display = 'flex';
@@ -100,6 +157,7 @@ function maybeEnableButtons() {
             updateLastSyncMessage();
             console.log('Sessão restaurada com token salvo.');
         } else {
+            if (savedToken) { limparSessao(); avisarSessaoExpirada(); } // havia token, mas venceu
             signinButton.style.display = 'block';
             signoutButton.style.display = 'none';
             syncButton.style.display = 'none';
@@ -126,8 +184,7 @@ function handleAuthClick() {
         }
 
         // Salva o token no localStorage para futuras sessões
-        localStorage.setItem(ACCESS_TOKEN_KEY, resp.access_token);
-        gapi.client.setToken({ access_token: resp.access_token });
+        salvarToken(resp);
 
         // Verifica se o escopo do Google Drive foi concedido
         const grantedScopes = resp.scope ? resp.scope.split(' ') : [];
@@ -160,6 +217,7 @@ function handleSignoutClick() {
         google.accounts.oauth2.revoke(token.access_token);
         gapi.client.setToken('');
         localStorage.removeItem(ACCESS_TOKEN_KEY);
+        localStorage.removeItem(TOKEN_EXPIRES_KEY);
 
         signinButton.style.display = 'block';
         signoutButton.style.display = 'none';
@@ -181,7 +239,7 @@ function handleSignoutClick() {
 
 
 // Função para sincronizar o localStorage com o Google Drive
-syncButton.onclick = () => synchronizeWithDrive();
+syncButton.onclick = () => garantirToken(synchronizeWithDrive);
 // Função para encontrar ou criar a pasta "MORDREDDADOS" no Google Drive
 function findOrCreateFolder(callback) {
   // Query para buscar pela pasta com o nome e mimeType de pasta
@@ -328,7 +386,7 @@ function synchronizeWithDrive() {
     }
 
     // Chaves que **não** devem ser sincronizadas
-    const EXCLUDED_KEYS = [ACCESS_TOKEN_KEY, 'user_icon', 'user_name', 'last_sync'];
+    const EXCLUDED_KEYS = [ACCESS_TOKEN_KEY, TOKEN_EXPIRES_KEY, 'user_icon', 'user_name', 'last_sync'];
 
     // Garante que a pasta MORDREDDADOS exista
     findOrCreateFolder(function(folderId) {
@@ -425,7 +483,7 @@ function restoreUserInfo() {
     }
 }
 
-restoreButton.onclick = () => downloadFilesFromDrive();
+restoreButton.onclick = () => garantirToken(downloadFilesFromDrive);
 
 function downloadFilesFromDrive() {
     // Localiza ou cria a pasta "MORDREDDADOS"
@@ -491,7 +549,8 @@ function verificarValidadeToken() {
     .then(response => {
         if (!response.ok) {
             // Token inválido (ex: expirado ou revogado)
-            mostrarMensagem('Sua sessão do Google expirou. Por favor, clique em "Sign Out" e entre novamente.');
+            limparSessao();
+            avisarSessaoExpirada();
         } else {
             console.log('Token válido. Tudo está funcionando corretamente.');
         }

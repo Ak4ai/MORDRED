@@ -306,6 +306,7 @@ body.layout-colunas #col-dir {
   order: 1;
   flex: 0 1 auto;
   min-width: 0;
+  max-width: 10rem;
   margin-right: auto;
   font-size: 1.05rem;
   font-weight: 600;
@@ -808,3 +809,26 @@ body.layout-colunas #col-dir {
 #cab-painel.cab-empilhado .cab-stat .cab-stat-btn { width: 1.3rem; }
 #cab-painel.cab-empilhado .cab-stat .cab-stat-campo { width: 1.9rem; }
 #cab-painel.cab-empilhado > #togglecontainer1, #cab-painel.cab-empilhado > .cab-engrenagem { order: 2; }
+
+/* Níveis de compactação do cabeçalho (ver ui.js): 1 e 2 encolhem as caixinhas; 3 também esconde o nome */
+#cab-painel.cab-n1 .cab-stat,
+#cab-painel.cab-n2 .cab-stat { gap: 0.2rem; padding: 0.1rem 0.25rem 0.1rem 0.4rem; }
+#cab-painel.cab-n1 .cab-stat-topo,
+#cab-painel.cab-n2 .cab-stat-topo { gap: 0.25rem; }
+#cab-painel.cab-n1 .cab-stat-valor { min-width: 1.2rem; font-size: 0.9rem; }
+#cab-painel.cab-n1 .cab-stat .cab-stat-btn { width: 1.3rem; }
+#cab-painel.cab-n1 .cab-stat .cab-stat-campo { width: 1.9rem; }
+
+#cab-painel.cab-n2 .cab-stat-topo i { font-size: 0.8rem; }
+#cab-painel.cab-n2 .cab-stat-valor { min-width: 1rem; font-size: 0.8rem; }
+#cab-painel.cab-n2 .cab-stat .cab-stat-btn { width: 1.1rem; height: 1.3rem; font-size: 0.95rem; }
+#cab-painel.cab-n2 .cab-stat .cab-stat-campo { width: 1.6rem; height: 1.3rem; font-size: 0.7rem; }
+#cab-painel.cab-n2 > #togglecontainer1,
+#cab-painel.cab-n2 > .cab-engrenagem { width: 1.8rem; height: 1.8rem; }
+#cab-painel.cab-n2 .cab-avatar { width: 1.8rem; height: 1.8rem; }
+
+#cab-painel.cab-n3 .cab-nome { display: none; }
+#cab-painel.cab-n3 .cab-stats { margin-left: auto; }
+
+/* aviso quando a sessão do Google venceu */
+.sessao-aviso { margin: 0.6rem 0 0; font-size: 0.85rem; color: #e6c56a; text-align: center; }

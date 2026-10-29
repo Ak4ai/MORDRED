@@ -153,13 +153,28 @@
     abas.parentNode.insertBefore(topo, abas);
     topo.append(cab, abas);
 
-    // Se os status não cabem ao lado do nome, o cabeçalho "empilha": nome e botões numa linha
-    // e os status na de baixo. Medido de verdade (não só pela largura da janela), então vale
-    // para a coluna estreita, para o mobile e para apps com 4 status.
+    // Os status ficam sempre na 1ª linha, ao lado do avatar e do nome. Se não couberem, o cabeçalho
+    // vai tentando, nesta ordem: (1) encolher as caixinhas, (2) encolher mais, (3) esconder o nome.
+    // Só se nada disso bastar, os status descem para a linha de baixo ("empilhado").
+    // Cada tentativa é medida de verdade, então vale para qualquer largura de coluna ou de tela.
+    const NIVEIS = ['cab-n1', 'cab-n2', 'cab-n3'];
+    const cabe = () => {
+      const linha = avatar.offsetTop + avatar.offsetHeight;
+      const chip = stats.firstElementChild;
+      return stats.offsetTop < linha
+        && engrenagem.offsetTop < linha
+        && (!ocultar || ocultar.offsetTop < linha)
+        && (!chip || stats.offsetHeight <= chip.offsetHeight + 3); // as pílulas não quebraram entre si
+    };
     reorganizar = () => {
-      cab.classList.remove('cab-empilhado');
-      const mesmaLinha = stats.offsetTop < avatar.offsetTop + avatar.offsetHeight;
-      cab.classList.toggle('cab-empilhado', !mesmaLinha);
+      cab.classList.remove('cab-empilhado', ...NIVEIS);
+      if (cabe()) return;
+      for (const nivel of NIVEIS) {
+        cab.classList.add(nivel);
+        if (cabe()) return;
+      }
+      cab.classList.remove(...NIVEIS);
+      cab.classList.add('cab-empilhado');
     };
     new ResizeObserver(reorganizar).observe(topo);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(reorganizar);
