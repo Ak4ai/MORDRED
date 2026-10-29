@@ -415,7 +415,7 @@ body.layout-colunas #col-dir {
 #cab-topo .tab:hover { transform: none; border-width: 1px; }
 
 /* subabas: controle segmentado (Ações | Teste rápido, Habilidades | Escolha) */
-#actions > .subtabs, #skills > .subtabs {
+#actions .subtabs, #skills > .subtabs {
   flex-wrap: nowrap;
   width: fit-content;
   gap: 0;
@@ -425,7 +425,7 @@ body.layout-colunas #col-dir {
   border-radius: 6px;
   overflow: hidden;
 }
-#actions > .subtabs .subtab, #skills > .subtabs .subtab {
+#actions .subtabs .subtab, #skills > .subtabs .subtab {
   flex: 0 0 auto;
   margin: 0;
   padding: 0.35rem 0.9rem;
@@ -435,7 +435,7 @@ body.layout-colunas #col-dir {
   border-radius: 0;
   transform: none;
 }
-#actions > .subtabs .subtab.active, #skills > .subtabs .subtab.active { color: var(--texto); background: var(--painel-bg-forte); }
+#actions .subtabs .subtab.active, #skills > .subtabs .subtab.active { color: var(--texto); background: var(--painel-bg-forte); }
 
 /* Config usa os mesmos botões, mas pode quebrar linha (5 seções) */
 #config > .subtabs { flex-wrap: wrap; gap: 0.25rem; }
@@ -832,3 +832,139 @@ body.layout-colunas #col-dir {
 
 /* aviso quando a sessão do Google venceu */
 .sessao-aviso { margin: 0.6rem 0 0; font-size: 0.85rem; color: #e6c56a; text-align: center; }
+
+/* ==========================================================================
+   Espaços entre colunas, botão da coluna 1, seletor de arma e controles na Ficha
+   ========================================================================== */
+:root { --gap-centro: 0.25rem; }
+
+@media (min-width: 1024px) {
+  /* coluna 1 escondida: margens esquerda e direita iguais (32px) sem espaço sobrando */
+  body.layout-colunas.col-esq-oculta #col-meio { padding-left: 1rem; padding-right: 2rem; }
+  /* com a coluna 1 escondida, o painel principal aproveita o espaço liberado */
+  body.layout-colunas.col-esq-oculta #col-meio > .container { max-width: 1000px; }
+
+  /* o botão deixa de ocupar espaço: é uma aba estreita que fica por cima do vão entre as colunas */
+  body.layout-colunas #toggle-col-esq {
+    width: 1rem;
+    height: 3.25rem;
+    left: calc(var(--gap) / -2 - 0.5rem);
+    border-radius: 6px;
+  }
+  body.layout-colunas #toggle-col-esq i { font-size: 0.65rem; }
+  body.layout-colunas.col-esq-oculta #toggle-col-esq { left: calc(var(--gap) * -1); border-radius: 0 6px 6px 0; }
+}
+
+/* Combate: "Ações | Teste rápido" + seletor de arma na mesma linha */
+.combate-topo { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 0.6rem; margin-bottom: 0.6rem; }
+.combate-topo > .subtabs { margin: 0 !important; }
+
+.arma-select { position: relative; flex: 1 1 11rem; max-width: 18rem; margin-left: auto; }
+.arma-select[hidden] { display: none; }
+.arma-botao {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  text-align: left;
+  color: var(--texto);
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color var(--transicao);
+}
+.arma-botao:hover, .arma-select.aberto .arma-botao { border-color: rgba(255, 255, 255, 0.4); }
+.arma-rotulo { font-size: 0.75rem; color: var(--texto-suave); }
+.arma-valor { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.arma-botao i { font-size: 0.7rem; color: var(--texto-suave); transition: transform var(--transicao); }
+.arma-select.aberto .arma-botao i { transform: rotate(180deg); }
+
+.arma-menu {
+  display: none;
+  position: absolute;
+  z-index: 6;
+  top: calc(100% + 0.3rem);
+  left: 0;
+  right: 0;
+  min-width: 13rem;
+  padding: 0.35rem;
+  background: var(--painel-bg-forte);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  box-shadow: var(--sombra-painel);
+}
+.arma-select.aberto .arma-menu { display: block; }
+.arma-menu .inventory-preview { display: block; margin: 0; padding: 0; background: none; border: none; }
+.arma-menu .inventory-preview h3 { display: none; }
+.arma-menu .slider-container { display: flex; flex-direction: column; gap: 0.2rem; max-height: 15rem; overflow-y: auto; padding: 0; }
+.arma-menu .slider-container:not(:has(.inventory-item))::before { content: "Nenhum item no inventário"; padding: 0.5rem; font-size: 0.85rem; color: var(--texto-suave); }
+.arma-menu .slider-container .inventory-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: auto;
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+.arma-menu .slider-container .inventory-item:hover { background: var(--painel-bg-suave); }
+.arma-menu .slider-container .inventory-item img { width: 1.6rem; height: 1.6rem; margin: 0; object-fit: cover; border-radius: 4px; }
+.arma-menu .slider-container .inventory-item p { flex: 1; margin: 0; font-size: 0.9rem; }
+.arma-menu .slider-container .inventory-item.selected { background: var(--painel-bg-suave); border-color: var(--destaque); }
+.arma-menu .slider-container .inventory-item.selected::after {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.7rem;
+  color: var(--destaque);
+}
+
+/* Ficha: controles de ajuste (campo e botões − +) dentro de cada cartão de status */
+#info .status-ajuste { display: flex; gap: 0.3rem; margin-top: 0.55rem; }
+#info .status-ajuste .ajuste-campo {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 0.25rem;
+  font-size: 0.85rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  box-shadow: none;
+}
+#info .status-ajuste .ajuste-campo:focus { outline: none; border-color: var(--destaque); background: rgba(255, 255, 255, 0.12); }
+#info .status-ajuste .ajuste-btn {
+  flex: none;
+  width: 2rem;
+  margin: 0;
+  padding: 0.2rem 0;
+  font-size: 1rem;
+  line-height: 1.1;
+  color: var(--texto);
+  background: var(--painel-bg);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+#info .status-ajuste .ajuste-btn:hover { background: var(--painel-bg-forte); border-color: rgba(255, 255, 255, 0.4); }
+#info .status-ajuste .ajuste-btn:active { transform: scale(0.95); }
+
+/* a pílula do cabeçalho agora só tem ícone, valor e − + */
+.cab-stat .cab-stat-btn { width: 1.5rem; }
+
+/* Mobile: o cabeçalho só tem nome e botões; os status (e os ajustes) ficam na aba Ficha */
+@media (max-width: 1023px) {
+  .cab-stats { display: none; }
+  .combate-topo { align-items: stretch; }
+  .arma-select { flex: 1 1 100%; max-width: none; margin-left: 0; }
+}

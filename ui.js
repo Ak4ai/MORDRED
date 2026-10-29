@@ -80,8 +80,12 @@
         el = el.nextElementSibling;
       }
 
-      const ajuste = criarEl('div', { className: 'cab-stat-ajuste' });
-      campo.classList.add('cab-stat-campo');
+      // Os controles ORIGINAIS (campo + botões, com ids e handlers intactos) vão para o cartão do
+      // status na Ficha. A pílula do cabeçalho ganha cópias só dos botões − e +: elas chamam as mesmas
+      // funções (ajustarVida()...) e usam a quantidade do campo do cartão.
+      const fonte = document.getElementById(`status-${chave}`);
+      const cartao = fonte && fonte.closest('.status-item');
+      campo.classList.add('ajuste-campo');
       campo.placeholder = '1';
       if (!campo.value) campo.value = '1';
       campo.setAttribute('aria-label', `Quantidade de ${rotulo.toLowerCase()} a ajustar`);
@@ -89,22 +93,35 @@
         const reduz = /\(\s*-1\s*\)/.test(b.getAttribute('onclick') || '');
         const nomeOriginal = b.textContent.trim();
         b.dataset.sinal = reduz ? '-' : '+';
-        b.classList.add('cab-stat-btn');
+        b.classList.add('ajuste-btn');
         b.type = 'button';
         b.textContent = reduz ? '−' : '+';
         b.title = nomeOriginal;
         b.setAttribute('aria-label', nomeOriginal);
       });
-      // sempre na ordem − , +
       const menos = botoes.find((b) => b.dataset.sinal === '-');
       const mais = botoes.find((b) => b.dataset.sinal === '+');
-      ajuste.append(...[menos, campo, mais].filter(Boolean));
+
+      const ajuste = criarEl('div', { className: 'cab-stat-ajuste' });
+      if (cartao) {
+        const controles = criarEl('div', { className: 'status-ajuste' });
+        controles.append(...[menos, campo, mais].filter(Boolean));
+        cartao.append(controles);
+        [menos, mais].filter(Boolean).forEach((b) => {
+          const copia = b.cloneNode(true);
+          copia.classList.remove('ajuste-btn');
+          copia.classList.add('cab-stat-btn');
+          ajuste.append(copia);
+        });
+      } else {
+        // sem cartão na Ficha (estrutura diferente): mantém tudo dentro da pílula
+        ajuste.append(...[menos, campo, mais].filter(Boolean));
+      }
 
       chip.append(topoChip, ajuste);
       stats.append(chip);
 
       // valor vivo: acompanha o texto que o script.js já mantém em #status-<chave>
-      const fonte = document.getElementById(`status-${chave}`);
       const valor = topoChip.querySelector('.cab-stat-valor');
       const sincronizar = () => {
         const txt = fonte ? fonte.textContent : '';
@@ -226,6 +243,66 @@
     new MutationObserver(atualizar).observe(chat, { childList: true });
   }
 
+  // Combate: "Ações | Teste rápido" e o seletor de arma na mesma linha. O seletor é um menu suspenso:
+  // o próprio preview do inventário (cuja lista o inventario.js preenche e controla) vai para dentro
+  // do menu, então a seleção e as funções de ataque continuam exatamente como antes.
+  function montarSeletorArma() {
+    const actions = document.getElementById('actions');
+    const abas = actions && actions.querySelector(':scope > .subtabs');
+    if (!(actions && abas)) return;
+    const linha = criarEl('div', { className: 'combate-topo' });
+    abas.before(linha);
+    linha.append(abas);
+
+    const criar = (previewId, subId) => {
+      const preview = document.getElementById(previewId);
+      const sub = document.getElementById(subId);
+      const lista = preview && preview.querySelector('.slider-container');
+      if (!(preview && sub && lista)) return;
+
+      const caixa = criarEl('div', { className: 'arma-select' });
+      const botao = criarEl('button', { type: 'button', className: 'arma-botao' },
+        { 'aria-haspopup': 'listbox', 'aria-expanded': 'false' });
+      botao.innerHTML = '<span class="arma-rotulo">Arma</span><span class="arma-valor">Nenhuma</span>'
+        + '<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>';
+      const menu = criarEl('div', { className: 'arma-menu' }, { role: 'listbox' });
+      const antigoPai = preview.parentElement;
+      menu.append(preview);
+      caixa.append(botao, menu);
+      linha.append(caixa);
+      if (antigoPai && antigoPai.classList.contains('arma-escolha')) antigoPai.remove();
+
+      const valor = botao.querySelector('.arma-valor');
+      const atualizar = () => {
+        const sel = lista.querySelector('.inventory-item.selected');
+        valor.textContent = sel ? sel.textContent.trim() : 'Nenhuma';
+      };
+      new MutationObserver(atualizar).observe(lista, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+      atualizar();
+
+      const fechar = () => { caixa.classList.remove('aberto'); botao.setAttribute('aria-expanded', 'false'); };
+      botao.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const abre = !caixa.classList.contains('aberto');
+        caixa.classList.toggle('aberto', abre);
+        botao.setAttribute('aria-expanded', String(abre));
+      });
+      lista.addEventListener('click', (e) => { if (e.target.closest('.inventory-item')) setTimeout(fechar, 0); });
+      document.addEventListener('click', (e) => { if (!caixa.contains(e.target)) fechar(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(); });
+
+      // cada seletor só aparece junto da subaba a que pertence
+      const sincronizar = () => {
+        caixa.hidden = !sub.classList.contains('active');
+        if (caixa.hidden) fechar();
+      };
+      new MutationObserver(sincronizar).observe(sub, { attributes: true, attributeFilter: ['class'] });
+      sincronizar();
+    };
+    criar('inventory-preview', 'acoes');
+    criar('inventory-preview-testes', 'testes');
+  }
+
   function criarEl(tag, props = {}, attrs = {}) {
     const el = Object.assign(document.createElement(tag), props);
     Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
@@ -234,6 +311,7 @@
 
   montarCabecalho();
   montarUltimoResultado();
+  montarSeletorArma();
 
   // ---------- montagem das colunas ----------
   const player = document.querySelector('.player-container');
