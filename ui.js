@@ -166,7 +166,16 @@
       ocultar.title = 'Esconder a interface (ver só o tabuleiro)';
       ocultar.setAttribute('aria-label', ocultar.title);
     }
-    cab.append(...[avatar, nome, stats, ocultar, engrenagem].filter(Boolean));
+    // Menu (trocar de mod): atalho para o mesmo botão "Menu" da barra de baixo do mobile, que no desktop
+    // fica escondida. Clicar nele roda o handler original do script.js, que leva ao menu de mods.
+    const menu = criarEl('button', { type: 'button', className: 'cab-engrenagem cab-menu' },
+      { 'aria-label': 'Menu (trocar de mod)', title: 'Menu (trocar de mod)' });
+    menu.innerHTML = '<i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>';
+    menu.addEventListener('click', () => {
+      const original = document.getElementById('toggleselection1');
+      if (original) original.click(); else window.location.href = '../indexlimpo.html';
+    });
+    cab.append(...[avatar, nome, stats, menu, ocultar, engrenagem].filter(Boolean));
     abas.parentNode.insertBefore(topo, abas);
     topo.append(cab, abas);
 
