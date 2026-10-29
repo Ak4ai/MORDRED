@@ -2414,7 +2414,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Verifica a largura da janela
     function checkWindowSize() {
-        if (window.innerWidth >= 1024) {
+        if (MORDRED_UI.isDesktop()) {
             essentialInfo.classList.remove("hidden");
         } else {
             essentialInfo.classList.add("hidden");
@@ -2465,7 +2465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Verifica a largura da janela
     function checkWindowSize() {
-        if (window.innerWidth >= 1024) {
+        if (MORDRED_UI.isDesktop()) {
             essentialInfo2.classList.remove("hidden");
         } else {
             essentialInfo2.classList.add("hidden");

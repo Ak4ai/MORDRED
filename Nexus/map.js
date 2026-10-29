@@ -34,7 +34,7 @@ Array.from(toggleButtons).forEach(btn => {
   btn.addEventListener('click', () => {
     hidden = !hidden;
 
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const isMobile = MORDRED_UI.isMobile();
 
     // Esconde apenas em dispositivos não móveis
     container.style.display = hidden ? 'none' : 'flex';
@@ -101,7 +101,7 @@ Array.from(toggleButtons).forEach(btn => {
 function exitMapMode() {
   try {
     hidden = false;
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const isMobile = MORDRED_UI.isMobile();
 
     // Show main container, hide the compact ficha-bar that appears in map mode
     container.style.display = 'flex';

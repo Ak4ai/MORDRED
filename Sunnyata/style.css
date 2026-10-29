@@ -1,10 +1,17 @@
+/* Tema roxo do Sunnyata: sobrescreve os valores padrão de ../ui.css */
+:root {
+  --painel-bg: #29254091;
+  --painel-bg-forte: #3b2540b6;
+  --painel-bg-suave: #38243e80;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   min-height: 100dvh;
   height: 100dvh;
   height: var(--altura-visivel);
-  background-color: #38243e80; /* Cor de fundo */
+  background-color: var(--painel-bg-suave); /* Cor de fundo */
   overflow-x: hidden; /* Evita o scroll horizontal */
   overflow-y: hidden;
   -webkit-user-select: none;
@@ -36,16 +43,16 @@ body {
 .container {
   position:absolute;
   display: flex;
-  color: #c9c9da;
+  color: var(--texto);
   top: 1dvh;
   padding: 25px;
   padding-top: 5px;
   padding-bottom: 5px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: all ease .2s;
   max-width: 600px;
   width: 80vw;
@@ -101,8 +108,8 @@ input {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   color: #ccc;
   border-radius: 4px;
   font-size: 16px;
@@ -147,8 +154,8 @@ input[type="checkbox"] {
   appearance: none; /* Remove o estilo padrão do sistema operacional */
   width: 20px;
   height: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   border-radius: 4px;
   cursor: pointer;
   position: relative;
@@ -188,7 +195,7 @@ input:focus {
 /* Estilo para o dropdown do select */
 select::-ms-expand {
   display: none; /* Esconde o ícone de dropdown no Internet Explorer */
-  background-color: #29254091;
+  background-color: var(--painel-bg);
 }
 
 select {
@@ -201,8 +208,8 @@ select {
   border-radius: 4px;
   font-size: 16px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   appearance: none; /* Remove o estilo padrão do sistema operacional */
   cursor: pointer; /* Altera o cursor ao passar o mouse */
   box-sizing: border-box; /* Garante que o padding não aumente a largura total */
@@ -210,8 +217,8 @@ select {
 
 /* Estilo para a lista suspensa das opções */
 select option {
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   color: #ccc;
 }
 
@@ -224,7 +231,7 @@ select option:hover {
 /* Estilo quando o select está em foco */
 select:focus {
   border: 1px solid rgba(250, 243, 243, 0.923);
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   outline: none; /* Remove a borda de foco padrão */
   box-shadow: 0 0 5px rgba(240, 237, 237, 0.5); /* Sombra ao focar */
 }
@@ -249,10 +256,10 @@ select:focus option:checked {
   padding: 10px;
   background-color: #9790b390;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  border: 1px solid var(--borda);
   border-radius: 0.25rem;
   margin: 2px;
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   transition: all ease .2s;
   max-width: 350px;
 }
@@ -311,7 +318,7 @@ select:focus option:checked {
   text-align: center;
   margin-bottom: 0;
   padding: 0;
-  color: #c9c9da;
+  color: var(--texto);
 }
 
 .status-column {
@@ -333,8 +340,8 @@ select:focus option:checked {
 .status-item span {
   padding: 3px;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   border-radius: 5px;
   font-weight: bold;
   line-height: 25px;
@@ -362,7 +369,7 @@ button {
   margin: 5px 5px;
   padding: 10px 20px;
   color: #ccc;
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   border: 1px solid #ebe0e0;
   border-radius: 0.5rem;
   position: relative;
@@ -417,8 +424,8 @@ button:active {
 }
 
 .status-pericias {
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   padding: 10px;
   border-radius: 0.5rem;
   margin-top: 20px;
@@ -433,8 +440,8 @@ button:active {
 }
 
 .status-tracos {
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   padding: 10px;
   border-radius: 0.5rem;
   margin-top: 20px;
@@ -463,7 +470,7 @@ button:active {
 }
 .status-bar-fill {
   height: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  border: 1px solid var(--borda);
   background-color: #36254091;
   border-radius: 5px;
   transition: width 0.3s ease;
@@ -483,8 +490,8 @@ button:active {
   min-width: 100%;
   text-align: center;
   padding-top: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   border-radius: 0.5rem;
 }
 
@@ -507,9 +514,9 @@ button:active {
   align-items: center;
   font-size: small;
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
 }
 
 .atributo-item label {
@@ -520,8 +527,8 @@ button:active {
 .atributo-item span {
   display: block;
   padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   border-radius: 5px;
   width: 80%;
   text-align: center;
@@ -545,8 +552,8 @@ button:active {
 
 /* Track (parte de fundo da barra de rolagem) */
 ::-webkit-scrollbar-track {
-  border-radius: 8px;;
-  background-color: #29254091; /* Cor de fundo da barra de título */
+  border-radius: var(--raio);;
+  background-color: var(--painel-bg); /* Cor de fundo da barra de título */
 }
 
 /* Thumb (parte deslizante da barra de rolagem) */
@@ -561,19 +568,19 @@ button:active {
 }
 /* Estiliza o canto onde o scroll horizontal e vertical se encontram */
 ::-webkit-scrollbar-corner {
-  background-color: #29254091; /* Mesma cor do track ou do fundo */
+  background-color: var(--painel-bg); /* Mesma cor do track ou do fundo */
 }
 
 
 .dialog-container {
   border: 1px solid #999999;
   border-radius: 0.5rem;
-  color: #c9c9da;
+  color: var(--texto);
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
   padding: 20px;
   background-color: rgba(37, 50, 64, 0.167); /* Opacidade ajustada para 80% */
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: all ease 0.5s;
   width: 80vw; /* Largura igual a 80% da largura da tela */
   max-width: 600px; /* Largura máxima para manter o tamanho controlado */
@@ -626,8 +633,8 @@ textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   color: #ccc;
   border-radius: 4px;
   font-size: 16px;
@@ -657,12 +664,12 @@ textarea:focus {
   overflow-y: auto;
   z-index: 998;
   display: block;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
-  color: #c9c9da;
-  background-color: #29254091;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  color: var(--texto);
+  background-color: var(--painel-bg);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
   max-width: 25vw;
   width: 100%;
@@ -677,7 +684,7 @@ textarea:focus {
   width: 100%;
   object-fit: cover; /* Corta e encaixa a imagem no quadrado */
   border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  border: 1px solid var(--borda);
   display: block;
 }
 
@@ -714,7 +721,7 @@ textarea:focus {
   width: 4vw;
   background-color: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--raio);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -847,8 +854,8 @@ textarea:focus {
   align-items: center;
   gap: 10px;
   border-radius: 0.5rem;
-  background-color: #29254091;
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: var(--painel-bg);
+  border: 1px solid var(--borda);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
   padding: 10px;
   width: fit-content;
@@ -864,7 +871,7 @@ textarea:focus {
 
 /* Estilos para a aba de informações essenciais */
 #essential-info2 {
-  border-radius: 8px;
+  border-radius: var(--raio);
   left: 1rem; /* Centraliza horizontalmente */
   bottom: 1rem;
   text-align: center;
@@ -873,12 +880,12 @@ textarea:focus {
   overflow-y: auto;
   z-index: 998;
   display: block;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  color: #c9c9da;
+  border: 1px solid var(--borda);
+  color: var(--texto);
   box-shadow: 2px 2px 5px rgba(41, 35, 35, 0.3);
-  background-color: #29254091;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: top 0.5s ease; /* Adiciona uma transição suave para a propriedade 'top' */
   width: 25vw;
 }
@@ -887,8 +894,8 @@ textarea:focus {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #29254091;
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg);
   color: #ccc;
   border-radius: 4px;
   font-size: 16px;
@@ -935,7 +942,7 @@ textarea:focus {
   left: 50%;
   transform: translateX(-50%);
   width: 30px;
-  border:#29254091 solid 2px;
+  border:var(--painel-bg) solid 2px;
   height: 30px;
   border-radius: 50%;
   background-size: cover;
@@ -993,7 +1000,7 @@ textarea:focus {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.222);
+    border: 1px solid var(--borda);
     color: #ccc;
     border-radius: 4px;
     font-size: 16px;
@@ -1056,7 +1063,7 @@ textarea:focus {
     padding: 12px;
     font-size: 1em;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: var(--raio);
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.05);
     color: white;
@@ -1069,7 +1076,7 @@ textarea:focus {
   #status-img {
     height: 50%;
     width: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.222);
+    border: 1px solid var(--borda);
     border-radius: 3vw;
   }
 
@@ -1084,7 +1091,7 @@ textarea:focus {
     width: 80px !important;
     height: 80px !important;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: var(--raio);
   }
 
   #essential-info label {
@@ -1169,17 +1176,17 @@ textarea:focus {
 
 .modal-content {
   border: 1px solid #999; 
-  color: #c9c9da;
+  color: var(--texto);
   position: fixed; /* Alterado para fixed */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* Centraliza o modal */
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  background-color: #3b2540b6;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  border: 1px solid var(--borda);
+  background-color: var(--painel-bg-forte);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: all ease .2s;
   width: 80%; /* Largura fixada */
   max-width: 600px; /* Largura máxima */
@@ -1221,8 +1228,8 @@ textarea:focus {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #29254091; /* Mesmo fundo da checkbox */
-  border: 1px solid rgba(255, 255, 255, 0.222); /* Mesma borda */
+  background-color: var(--painel-bg); /* Mesmo fundo da checkbox */
+  border: 1px solid var(--borda); /* Mesma borda */
   border-radius: 4px; /* Mesma borda arredondada */
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra semelhante */
   transition: 0.4s;
@@ -1269,16 +1276,16 @@ textarea:focus {
 .inventory-preview {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #29254091; /* Pode usar o mesmo fundo da checkbox */
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: var(--painel-bg); /* Pode usar o mesmo fundo da checkbox */
+  border: 1px solid var(--borda);
   border-radius: 4px;
 }
 
 .inventory-preview-testes {
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #29254091; /* Pode usar o mesmo fundo da checkbox */
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: var(--painel-bg); /* Pode usar o mesmo fundo da checkbox */
+  border: 1px solid var(--borda);
   border-radius: 4px;
 }
 
@@ -1297,7 +1304,7 @@ textarea:focus {
   border: 1px solid #dbdbeb7f;
   border-radius: 4px;
   padding: 5px;
-  background-color: #29254091;
+  background-color: var(--painel-bg);
 }
 
 .slider-container .inventory-item img {
@@ -1344,10 +1351,10 @@ textarea:focus {
   background-color: rgba(37, 38, 64, 0.568); /* Opacidade ajustada para 80% */
   border: 1px solid #999999;
   border-radius: 0.5rem;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   transition: all ease 0.5s;
-  color: #c9c9da;
+  color: var(--texto);
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
   padding: 10px;
   padding-left: 20px;
@@ -1528,12 +1535,12 @@ textarea:focus {
 
 #zoom-controls button {
   z-index: 50;
-  background-color: #29254091;
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg);
+  backdrop-filter: blur(var(--blur));
   color: #fff;
   width: 4vw;
   border: #fff 3px solid;
-  border-radius: 8px;
+  border-radius: var(--raio);
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
@@ -1551,12 +1558,12 @@ textarea:focus {
   top: 1rem;
   right: 0.5vw;
   z-index: 50;
-  background-color: #29254091;
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg);
+  backdrop-filter: blur(var(--blur));
   color: #fff;
   width: 4vw;
   border: #fff 3px solid;
-  border-radius: 8px;
+  border-radius: var(--raio);
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
@@ -1580,7 +1587,7 @@ textarea:focus {
   text-align: center;
   width: 100%;
   height: 25px;
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   margin: 0 0 5px auto;      /* topo 0, direita 0, bottom 5px, left auto */
   margin-top: 10px;
   z-index: 0;
@@ -1588,7 +1595,7 @@ textarea:focus {
 }
 
 #togglecontainer1:hover {
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   border: 3px solid #ccc;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Sombra ao focar */
   transform: scale(1.05); /* Aumenta o tamanho ao focar */
@@ -1610,7 +1617,7 @@ textarea:focus {
 
 .toggle-bot{
   position: static;
-  background-color: #29254091;
+  background-color: var(--painel-bg);
   display: flex;
   margin: 10px;
   margin-bottom: 5px;
@@ -1658,11 +1665,11 @@ textarea:focus {
   right: 0.5vw;
   z-index: 50;
   width: 4vw;
-  background-color: #29254091;
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg);
+  backdrop-filter: blur(var(--blur));
   color: #fff;
   border: #fff 3px solid;
-  border-radius: 8px;
+  border-radius: var(--raio);
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
@@ -1690,11 +1697,11 @@ textarea:focus {
   top: 7rem;
   right: 0.5vw;
   z-index: 50;
-  background-color: #29254091;
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg);
+  backdrop-filter: blur(var(--blur));
   color: #fff;
   border: #fff 3px solid;
-  border-radius: 8px;
+  border-radius: var(--raio);
   cursor: pointer;
   font-size: 1.25vh;
   opacity: 0.8;
@@ -1743,7 +1750,7 @@ textarea:focus {
   overflow: auto;
   background-color: #323232;
   box-shadow: 0 0 10px #000;
-  border: #29254091 solid 10px;
+  border: var(--painel-bg) solid 10px;
 }
 
 #tabuleiro-wrapper:active {
@@ -1913,8 +1920,8 @@ textarea:focus {
 .resize-handle.bottom-right { bottom: -4px; right: -4px; cursor: nwse-resize; }
 
 .context-menu {
-  background-color: #38243e80;
-  backdrop-filter: blur(20px);
+  background-color: var(--painel-bg-suave);
+  backdrop-filter: blur(var(--blur));
   border: 1px solid #ccc;
   color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -1931,7 +1938,7 @@ textarea:focus {
   cursor: pointer;
 }
 .context-menu li:hover {
-  background-color: #38243e80;
+  background-color: var(--painel-bg-suave);
   border-radius: 4px;
   border: 1px solid #ccc;
 }
@@ -1950,11 +1957,11 @@ textarea:focus {
   gap: 0.5rem;
   width: 25vw;
   z-index: 1000;
-  background-color: #29254091;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
+  background-color: var(--painel-bg);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
   padding: 1rem;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(var(--blur));
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
   /* animação da altura */
@@ -2017,7 +2024,7 @@ textarea:focus {
 } 
 
 #loadVideo:hover {
-  background-color: #38243e80;
+  background-color: var(--painel-bg-suave);
 }
 
 #youtubePlayer {
@@ -2037,7 +2044,7 @@ textarea:focus {
   font-size: 1rem;
   background-color: #19172780;
   border: #a590ad3f solid 2px;
-  border-radius: 8px;
+  border-radius: var(--raio);
   width: 100%;
   height: 5px;
   color: white;
@@ -2136,7 +2143,7 @@ textarea:focus {
   padding: 1px;
   background-color: #28243e8a;
   border:#9390ad3f 3px solid;
-  border-radius: 8px;
+  border-radius: var(--raio);
   color: white;
   max-height: 150px;
   overflow-y: auto;
@@ -2232,8 +2239,8 @@ textarea:focus {
 /* Campo de entrada */
 #chat-input {
   flex: 1;  /* O input ocupa todo o espaço disponível */
-  background-color: #29254091;
-  border: 1px solid rgba(255, 255, 255, 0.222);
+  background-color: var(--painel-bg);
+  border: 1px solid var(--borda);
   border-radius: 4px;
   padding: 8px;
   color: #ccc;
@@ -2248,7 +2255,7 @@ textarea:focus {
   background-color: #9690b390;
   height: 30px;
   width: 2px;
-  color: #29254091;
+  color: var(--painel-bg);
   border: 1px solid #ebe0e0;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -2291,13 +2298,13 @@ textarea:focus {
   bottom: 1rem;
   width: 25vw;
   max-height: 20vh;
-  background-color: #29254091;
-  color: #c9c9da;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
+  background-color: var(--painel-bg);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
   padding: 1rem;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2311,13 +2318,13 @@ textarea:focus {
   bottom: 2vh;
   width: 25vw;
   max-height: 40vh;
-  background-color: #29254091;
-  color: #c9c9da;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
+  background-color: var(--painel-bg);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
   padding: 1rem;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2331,14 +2338,14 @@ textarea:focus {
   bottom: 2vh;
   width: 350px;
   max-height: 10vh;
-  background-color: #29254091;
-  color: #c9c9da;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
+  background-color: var(--painel-bg);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
   padding: 15px;
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2354,14 +2361,14 @@ textarea:focus {
   bottom: 2vh;
   width: 350px;
   max-height: 40vh;
-  background-color: #29254091;
-  color: #c9c9da;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  border-radius: 8px;
+  background-color: var(--painel-bg);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
   padding: 15px;
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2388,7 +2395,7 @@ textarea:focus {
 .chat-message {
   max-width: 75%;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--raio);
   word-break: break-word;
   display: inline-block;
 }

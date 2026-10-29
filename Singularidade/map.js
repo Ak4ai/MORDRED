@@ -34,7 +34,7 @@ Array.from(toggleButtons).forEach(btn => {
   btn.addEventListener('click', () => {
     hidden = !hidden;
 
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const isMobile = MORDRED_UI.isMobile();
 
     // Esconde apenas em dispositivos não móveis
     container.style.display = hidden ? 'none' : 'flex';

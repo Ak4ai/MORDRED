@@ -424,7 +424,7 @@ function openTab(tabName) {
     const essentialInfo = document.getElementById('essential-info');
     const anotacoes = document.getElementById('essential-info2');
     const playerContainer = document.querySelector('.player-container');
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const isMobile = MORDRED_UI.isMobile();
 
   // Marca aba ativa
   tabs.forEach(tab => {
@@ -2222,7 +2222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Verifica a largura da janela
     function checkWindowSize() {
-        if (window.innerWidth >= 1024) {
+        if (MORDRED_UI.isDesktop()) {
             essentialInfo.classList.remove("hidden");
         } else {
             essentialInfo.classList.add("hidden");
@@ -2273,7 +2273,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Verifica a largura da janela
     function checkWindowSize() {
-        if (window.innerWidth >= 1024) {
+        if (MORDRED_UI.isDesktop()) {
             essentialInfo2.classList.remove("hidden");
         } else {
             essentialInfo2.classList.add("hidden");
@@ -2875,7 +2875,7 @@ window.addEventListener('resize', aplicarAlturaComDelay);
 function controlarVisibilidadeResponsiva() {
   const playerContainer = document.querySelector('.player-container');
   const chatContainer = document.getElementById('chat-container');
-  const isMobile = window.innerWidth <= 1023;
+  const isMobile = MORDRED_UI.isMobile();
   
   if (playerContainer) {
     if (isMobile) {

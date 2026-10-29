@@ -1,0 +1,272 @@
+/* ==========================================================================
+   MORDRED UI — camada compartilhada (Sunnyata, Nexus, Singularidade)
+   Carregar ANTES do style.css de cada app: o tema (cores) de cada app
+   sobrescreve os valores padrão abaixo, e as regras de layout daqui
+   usam seletores mais específicos para valer sobre o style.css.
+   ========================================================================== */
+
+/* ---------- Tokens (valores padrão; cada app define o seu tema) ---------- */
+:root {
+  --painel-bg: #29254091;
+  --painel-bg-forte: #3b2540b6;
+  --painel-bg-suave: #38243e80;
+  --borda: rgba(255, 255, 255, 0.222);
+  --texto: #c9c9da;
+  --texto-suave: #8684a1;
+  --destaque: #a0b3ff;
+  --blur: 20px;
+  --raio: 8px;
+  --sombra-painel: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --transicao: 0.25s ease;
+
+  /* Layout em colunas (desktop) */
+  --gap: clamp(0.5rem, 1.1vw, 1rem);
+  --col-lateral: clamp(240px, 21vw, 380px);
+  --col-centro-max: 860px;
+
+  /* Modais */
+  --modal-largura: 600px;
+}
+
+/* ---------- Acabamento comum ---------- */
+:where(button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+}
+
+.container,
+#essential-info,
+#essential-info2,
+#chat-mensagens,
+.player-container,
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+/* Modais: nunca maiores que a tela, com rolagem própria e fundo que dá foco */
+.modal {
+  background: rgba(10, 8, 20, 0.35);
+}
+
+.modal-content {
+  width: min(var(--modal-largura), calc(100vw - 2 * var(--gap)));
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--gap));
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* O botão de esconder a coluna 1 só existe no layout em colunas */
+#toggle-col-esq { display: none; }
+
+/* ==========================================================================
+   Layout em 3 colunas — só com o JS ativo (body.layout-colunas) e em desktop.
+   No mobile os wrappers somem (display: contents) e o layout antigo segue igual.
+   ========================================================================== */
+body.layout-colunas #app-layout,
+body.layout-colunas #col-esq,
+body.layout-colunas #col-meio,
+body.layout-colunas #col-dir {
+  display: contents;
+}
+
+@media (min-width: 1024px) {
+  body.layout-colunas #app-layout {
+    position: fixed;
+    inset: var(--gap);
+    z-index: 997;
+    display: grid;
+    grid-template-columns: var(--col-esq-w, var(--col-lateral)) minmax(0, 1fr) var(--col-lateral);
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--gap);
+    transition: grid-template-columns var(--transicao);
+    pointer-events: none; /* os vãos entre as colunas deixam o mapa receber cliques */
+  }
+
+  body.layout-colunas.col-esq-oculta #app-layout {
+    --col-esq-w: 0px;
+    column-gap: 0;
+  }
+
+  body.layout-colunas #col-esq,
+  body.layout-colunas #col-meio,
+  body.layout-colunas #col-dir {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    pointer-events: none;
+  }
+
+  body.layout-colunas #col-esq > *,
+  body.layout-colunas #col-meio > *,
+  body.layout-colunas #col-dir > * {
+    pointer-events: auto;
+  }
+
+  body.layout-colunas #col-esq,
+  body.layout-colunas #col-dir {
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  body.layout-colunas #col-esq {
+    overflow: hidden;
+    transition: opacity var(--transicao);
+  }
+
+  body.layout-colunas.col-esq-oculta #col-esq {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.layout-colunas #col-meio {
+    position: relative;
+    justify-content: center;
+  }
+
+  /* ---- Coluna do meio (a principal) ---- */
+  body.layout-colunas #col-meio > .container,
+  html.ios body.layout-colunas #col-meio > .container {
+    position: relative;
+    top: auto !important;
+    width: 100%;
+    max-width: var(--col-centro-max);
+    height: 100% !important;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* abas sempre à vista enquanto o conteúdo rola */
+  body.layout-colunas .container > .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    padding-block: 0.25rem;
+    background: var(--painel-bg-forte);
+    -webkit-backdrop-filter: blur(var(--blur));
+    backdrop-filter: blur(var(--blur));
+  }
+
+  body.layout-colunas .tab,
+  body.layout-colunas .subtab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 0.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* os atalhos de Chat/Player/Menu/Infos são do mobile: no desktop tudo está sempre à vista */
+  body.layout-colunas #bottom-toggles { display: none; }
+
+  /* ---- Coluna 1: player + anotações ---- */
+  body.layout-colunas #col-esq .player-container {
+    position: static;
+    width: auto;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+  }
+
+  body.layout-colunas #col-esq #essential-info2 {
+    position: static;
+    width: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  body.layout-colunas #col-esq #essential-info2 h3 {
+    margin: 0 0 0.5rem;
+  }
+
+  body.layout-colunas #col-esq #essential-info2 .textarea-wrapper {
+    height: calc(100% - 2.25rem);
+  }
+
+  body.layout-colunas #col-esq #essential-info2 textarea {
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    margin-bottom: 0;
+    resize: none;
+  }
+
+  /* ---- Coluna 3: ficha + chat (fora do modo mapa) ---- */
+  body.layout-colunas #col-dir #essential-info:not(.vertical) {
+    position: static;
+    width: auto;
+    max-width: none;
+    flex: 0 1 auto;
+    max-height: 62%;
+    transform: none !important;
+    box-sizing: border-box;
+  }
+
+  body.layout-colunas #col-dir #chat-container:not(.map),
+  body.layout-colunas #col-dir #chat-container:not(.map):hover {
+    position: static;
+    width: auto;
+    flex: 1 1 0;
+    min-height: 9rem;
+    max-height: none;
+    margin-top: auto;
+    box-sizing: border-box;
+  }
+
+  /* ---- Botão que esconde/mostra a coluna 1 ---- */
+  body.layout-colunas #toggle-col-esq {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 4.5rem;
+    padding: 0;
+    margin: 0;
+    transform: translateY(-50%);
+    color: var(--texto);
+    background: var(--painel-bg);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    -webkit-backdrop-filter: blur(var(--blur));
+    backdrop-filter: blur(var(--blur));
+    box-shadow: var(--sombra-painel);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity var(--transicao), background-color var(--transicao);
+  }
+
+  body.layout-colunas #toggle-col-esq:hover,
+  body.layout-colunas #toggle-col-esq:focus-visible {
+    opacity: 1;
+    background: var(--painel-bg-forte);
+  }
+
+  body.layout-colunas #toggle-col-esq i {
+    transition: transform var(--transicao);
+  }
+
+  body.layout-colunas.col-esq-oculta #toggle-col-esq i {
+    transform: rotate(180deg);
+  }
+
+  /* o botão acompanha o container: some junto no modo mapa */
+  body.layout-colunas #col-meio > .container[style*="display: none"] ~ #toggle-col-esq,
+  body.layout-colunas #col-meio > #toggle-col-esq:has(~ .container[style*="display: none"]) {
+    display: none;
+  }
+}
