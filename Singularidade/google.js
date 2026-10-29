@@ -43,8 +43,8 @@ function checkIfEverythingLoaded() {
 }
 
 
-var CLIENT_ID = '607317652690-jukucl3pro5ts8agt3cpndm9teosg1c7.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyC3-6BvwRHqP7cEtyv9A9Oqhu-67UcKJbI';
+var CLIENT_ID = '1040461985275-h99csmlc7kdcp91gkbcjmqoqo716dflr.apps.googleusercontent.com';
+var API_KEY = 'AIzaSyA3f1PyZsDEGumSRnB_RIs-aP5kwqtB_UA';
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
 var SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid';
 
