@@ -377,7 +377,7 @@ function openTab(tabName) {
 
     tabs.forEach(tab => {
         tab.classList.remove('active');
-        if (tab.innerText.toLowerCase() === tabName) {
+        if ((tab.dataset.tab || tab.innerText.toLowerCase()) === tabName) {
             tab.classList.add('active');
         }
     });
@@ -491,7 +491,7 @@ function openTab(tabName) {
 
     tabs.forEach(tab => {
         tab.classList.remove('active');
-        if (tab.innerText.toLowerCase() === tabName) {
+        if ((tab.dataset.tab || tab.innerText.toLowerCase()) === tabName) {
             tab.classList.add('active');
         }
     });

@@ -145,26 +145,6 @@ body.layout-colunas #col-dir {
     box-sizing: border-box;
   }
 
-  /* abas sempre à vista enquanto o conteúdo rola */
-  body.layout-colunas .container > .tabs {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    padding-block: 0.25rem;
-    background: var(--painel-bg-forte);
-    -webkit-backdrop-filter: blur(var(--blur));
-    backdrop-filter: blur(var(--blur));
-  }
-
-  body.layout-colunas .tab,
-  body.layout-colunas .subtab {
-    flex: 1 1 0;
-    min-width: 0;
-    padding-inline: 0.4rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
   /* os atalhos de Chat/Player/Menu/Infos são do mobile: no desktop tudo está sempre à vista */
   body.layout-colunas #bottom-toggles { display: none; }
@@ -269,4 +249,233 @@ body.layout-colunas #col-dir {
   body.layout-colunas #col-meio > #toggle-col-esq:has(~ .container[style*="display: none"]) {
     display: none;
   }
+}
+
+/* ==========================================================================
+   Painel principal: cabeçalho com status vivo + 4 abas + Combate em cartões
+   (vale em desktop e mobile — é o conteúdo do .container)
+   ========================================================================== */
+:root {
+  --stat-vida: #d4688a;
+  --stat-mana: #6a8cff;      /* alma, energia, éter */
+  --stat-mente: #b48cff;     /* sanidade */
+  --stat-defesa: #9bbf6a;    /* escudo, defesa */
+}
+
+/* topo fixo: cabeçalho + abas continuam à vista enquanto o conteúdo rola */
+#cab-topo {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0 -0.25rem 0.75rem;
+  padding: 0.5rem 0.25rem 0.25rem;
+  background: var(--painel-bg-forte);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--borda);
+}
+
+#cab-painel { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+.cab-id { display: flex; align-items: center; gap: 0.6rem; }
+
+.cab-avatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--texto);
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+}
+
+.cab-nome {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cab-engrenagem {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: var(--texto-suave);
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  cursor: pointer;
+  transition: color var(--transicao), background-color var(--transicao);
+}
+.cab-engrenagem:hover, .cab-engrenagem.ativa { color: var(--texto); background: var(--painel-bg-suave); }
+.cab-engrenagem.ativa i { transform: rotate(60deg); }
+.cab-engrenagem i { transition: transform var(--transicao); }
+
+.cab-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(10.5rem, 100%), 1fr));
+  gap: 0.4rem;
+}
+
+.cab-stat {
+  --cor-stat: var(--destaque);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+.cab-stat[data-stat="vida"] { --cor-stat: var(--stat-vida); }
+.cab-stat[data-stat="alma"], .cab-stat[data-stat="energia"], .cab-stat[data-stat="eter"] { --cor-stat: var(--stat-mana); }
+.cab-stat[data-stat="sanidade"] { --cor-stat: var(--stat-mente); }
+.cab-stat[data-stat="escudo"], .cab-stat[data-stat="defesa"] { --cor-stat: var(--stat-defesa); }
+
+.cab-stat-topo { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+.cab-stat-topo i { color: var(--cor-stat); font-size: 0.95rem; }
+.cab-stat-rotulo { flex: 1; text-align: left; color: var(--texto-suave); }
+.cab-stat-valor { font-size: 1.15rem; color: var(--texto); font-variant-numeric: tabular-nums; }
+
+.cab-stat-ajuste { display: flex; gap: 0.3rem; }
+
+.cab-stat .cab-stat-campo {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.cab-stat .cab-stat-btn {
+  flex: none;
+  width: 2rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--texto);
+  background: var(--painel-bg);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+.cab-stat .cab-stat-btn:hover { background: var(--painel-bg-forte); border-color: var(--cor-stat); }
+.cab-stat .cab-stat-btn:active { transform: scale(0.95); }
+
+/* abas: 4 iguais, sem o "pulo" do hover antigo */
+#cab-topo .tabs { margin: 0; gap: 0.25rem; background: transparent; }
+#cab-topo .tab {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0.55rem 0.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#cab-topo .tab:hover { transform: none; border-width: 1px; }
+
+/* subabas (Ações | Teste rápido, Habilidades | Escolha, seções da Config) */
+.subtabs { flex-wrap: wrap; gap: 0.25rem; }
+.subtab { flex: 1 1 auto; max-width: none; margin: 0; white-space: nowrap; }
+.subtab:hover { transform: none; border-width: 1px; }
+
+/* Combate: escolha da arma + cartões de ação */
+.arma-escolha { margin-bottom: 0.75rem; text-align: left; }
+.arma-escolha h3 { margin: 0 0 0.4rem; font-size: 0.85rem; font-weight: 500; color: var(--texto-suave); }
+
+.acoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: 0.6rem;
+}
+
+.acao-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  text-align: left;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  transition: border-color var(--transicao);
+}
+/* se o último cartão sobrar sozinho numa linha de 3, ele ocupa o resto */
+.acao-card:last-child:nth-child(3n + 2) { grid-column: span 2; }
+.acao-card:hover, .acao-card:focus-within { border-color: rgba(255, 255, 255, 0.4); }
+.acao-card h3 { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 1rem; }
+.acao-card h3 i { width: 1.2rem; text-align: center; color: var(--destaque); }
+
+.acao-campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
+.acao-card .campo { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.acao-card label { font-size: 0.75rem; color: var(--texto-suave); }
+.acao-card input[type="number"] { width: 100%; margin: 0; padding: 0.3rem 0.4rem; font-size: 0.95rem; text-align: center; }
+.acao-card .acao-extra { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--texto); }
+.acao-card .acao-extra input { width: auto; margin: 0; }
+
+.acao-card .btn-rolar {
+  margin-top: auto;
+  padding: 0.45rem 0;
+  color: var(--texto);
+  background: var(--painel-bg-forte);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao);
+}
+.acao-card .btn-rolar:hover { background: #494463; border-color: rgba(255, 255, 255, 0.55); }
+.acao-card .btn-rolar:active { transform: scale(0.98); }
+
+/* Config: aberta pela engrenagem, com botão de voltar */
+.cfg-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: auto;
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.8rem;
+  color: var(--texto);
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+.cfg-voltar:hover { background: var(--painel-bg-suave); }
+
+/* a faixa antiga "Status do Personagem" perde a ênfase: o status agora fica no cabeçalho */
+#info > h1 { margin: 0.25rem 0 0.75rem; font-size: 1.3rem; }
+
+/* Mobile: status em uma linha por item e menos aninhamento de bordas/margens */
+@media (max-width: 1023px) {
+  .container { padding-left: 12px; padding-right: 12px; }
+  .content, .subcontent { padding: 0.6rem; }
+  .content { border: none; }
+
+  .cab-stats { grid-template-columns: minmax(0, 1fr); gap: 0.3rem; }
+  .acoes-grid { grid-template-columns: minmax(0, 1fr); }
+  .acao-card:last-child:nth-child(3n + 2) { grid-column: auto; }
+  .subcontent { border: none; padding: 0.4rem 0; }
+  .cab-stat { flex-direction: row; align-items: center; gap: 0.5rem; padding: 0.3rem 0.5rem; }
+  .cab-stat-topo { flex: 0 0 7.5rem; }
+  .cab-stat-ajuste { flex: 1; min-width: 0; }
+  #cab-topo { margin-bottom: 0.5rem; }
 }

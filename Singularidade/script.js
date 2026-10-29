@@ -511,7 +511,7 @@ function openTab(tabName) {
 
   // Marca aba ativa
   tabs.forEach(tab => {
-    tab.classList.toggle('active', tab.innerText.toLowerCase() === tabName);
+    tab.classList.toggle('active', (tab.dataset.tab || tab.innerText.toLowerCase()) === tabName);
   });
 
   // Exibe conteúdo correspondente e controla intervalo de atualização

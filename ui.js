@@ -31,6 +31,157 @@
     try { localStorage.setItem(CHAVE_PREF, oculta ? '1' : '0'); } catch { /* sem persistência */ }
   };
 
+  // ---------- cabeçalho do painel principal ----------
+  // Monta, a partir do que já existe na aba "Ajustes" (campos ajuste-* e seus botões), um cabeçalho
+  // fixo com o status vivo e os botões −/+. Os elementos são MOVIDOS, não recriados: ids e
+  // handlers (ajustarVida(), ajustarAlma()...) continuam os mesmos, então script.js não muda.
+  const ICONES = {
+    vida: 'heart', alma: 'fire', energia: 'bolt', eter: 'wand-sparkles',
+    sanidade: 'brain', escudo: 'shield-halved', defesa: 'shield-halved',
+  };
+
+  function montarCabecalho() {
+    const painel = document.querySelector('.container');
+    const abas = painel && painel.querySelector(':scope > .tabs');
+    const ajustes = document.getElementById('ajustes');
+    if (!(painel && abas && ajustes)) return;
+
+    const topo = criarEl('div', { id: 'cab-topo' });
+    const cab = criarEl('div', { id: 'cab-painel' });
+    const id = criarEl('div', { className: 'cab-id' });
+    const avatar = criarEl('span', { className: 'cab-avatar', textContent: '?' }, { 'aria-hidden': 'true' });
+    const nome = criarEl('span', { className: 'cab-nome', textContent: 'Personagem' });
+    const engrenagem = criarEl('button', { type: 'button', className: 'cab-engrenagem' },
+      { 'aria-label': 'Configurações', title: 'Configurações' });
+    engrenagem.innerHTML = '<i class="fa-solid fa-gear" aria-hidden="true"></i>';
+    id.append(avatar, nome, engrenagem);
+
+    const stats = criarEl('div', { className: 'cab-stats' });
+    ajustes.querySelectorAll('input[id^="ajuste-"]').forEach((campo) => {
+      const chave = campo.id.replace('ajuste-', '');
+      const titulo = campo.previousElementSibling && campo.previousElementSibling.tagName === 'H2'
+        ? campo.previousElementSibling : null;
+      const rotulo = titulo
+        ? titulo.textContent.replace(/^\s*Ajuste\s+/i, '').replace(/:\s*$/, '').trim()
+        : chave.charAt(0).toUpperCase() + chave.slice(1);
+
+      const chip = criarEl('div', { className: 'cab-stat' });
+      chip.dataset.stat = chave; // a cor vem do ui.css (--stat-*)
+
+      const topoChip = criarEl('div', { className: 'cab-stat-topo' });
+      topoChip.innerHTML = `<i class="fa-solid fa-${ICONES[chave] || 'circle'}" aria-hidden="true"></i>`
+        + `<span class="cab-stat-rotulo"></span><b class="cab-stat-valor">–</b>`;
+      topoChip.querySelector('.cab-stat-rotulo').textContent = rotulo;
+
+      // os dois botões que vêm logo depois do campo (reduzir e adicionar): lidos ANTES de mover o campo
+      let el = campo.nextElementSibling;
+      const botoes = [];
+      while (el && botoes.length < 2) {
+        if (el.tagName === 'BUTTON') botoes.push(el);
+        el = el.nextElementSibling;
+      }
+
+      const ajuste = criarEl('div', { className: 'cab-stat-ajuste' });
+      campo.classList.add('cab-stat-campo');
+      campo.placeholder = '1';
+      if (!campo.value) campo.value = '1';
+      campo.setAttribute('aria-label', `Quantidade de ${rotulo.toLowerCase()} a ajustar`);
+      ajuste.append(campo);
+
+      botoes.forEach((b) => {
+        const reduz = /\(\s*-1\s*\)/.test(b.getAttribute('onclick') || '');
+        const nomeOriginal = b.textContent.trim();
+        b.dataset.sinal = reduz ? '-' : '+';
+        b.classList.add('cab-stat-btn');
+        b.type = 'button';
+        b.textContent = reduz ? '−' : '+';
+        b.title = nomeOriginal;
+        b.setAttribute('aria-label', nomeOriginal);
+      });
+      // sempre na ordem − , +
+      botoes.sort((a, b) => (a.dataset.sinal === '-' ? -1 : 1) - (b.dataset.sinal === '-' ? -1 : 1))
+        .forEach((b) => ajuste.append(b));
+
+      chip.append(topoChip, ajuste);
+      stats.append(chip);
+
+      // valor vivo: acompanha o texto que o script.js já mantém em #status-<chave>
+      const fonte = document.getElementById(`status-${chave}`);
+      const valor = topoChip.querySelector('.cab-stat-valor');
+      const sincronizar = () => {
+        const txt = fonte ? fonte.textContent : '';
+        const num = txt.match(/-?\d+(?:[.,]\d+)?/);
+        valor.textContent = num ? num[0] : '–';
+        valor.title = txt.trim();
+      };
+      if (fonte) {
+        sincronizar();
+        new MutationObserver(sincronizar).observe(fonte, { childList: true, characterData: true, subtree: true });
+      }
+    });
+
+    // a Vida sempre primeiro; o resto segue a ordem do HTML
+    const chips = [...stats.children];
+    chips.sort((a, b) => (b.dataset.stat === 'vida') - (a.dataset.stat === 'vida'));
+    chips.forEach((c) => stats.append(c));
+
+    // a aba "Ajustes" deixa de existir: sobe pro cabeçalho
+    ajustes.remove();
+    painel.querySelectorAll('.subtab').forEach((st) => {
+      if ((st.getAttribute('onclick') || '').includes("'ajustes'")) st.remove();
+    });
+
+    // nome e inicial do avatar acompanham #status-nome
+    const fonteNome = document.getElementById('status-nome');
+    const sincNome = () => {
+      const t = (fonteNome.textContent || '').trim();
+      nome.textContent = t || 'Personagem';
+      avatar.textContent = (t.charAt(0) || '?').toUpperCase();
+    };
+    if (fonteNome) {
+      sincNome();
+      new MutationObserver(sincNome).observe(fonteNome, { childList: true, characterData: true, subtree: true });
+    }
+
+    cab.append(id, stats);
+    abas.parentNode.insertBefore(topo, abas);
+    topo.append(cab, abas);
+
+    // ---------- Config: abre pela engrenagem, com botão de voltar ----------
+    const config = document.getElementById('config');
+    if (!config) return;
+    let ultimaAba = 'info';
+    const abaAtiva = () => (document.querySelector('.content.active') || {}).id || 'info';
+    // openTab vem do script.js do app (carregado depois, com defer): resolve só na hora do clique
+    const alternarConfig = () => {
+      if (typeof window.openTab !== 'function') return;
+      if (config.classList.contains('active')) {
+        window.openTab(ultimaAba);
+      } else {
+        ultimaAba = abaAtiva();
+        window.openTab('config');
+      }
+    };
+    engrenagem.addEventListener('click', alternarConfig);
+    const voltar = criarEl('button', { type: 'button', className: 'cfg-voltar' });
+    voltar.innerHTML = '<i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Voltar';
+    voltar.addEventListener('click', alternarConfig);
+    config.prepend(voltar);
+    new MutationObserver(() => {
+      const aberta = config.classList.contains('active');
+      engrenagem.classList.toggle('ativa', aberta);
+      engrenagem.setAttribute('aria-pressed', String(aberta));
+    }).observe(config, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  function criarEl(tag, props = {}, attrs = {}) {
+    const el = Object.assign(document.createElement(tag), props);
+    Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    return el;
+  }
+
+  montarCabecalho();
+
   // ---------- montagem das colunas ----------
   const player = document.querySelector('.player-container');
   const notas = document.getElementById('essential-info2');

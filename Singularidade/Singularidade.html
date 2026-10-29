@@ -2,7 +2,7 @@
     <html lang="en">
     <head>
         <link rel="icon" type="image/png" href="android-icon-192x192.png">
-        <link rel="stylesheet" href="../ui.css?v=1.0.0">
+        <link rel="stylesheet" href="../ui.css?v=1.1.5">
         <link rel="stylesheet" href="style.css?v=1.0.7">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -262,12 +262,11 @@
     <div class="container">
         <button id="togglecontainer1"class="toggle-container"><i class="fa-solid fa-arrows-to-eye"></i></button>
 
-        <div class="tabs">
-            <div class="tab active" onclick="openTab('info')">Info</div>
-            <div class="tab" onclick="openTab('skills')">Skills</div>
-            <div class="tab" onclick="openTab('actions')">Actions</div>
-            <div class="tab" onclick="openTab('inventory')">Inventory</div>
-            <div class="tab" onclick="openTab('config')">Config</div>
+        <div class="tabs" role="tablist">
+            <div class="tab active" data-tab="info" role="tab" onclick="openTab('info')">Ficha</div>
+            <div class="tab" data-tab="actions" role="tab" onclick="openTab('actions')">Combate</div>
+            <div class="tab" data-tab="skills" role="tab" onclick="openTab('skills')">Habilidades</div>
+            <div class="tab" data-tab="inventory" role="tab" onclick="openTab('inventory')">Mochila</div>
         </div>  
         
         <div id="info" class="content active">
@@ -639,10 +638,11 @@
 
         <div id="config" class="content">
             <div class="subtabs">
-                <div class="subtab active" onclick="openSubtab('config', 'status1')">Status</div>
-                <div class="subtab" onclick="openSubtab('config', 'habilidades1')">Skills</div>
-                <div class="subtab" onclick="openSubtab('config', 'habilidades2')">SaveData</div>
-                <div class="subtab" onclick="openSubtab('config', 'Google')">Google</div>
+                <div class="subtab active" onclick="openSubtab('config', 'status1')">Personagem</div>
+                <div class="subtab" onclick="openSubtab('config', 'habilidades1')">Habilidades</div>
+                <div class="subtab" onclick="openSubtab('config', 'habilidades2')">Dados e backup</div>
+                <div class="subtab" onclick="openSubtab('config', 'Google')">Google Drive</div>
+                <div class="subtab" onclick="openSubtab('config', 'avancado')">Avançado</div>
             </div>
             <div id="status1" class="subcontent active">
                 <div id="toggle-atualizar">
@@ -1035,7 +1035,8 @@
                 <br><br>
                 <button type="button" onclick="listarArquivos()">Listar Arquivos no LocalStorage</button>
                 <br>
-                <hr>
+                </div>
+            <div id="avancado" class="subcontent">
                 <h2>Atualizar Site</h2>
                 Aperte esse botão para atualizar o site e carregar os dados mais recentes.<br>
                 Aviso: ele vai apagar seus dados entao tenha certeza de fazer um backup antes.<br>
@@ -1163,62 +1164,59 @@
             <div class="subtabs">
                 <div class="subtab active" onclick="openSubtab('actions', 'acoes')">Ações</div>
                 <div class="subtab" onclick="openSubtab('actions', 'ajustes')">Ajustes</div>
-                <div class="subtab" onclick="openSubtab('actions', 'testes')">Testes</div>
+                <div class="subtab" onclick="openSubtab('actions', 'testes')">Teste rápido</div>
             </div>
             <div id="acoes" class="subcontent active">
-                <!-- Pré-visualização do Inventário -->
-                <div id="inventory-preview" class="inventory-preview">
+                <div class="arma-escolha">
+                    <div id="inventory-preview" class="inventory-preview">
                     <h3>Selecione o item para atacar</h3>
                     <div class="slider-container">
                     <!-- Os itens do inventário serão inseridos dinamicamente aqui -->
                     </div>
                 </div>
-                <h2>Atacar</h2>
-                <label for="vantagens-ataque">Número de Vantagens:</label>
-                <input type="number" id="vantagens-ataque" value="0">
-                <br>
-                <label for="modificador-ataque">Modificador:</label>
-                <input type="number" id="modificador-ataque" value="0">
-                <br>
-                <button onclick="executarAtaque()">Executar Ataque</button>
-
-                <h2>Atirar</h2>
-                <label for="vantagens-tiro">Número de Vantagens:</label>
-                <input type="number" id="vantagens-tiro" value="0">
-                <br>
-                <label for="modificador-tiro">Modificador:</label>
-                <input type="number" id="modificador-tiro" value="0">
-                <br>
-                <button onclick="executarTiro()">Executar Tiro</button>
-
-                <h2>Defender</h2>
-                <label for="vantagens-sanidade">Número de Vantagens:</label>
-                <input type="number" id="vantagens-sanidade" value="0">
-                <br>
-                <label for="modificador-sanidade">Modificador:</label>
-                <input type="number" id="modificador-sanidade" value="0">
-                <br>
-                <div id="check-sanidade">
-                <button onclick="executarDefesa()">Executar Defesa</button>
-                    <!--<input type="checkbox" id="checkSanidade" checked>
-                    <label for="checkSanidade">Sanidade Total</label> --> </div>
-                <h2>Esquivar</h2>
-                <label for="vantagens-esquiva">Número de Vantagens:</label>
-                <input type="number" id="vantagens-esquiva" value="0">
-                <br>
-                <label for="modificador-esquiva">Modificador:</label>
-                <input type="number" id="modificador-esquiva" value="0">
-                <br>
-                <button onclick="executarEsquiva()">Executar Esquiva</button>
-                
-                <h2>Contra-Atacar</h2>
-                <label for="vantagens-contraataque">Número de Vantagens:</label>
-                <input type="number" id="vantagens-contraataque" value="0">
-                <br>
-                <label for="modificador-contraataque">Modificador:</label>
-                <input type="number" id="modificador-contraataque" value="0">
-                <br>
-                <button onclick="executarContraAtaque()">Executar Contra-Ataque</button>
+                </div>
+                <div class="acoes-grid">
+                    <section class="acao-card">
+                        <h3><i class="fa-solid fa-khanda" aria-hidden="true"></i> Atacar</h3>
+                        <div class="acao-campos">
+                            <div class="campo"><label for="vantagens-ataque">Vantagens</label><input type="number" id="vantagens-ataque" value="0"></div>
+                            <div class="campo"><label for="modificador-ataque">Modificador</label><input type="number" id="modificador-ataque" value="0"></div>
+                        </div>
+                        <button type="button" class="btn-rolar" onclick="executarAtaque()">Rolar</button>
+                    </section>
+                    <section class="acao-card">
+                        <h3><i class="fa-solid fa-crosshairs" aria-hidden="true"></i> Atirar</h3>
+                        <div class="acao-campos">
+                            <div class="campo"><label for="vantagens-tiro">Vantagens</label><input type="number" id="vantagens-tiro" value="0"></div>
+                            <div class="campo"><label for="modificador-tiro">Modificador</label><input type="number" id="modificador-tiro" value="0"></div>
+                        </div>
+                        <button type="button" class="btn-rolar" onclick="executarTiro()">Rolar</button>
+                    </section>
+                    <section class="acao-card">
+                        <h3><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Defender</h3>
+                        <div class="acao-campos">
+                            <div class="campo"><label for="vantagens-sanidade">Vantagens</label><input type="number" id="vantagens-sanidade" value="0"></div>
+                            <div class="campo"><label for="modificador-sanidade">Modificador</label><input type="number" id="modificador-sanidade" value="0"></div>
+                        </div>
+                        <button type="button" class="btn-rolar" onclick="executarDefesa()">Rolar</button>
+                    </section>
+                    <section class="acao-card">
+                        <h3><i class="fa-solid fa-person-running" aria-hidden="true"></i> Esquivar</h3>
+                        <div class="acao-campos">
+                            <div class="campo"><label for="vantagens-esquiva">Vantagens</label><input type="number" id="vantagens-esquiva" value="0"></div>
+                            <div class="campo"><label for="modificador-esquiva">Modificador</label><input type="number" id="modificador-esquiva" value="0"></div>
+                        </div>
+                        <button type="button" class="btn-rolar" onclick="executarEsquiva()">Rolar</button>
+                    </section>
+                    <section class="acao-card">
+                        <h3><i class="fa-solid fa-reply" aria-hidden="true"></i> Contra-atacar</h3>
+                        <div class="acao-campos">
+                            <div class="campo"><label for="vantagens-contraataque">Vantagens</label><input type="number" id="vantagens-contraataque" value="0"></div>
+                            <div class="campo"><label for="modificador-contraataque">Modificador</label><input type="number" id="modificador-contraataque" value="0"></div>
+                        </div>
+                        <button type="button" class="btn-rolar" onclick="executarContraAtaque()">Rolar</button>
+                    </section>
+                </div>
             </div>
             <div id="ajustes" class="subcontent">
                 <h2>Ajuste Éter:</h2>
@@ -1327,7 +1325,7 @@
         <button id="toggleinfo1"class="toggle-bot">Infos</i></button>
       </div>
     </div>                                               
-        <script src="../ui.js?v=1.0.0"></script>
+        <script src="../ui.js?v=1.1.1"></script>
         <script src="https://apis.google.com/js/api.js" defer></script>
         <script>
             function handleGisLoaded() {
