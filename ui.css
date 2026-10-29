@@ -316,6 +316,8 @@ body.layout-colunas #col-dir {
 
 .cab-stats {
   order: 2;
+  flex: 0 0 auto;
+  max-width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -563,11 +565,246 @@ body.layout-colunas #col-dir {
 /* Mobile: nome + engrenagem na 1ª linha, status na 2ª; cartões em 1 coluna */
 @media (max-width: 1023px) {
   .container { padding-left: 12px; padding-right: 12px; }
-  .cab-stats { order: 4; flex: 1 1 100%; justify-content: flex-start; }
-  .cab-stat { flex: 1 1 7.5rem; justify-content: space-between; gap: 0.2rem; padding: 0.15rem 0.25rem 0.15rem 0.4rem; }
-  .cab-stat-valor { min-width: 1.2rem; }
-  .cab-stat .cab-stat-btn { width: 1.3rem; }
-  .cab-stat .cab-stat-campo { width: 1.9rem; }
   .acoes-grid { grid-template-columns: minmax(0, 1fr); }
   .acao-card:last-child:nth-child(3n + 2) { grid-column: auto; }
 }
+
+/* ==========================================================================
+   Ajustes do cabeçalho, respiro entre colunas, Ficha e Mochila
+   ========================================================================== */
+:root { --gap-centro: clamp(0.75rem, 3vw, 3rem); }
+
+/* mais respiro entre a coluna do meio e as laterais (principalmente com a coluna 1 escondida) */
+@media (min-width: 1024px) {
+  body.layout-colunas #col-meio { padding-inline: var(--gap-centro); }
+
+  /* coluna 1 escondida: a margem da direita iguala a da esquerda (que inclui o recuo do layout) */
+  body.layout-colunas.col-esq-oculta #col-meio { padding-right: calc(var(--gap-centro) + var(--gap)); }
+}
+
+/* botão "esconder interface": mesmo tamanho e estilo da engrenagem, à esquerda dela */
+#cab-painel > #togglecontainer1 {
+  order: 3;
+  position: static;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: var(--texto-suave);
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  opacity: 1;
+  box-shadow: none;
+  cursor: pointer;
+  transition: color var(--transicao), background-color var(--transicao);
+}
+#cab-painel > #togglecontainer1:hover { color: var(--texto); background: var(--painel-bg-suave); transform: none; border: 1px solid var(--borda); box-shadow: none; }
+#cab-painel > #togglecontainer1:active { transform: scale(0.95); background: var(--painel-bg-suave); }
+
+/* campo de quantidade da pílula: discreto, sem a moldura pesada */
+.cab-stat .cab-stat-campo {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--texto);
+  transition: border-color var(--transicao), background-color var(--transicao);
+}
+.cab-stat .cab-stat-campo:hover { background: rgba(255, 255, 255, 0.1); }
+.cab-stat .cab-stat-campo:focus { outline: none; border-color: var(--stat-cor, var(--cor-stat)); background: rgba(255, 255, 255, 0.12); }
+
+/* ---------- Ficha ---------- */
+#info .status-info { display: flex; flex-direction: column; gap: 0.9rem; }
+#info .status-column, #info .status-column3 { padding: 0; text-align: left; }
+
+#info h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--texto-suave);
+  text-align: left;
+}
+
+/* Status base: um cartão por status, com a barra na cor do status */
+#info .status-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.5rem; }
+#info .status-column > h2 { grid-column: 1 / -1; margin-bottom: 0; }
+#info .status-column .status-item {
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+#info .status-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.8rem; }
+#info .status-label label { color: var(--texto-suave); }
+#info .status-label span {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+#info .status-bar { height: 6px; margin-top: 0.4rem; border: none; border-radius: 3px; background: var(--painel-bg); }
+#info .status-bar-fill { border: none; border-radius: 3px; background: var(--destaque); }
+#info #status-bar-vida { background: var(--stat-vida); }
+#info #status-bar-alma, #info #status-bar-energia, #info #status-bar-eter { background: var(--stat-mana); }
+#info #status-bar-sanidade { background: var(--stat-mente); }
+#info #status-bar-escudo, #info #status-bar-defesa { background: var(--stat-defesa); }
+
+/* Atributos: azulejos com o número em destaque */
+#info .atributos-grid { grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: 0.4rem; }
+#info .atributo-item {
+  padding: 0.55rem 0.3rem;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+#info .atributo-item label { margin: 0 0 0.15rem; font-size: 0.7rem; font-weight: 500; color: var(--texto-suave); }
+#info .atributo-item span {
+  width: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--texto);
+}
+
+/* Perícias e Traços: sanfonas */
+#info .status-pericias, #info .status-tracos {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+#info h2.collapsible {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  font-size: 0.95rem;
+  color: var(--texto);
+  user-select: none;
+}
+#info h2.collapsible::after {
+  content: "\f078";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.7rem;
+  color: var(--texto-suave);
+  transition: transform var(--transicao);
+}
+#info .status-pericias:has(.content-expanded) h2.collapsible::after,
+#info .status-tracos:has(.content-expanded) h2.collapsible::after { transform: rotate(180deg); }
+
+#info .status-info2 { gap: 0 1.2rem; }
+#info .status-info2.content-expanded { padding: 0.2rem 0.8rem 0.8rem; }
+#info .status-info2 .status-column2 { flex: 1 1 12rem; min-width: 0; padding: 0; text-align: left; }
+#info .status-info2 .status-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--borda);
+}
+#info .status-info2 .status-item label { color: var(--texto-suave); font-size: 0.85rem; }
+#info .status-info2 .status-item span {
+  min-width: 2rem;
+  padding: 0.1rem 0.5rem;
+  line-height: 1.4;
+  text-align: center;
+  background: var(--painel-bg);
+  border-radius: 6px;
+}
+#info .status-column4 { flex: 1 1 100%; margin-top: 0.6rem; padding: 0; text-align: left; }
+#info .status-column4 label { color: var(--texto-suave); font-size: 0.85rem; }
+
+/* ---------- Mochila ---------- */
+#inventory > h2 { margin: 0 0 0.5rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.02em; text-align: left; color: var(--texto-suave); }
+
+#inventory-items {
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+#inventory-items:empty::before {
+  content: "Sua mochila está vazia";
+  grid-column: 1 / -1;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+#inventory-items .inventory-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--painel-bg-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  transition: border-color var(--transicao);
+}
+#inventory-items .inventory-item:hover { border-color: rgba(255, 255, 255, 0.4); }
+#inventory-items .inventory-item .item-icon { width: 3rem; height: 3rem; border-radius: 6px; }
+#inventory-items .inventory-item h3 { margin: 0; font-size: 0.9rem; font-weight: 500; overflow-wrap: anywhere; }
+#inventory-items .inventory-item .item-quantity { margin: 0; font-size: 0.75rem; color: var(--texto-suave); }
+#inventory-items .inventory-item .item-buttons { display: flex; gap: 0.3rem; margin-top: 0.2rem; }
+#inventory-items .inventory-item .item-buttons button {
+  width: 1.8rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  color: var(--texto);
+  background: var(--painel-bg);
+  border: 1px solid var(--borda);
+  border-radius: 5px;
+  cursor: pointer;
+}
+#inventory-items .inventory-item .item-buttons button:hover { background: var(--painel-bg-forte); }
+
+#open-add-item {
+  width: 100%;
+  margin: 0.75rem 0 0;
+  padding: 0.5rem 0;
+  color: var(--texto);
+  background: var(--painel-bg-forte);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+#open-add-item::before { content: "+ "; }
+#open-add-item:hover { background: #494463; }
+#total-weight { margin-top: 0.6rem; font-size: 0.8rem; text-align: right; color: var(--texto-suave); }
+
+/* janelas de adicionar item / detalhes: campos sempre cabendo na largura */
+.modal-content input:not([type="checkbox"]), .modal-content textarea { width: 100%; box-sizing: border-box; }
+.modal-content label { display: block; margin-top: 0.4rem; font-size: 0.85rem; color: var(--texto-suave); text-align: left; }
+.modal-content textarea { min-height: 4.5rem; resize: vertical; }
+.modal-content .modal-buttons { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; }
+
+/* cabeçalho empilhado (ver ui.js): nome + botões na 1ª linha, status na 2ª */
+#cab-painel.cab-empilhado .cab-stats { order: 4; flex: 1 1 100%; justify-content: flex-start; }
+#cab-painel.cab-empilhado .cab-stat { flex: 1 1 7.5rem; justify-content: space-between; gap: 0.2rem; padding: 0.15rem 0.25rem 0.15rem 0.4rem; }
+#cab-painel.cab-empilhado .cab-stat-valor { min-width: 1.2rem; }
+#cab-painel.cab-empilhado .cab-stat .cab-stat-btn { width: 1.3rem; }
+#cab-painel.cab-empilhado .cab-stat .cab-stat-campo { width: 1.9rem; }
+#cab-painel.cab-empilhado > #togglecontainer1, #cab-painel.cab-empilhado > .cab-engrenagem { order: 2; }

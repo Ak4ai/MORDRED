@@ -41,6 +41,8 @@
   };
 
   function montarCabecalho() {
+    // reposiciona o cabeçalho conforme o espaço (definida mais abaixo; os observadores chamam por aqui)
+    let reorganizar = () => {};
     const painel = document.querySelector('.container');
     const abas = painel && painel.querySelector(':scope > .tabs');
     const ajustes = document.getElementById('ajustes');
@@ -109,6 +111,7 @@
         const num = txt.match(/-?\d+(?:[.,]\d+)?/);
         valor.textContent = num ? num[0] : '–';
         valor.title = txt.trim();
+        reorganizar();
       };
       if (fonte) {
         sincronizar();
@@ -139,9 +142,28 @@
       new MutationObserver(sincNome).observe(fonteNome, { childList: true, characterData: true, subtree: true });
     }
 
-    cab.append(avatar, nome, stats, engrenagem);
+    // o botão que esconde a interface (mostra só o tabuleiro) sai do topo do painel e vem pra cá,
+    // à esquerda da engrenagem. É o mesmo elemento: o map.js já liga o clique nele pela classe.
+    const ocultar = painel.querySelector('#togglecontainer1');
+    if (ocultar) {
+      ocultar.title = 'Esconder a interface (ver só o tabuleiro)';
+      ocultar.setAttribute('aria-label', ocultar.title);
+    }
+    cab.append(...[avatar, nome, stats, ocultar, engrenagem].filter(Boolean));
     abas.parentNode.insertBefore(topo, abas);
     topo.append(cab, abas);
+
+    // Se os status não cabem ao lado do nome, o cabeçalho "empilha": nome e botões numa linha
+    // e os status na de baixo. Medido de verdade (não só pela largura da janela), então vale
+    // para a coluna estreita, para o mobile e para apps com 4 status.
+    reorganizar = () => {
+      cab.classList.remove('cab-empilhado');
+      const mesmaLinha = stats.offsetTop < avatar.offsetTop + avatar.offsetHeight;
+      cab.classList.toggle('cab-empilhado', !mesmaLinha);
+    };
+    new ResizeObserver(reorganizar).observe(topo);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(reorganizar);
+    reorganizar();
 
     // ---------- Config: abre pela engrenagem, com botão de voltar ----------
     const config = document.getElementById('config');
