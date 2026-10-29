@@ -170,6 +170,9 @@
     abas.parentNode.insertBefore(topo, abas);
     topo.append(cab, abas);
 
+    // só enquanto o conteúdo rola por baixo, o topo ganha um fundo suave (parado, fica sem camada extra)
+    painel.addEventListener('scroll', () => topo.classList.toggle('rolando', painel.scrollTop > 2), { passive: true });
+
     // Os status ficam sempre na 1ª linha, ao lado do avatar e do nome. Se não couberem, o cabeçalho
     // vai tentando, nesta ordem: (1) encolher as caixinhas, (2) encolher mais, (3) esconder o nome.
     // Só se nada disso bastar, os status descem para a linha de baixo ("empilhado").

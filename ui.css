@@ -14,6 +14,7 @@
   --texto: #c9c9da;
   --texto-suave: #8684a1;
   --destaque: #a0b3ff;
+  --ativo: #494463;
   --blur: 20px;
   --raio: 8px;
   --sombra-painel: 0 4px 16px rgba(0, 0, 0, 0.35);
@@ -273,7 +274,7 @@ body.layout-colunas #col-dir {
   z-index: 3;
   margin: 0 -0.25rem 0.6rem;
   padding: 0.5rem 0.25rem 0.5rem;
-  background: var(--painel-bg-forte);
+  background: transparent; /* o painel já tem fundo; outro aqui criava uma faixa extra */
   -webkit-backdrop-filter: blur(var(--blur));
   backdrop-filter: blur(var(--blur));
   border-bottom: 1px solid var(--borda);
@@ -435,7 +436,7 @@ body.layout-colunas #col-dir {
   border-radius: 0;
   transform: none;
 }
-#actions .subtabs .subtab.active, #skills > .subtabs .subtab.active { color: var(--texto); background: var(--painel-bg-forte); }
+#actions .subtabs .subtab.active, #skills > .subtabs .subtab.active { color: var(--texto); background: var(--ativo); }
 
 /* Config usa os mesmos botões, mas pode quebrar linha (5 seções) */
 #config > .subtabs { flex-wrap: wrap; gap: 0.25rem; }
@@ -531,7 +532,7 @@ body.layout-colunas #col-dir {
   cursor: pointer;
   transition: background-color var(--transicao), border-color var(--transicao);
 }
-.acao-card .btn-rolar:hover { background: #494463; border-color: rgba(255, 255, 255, 0.55); }
+.acao-card .btn-rolar:hover { background: var(--ativo); border-color: rgba(255, 255, 255, 0.55); }
 .acao-card .btn-rolar:active { transform: scale(0.97); }
 
 /* última rolagem (vem do chat) */
@@ -793,7 +794,7 @@ body.layout-colunas #col-dir {
   cursor: pointer;
 }
 #open-add-item::before { content: "+ "; }
-#open-add-item:hover { background: #494463; }
+#open-add-item:hover { background: var(--ativo); }
 #total-weight { margin-top: 0.6rem; font-size: 0.8rem; text-align: right; color: var(--texto-suave); }
 
 /* janelas de adicionar item / detalhes: campos sempre cabendo na largura */
@@ -968,3 +969,6 @@ body.layout-colunas #col-dir {
   .combate-topo { align-items: stretch; }
   .arma-select { flex: 1 1 100%; max-width: none; margin-left: 0; }
 }
+
+/* topo do painel: fundo suave só durante a rolagem, para o conteúdo que passa por baixo não aparecer */
+#cab-topo.rolando { background: var(--painel-bg); }
